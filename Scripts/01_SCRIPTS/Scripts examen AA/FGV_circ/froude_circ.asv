@@ -1,0 +1,13 @@
+function en = froude_circ(y,par)
+%% Datos de entrada
+Q = par(1);% caudal en m3/s
+d = par(2);% pendiente de los taludes mH:1V. rectangular m=0
+d = par(2);% diámemetro en m
+
+%% Propiedades geométricas
+B=b+2*m*y;% ancho superficial
+A=(b+m*y)*y;% área
+%P=b+2*y*(1+m^2)^0.5;% perimetro mojado
+%R= A/P;% radio hidráulico
+%% Función
+en=(Q^2)*B./(9.8*A.^3)-1;
