@@ -415,6 +415,142 @@ Todos los resultados numéricos coinciden con la solución oficial manuscrita.
 
 ---
 
-*(Ejercicios 3 y 4 pendientes — se continuará en la próxima corrida.)*
+---
+
+## EJERCICIO 4 — Instalación de bombeo entre tanque de succión y tanque a presión
+
+**Datos:** tanque de succión Ts (superficie libre, z_Ts=−1 m), bomba a z_B=0 m,
+tanque a presión Ti (superficie a z_Ti=9 m, presión manométrica Pi variable
+entre 1×10⁵ y 3×10⁵ Pa). Tubería de succión: L_s=25 m, k_s=4; tubería de
+impulsión: L_i=2500 m, k_i=8. Ambas de D=350 mm, ε=0.05 mm (misma cañería,
+mismo diámetro en succión e impulsión). Curva de bomba (Q, H, rendimiento,
+NPSH_r) dada en la tabla del enunciado.
+
+Teoría usada: pérdida de carga distribuida (Darcy-Weisbach, Teórico §3.3.10
+Ec. 18) y localizada (Ec. 19), curva característica de la bomba (§3.3.8),
+curva de la instalación (§3.3.10 Ec. 15) y punto de funcionamiento como
+intersección de ambas curvas (§3.3.11), y cavitación / NPSH disponible vs.
+requerido (§3.3.14). El factor de fricción f se obtiene de Colebrook-White
+(equivalente numérico del Ábaco de Moody que usa el teórico), con la función
+`colebrook.m` de la carpeta `Scripts/01_SCRIPTS/bombas Pedro`.
+
+**Ecuación de la instalación** (energía entre la superficie libre de Ts,
+punto A, y la superficie de Ti, punto B, con el aporte de la bomba H_m en el
+medio): como ambas superficies libres tienen v≈0 y el diámetro de tubería es
+el mismo en succión e impulsión (por lo que no hay salto de energía cinética
+en la brida de la bomba), queda
+
+```
+H_m = H_B − H_A = (Pi/γ + z_Ti + ΔH_i) − (z_Ts − ΔH_s)
+ΔH_s = (k_s + f·L_s/D)·Q²/(2gA²)      ΔH_i = (k_i + f·L_i/D)·Q²/(2gA²)
+```
+
+con A = πD²/4 el área de la tubería (igual en ambos tramos), y f=f(Re, ε/D)
+el mismo en los dos tramos porque Q, D y ε son iguales.
+
+**Herramienta:** se adaptó el script del curso `Bomba_sola.m` (carpeta
+`bombas Pedro`) a esta instalación de un solo diámetro; se usa `colebrook.m`
+tal cual, y `fzero`/interpolación `pchip` de Octave para hallar la
+intersección entre la curva de la bomba y la de la instalación (punto de
+funcionamiento). Se eligió esta herramienta porque es la que el curso provee
+específicamente para resolver instalaciones de bombeo con pérdida de carga
+dependiente de f (que a su vez depende de Q), evitando iterar a mano
+Colebrook para cada caudal.
+
+**Scripts:** `scripts/ej4_parte1.m`, `scripts/ej4_parte2.m`,
+`scripts/ej4_parte3.m` (+ `scripts/colebrook.m`).
+
+### Parte 1) Rango de caudales y cargas para Pi ∈ [1×10⁵, 3×10⁵] Pa
+
+**Concepto:** a mayor Pi, la curva de la instalación H_inst(Q) se desplaza
+hacia arriba (mayor carga estática requerida), y como la curva de la bomba es
+decreciente, el punto de funcionamiento se corre a menor Q y mayor H. Por lo
+tanto Pi=1×10⁵ Pa da el caudal máximo posible y Pi=3×10⁵ Pa el mínimo.
+
+**Resultado (`ej4_parte1.m`):**
+```
+Pi = 1e5 Pa -> Q = 0.1757 m3/s , H = 40.05 m   (caudal y carga máximos)
+Pi = 3e5 Pa -> Q = 0.1030 m3/s , H = 47.76 m   (caudal y carga mínimos)
+```
+
+**Resultado final Parte 1: Q ∈ [0.103, 0.176] m³/s , H ∈ [40.1, 47.8] m.**
+
+**Comparación con solución oficial:** el manuscrito da (Pi=1×10⁵→Q=0.174
+m³/s, H=40.5 m) y (Pi=3×10⁵→Q=0.1023 m³/s, H=47.77 m) — coincide muy bien; la
+diferencia de ≈0.4 m en H para Pi=1×10⁵ es consistente con la lectura gráfica
+manual de la curva de la bomba en ese tramo más empinado.
+
+### Parte 2) Q = 0.11 m³/s: presión requerida, carga, factor de fricción y cavitación
+
+**Desarrollo (`ej4_parte2.m`):** con Q=0.11 m³/s, v=1.143 m/s, Re=4.00×10⁵,
+**f = 0.0153** (Colebrook). De la curva de la bomba, **H_m = 47.17 m**
+(carga suministrada). Con ΔH_s=0.339 m y ΔH_i=7.791 m, despejando Pi de la
+ecuación de la instalación:
+
+**Pi = 2.85×10⁵ Pa.**
+
+**Cavitación — NPSH disponible** (Teórico §3.3.14): sólo depende del tramo de
+succión, no de Pi:
+```
+NPSH_disp = (p_atm/γ − p_vap/γ) + z_Ts − ΔH_s − z_B = 10.09 + (−1) − 0.339 − 0 = 8.75 m
+```
+(p_atm/γ − p_vap/γ ≈ 10.09 m para agua a temperatura ambiente: p_atm=10.33 m,
+p_vap(20°C)=0.24 m, Teórico Fig. 30). El NPSH requerido, interpolado de la
+tabla de la bomba en Q=0.11, es **NPSH_req = 8.19 m**.
+
+**Como NPSH_disp (8.75 m) > NPSH_req (8.19 m) ⇒ la bomba NO cavita.**
+
+**Resultado final Parte 2: Pi = 2.85×10⁵ Pa, H_m = 47.17 m, f = 0.0153,
+NPSH_disp = 8.75 m, NPSH_req = 8.19 m, no cavita.**
+
+**Comparación con solución oficial:** el manuscrito da H_m≈47 m, f=0.0153,
+Pi≈2.82×10⁵ Pa, NPSH_disp=8.75 m, NPSH_req≈8.24 m, no cavita — **coincide
+casi exactamente** (NPSH_disp idéntico; Pi difiere <2%, coherente con la
+lectura gráfica manual de H_m).
+
+### Parte 3) Mínima presión en Ti para que la bomba no cavite
+
+**Concepto:** el NPSH disponible sólo depende de Q (no de Pi), y decrece con
+Q, mientras que el NPSH requerido de la bomba crece con Q; existe un caudal
+límite Q_lim donde ambas curvas se cruzan (Teórico §3.3.14): para Q>Q_lim la
+bomba cavita. Como una mayor Pi reduce el caudal de funcionamiento (Parte 1),
+la mínima presión que evita la cavitación es la que hace que el punto de
+funcionamiento caiga exactamente en Q=Q_lim.
+
+**Desarrollo (`ej4_parte3.m`):** resolviendo NPSH_disp(Q) = NPSH_req(Q) con
+`fzero`:
+```
+Q_lim = 0.1219 m3/s  (NPSH_disp = NPSH_req = 8.67 m)
+H de la bomba en Q_lim = 46.03 m
+```
+Despejando Pi de la ecuación de la instalación para (Q_lim, H_lim):
+
+**Pi_mín = 2.56×10⁵ Pa.**
+
+**Resultado final Parte 3: la mínima presión en el tanque elevado para que la
+bomba no cavite es Pi ≈ 2.56×10⁵ Pa (con Q_lim ≈ 0.122 m³/s).**
+
+**Comparación con solución oficial:** el manuscrito da Q_lim=0.1198 m³/s,
+lectura de la curva de bomba en ese punto (H>46 m, f=0.0151) y Pi_lim=2.54×10⁵
+Pa — **coincide muy bien** (diferencias <2%, coherentes con la lectura
+gráfica manual del cruce NPSH_disp/NPSH_req).
+
+### Resumen Ejercicio 4
+
+| Ítem | Resultado |
+|---|---|
+| Rango de caudales (Pi=1×10⁵..3×10⁵ Pa) | **Q ∈ [0.103, 0.176] m³/s** |
+| Rango de cargas | **H ∈ [40.1, 47.8] m** |
+| Para Q=0.11 m³/s: Pi requerida | **2.85×10⁵ Pa** |
+| Para Q=0.11 m³/s: H_m / f | **47.17 m / 0.0153** |
+| Para Q=0.11 m³/s: NPSH_disp / NPSH_req | **8.75 m / 8.19 m (no cavita)** |
+| Presión mínima en Ti para no cavitar | **2.56×10⁵ Pa** |
+
+Todos los resultados numéricos coinciden con la solución oficial manuscrita
+dentro del margen esperable de lectura gráfica manual.
+
+---
+
+*(Ejercicio 3 pendiente — se continuará en la próxima corrida.)*
 
 ESTADO: EN CURSO
