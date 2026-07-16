@@ -317,3 +317,105 @@ lectura gráfica de P(3,10) y en la tormenta de diseño.
 | Tr al que se inunda el camino (Q=50 m³/s) | **12 años** |
 | Tiempo inundado (evento Tr=25) | **36.6 min** |
 | Volumen mínimo del embalse (Tr=25) | **≈226 900 m³** |
+
+---
+
+## EJERCICIO 3 — Cuenca en Artigas, delimitación y caudal de diseño (método Racional)
+
+**Datos:** carta topográfica del SGM (curvas de nivel cada 10 m), punto de
+cierre en X=456.7 km, Y=6600.0 km. Cuenca trazada en la Parte 1: Área=8.94
+km², pendiente media=3.6 %, tiempo de concentración t_c=17 min, cubierta
+mayoritariamente por pastizal.
+
+**Teoría usada:** delimitación de cuencas por líneas de divorcio de aguas
+perpendiculares a las curvas de nivel (Teórico HHA §1.2.1), hipótesis de la
+tormenta de diseño del método Racional (§3.1.5 a), curvas IDF de Uruguay y
+coeficientes CD/CT/CA (§3.1.4), criterio de selección de método según t_c
+(§3.1.5): con t_c=17 min<20 min corresponde **únicamente el método
+Racional** (no el NRCS).
+
+### Parte 1) Delimitación de la cuenca
+
+**Concepto (Teórico §1.2.1).** La cuenca es el área de aporte tal que toda
+la lluvia caída dentro de ella escurre hacia el punto de cierre. Se delimita
+trazando la **línea de divorcio de aguas** (divisoria topográfica): una
+línea cerrada que pasa por los puntos más altos alrededor del punto de
+cierre y que es siempre **perpendicular a las curvas de nivel**, cruzándolas
+en los puntos donde éstas cambian de forma convexa (hacia aguas abajo, en
+las nacientes/lomas) a cóncava (en los valles/vaguadas), de modo que encierra
+exactamente la superficie que drena naturalmente hacia el punto de cierre
+marcado en la carta.
+
+**Herramienta:** delimitación gráfica manual sobre la carta topográfica
+provista con el examen (SGM, curvas de nivel cada 10 m). El repositorio no
+incluye la carta en blanco como archivo geográfico editable de forma
+independiente (sólo el PDF escaneado del examen), por lo que —siguiendo el
+mismo criterio ya usado en `resueltos/2026 Febrero` para una situación
+idéntica— se describe y verifica el trazado siguiendo las reglas de
+divisoria de aguas de §1.2.1, comparándolo con la delimitación de la
+solución oficial adjunta al examen.
+
+**Verificación:** la carta en blanco con el punto de cierre marcado se
+guardó en `scripts/ej3_carta_sin_delimitar.png`, y la delimitación de la
+solución oficial en `scripts/ej3_cuenca_solucion_oficial.png`. La divisoria
+oficial sigue las lomas altas al norte y al este del arroyo que pasa por el
+punto de cierre (entre las curvas de nivel de 190-200 m arriba y bajando
+hacia los ~150 m en el entorno del punto de cierre), consistente con las
+reglas de §1.2.1, y su área resultante es la que se usa como dato de entrada
+en las Partes 2 y 3: **Área=8.94 km²**.
+
+**Resultado final Parte 1: cuenca delimitada según divisoria de aguas
+topográfica (ver `scripts/ej3_cuenca_solucion_oficial.png`), Área=8.94 km².**
+
+### Parte 2) Tormenta de diseño del método Racional
+
+**Concepto (Teórico §3.1.5 a).** El método Racional supone que el caudal
+máximo se produce cuando toda la cuenca aporta simultáneamente, lo cual
+ocurre cuando la duración de la tormenta iguala el tiempo de concentración
+(momento en que la gota más alejada llega al punto de cierre) y bajo la
+hipótesis simplificadora de que la tormenta tiene intensidad constante en el
+tiempo y uniforme en toda el área de la cuenca.
+
+**Resultado final Parte 2: la tormenta de diseño del método Racional es una
+tormenta de intensidad constante, uniforme en toda el área de la cuenca, de
+duración igual al tiempo de concentración de la cuenca.**
+
+**Comparación con la solución oficial:** coincide textualmente con la
+respuesta del manuscrito ("Tormenta de intensidad constante, uniforme en el
+área de la cuenca, de duración igual a su tiempo de concentración").
+
+### Parte 3) Caudal máximo, Tr=5 años
+
+**Concepto.** Como t_c=17 min<20 min, el Teórico (§3.1.5) indica usar
+únicamente el método Racional: Q=C·i·A/360, con la intensidad i obtenida de
+las curvas IDF de Uruguay (P=CD·CT·CA·P(3,10), i=P/t_c) para duración d=t_c y
+Tr=5 años. El coeficiente C (pastizal, S=3.6 %) y el valor base P(3,10)=98 mm
+(isoyeta en el punto de cierre) se toman de la lectura gráfica de la
+solución oficial.
+
+**Script:** `scripts/ej3_racional.py`. Entradas: `Area=8.94 km2, tc=17 min,
+Tr=5, P310=98 mm (dato oficial), C_racional=0.36 (dato oficial)`.
+
+**Resultado:**
+```
+tc = 0.283 hs = 17 min  (< 20 min => solo metodo Racional)
+CT(Tr=5) = 0.860 ; CD(tc) = 0.349 ; CA(tc,A) = 0.969
+P = CT*CD*CA*P310 = 28.48 mm
+i = P/tc = 100.50 mm/h
+Q = C*i*A_ha/360 = 89.85 m3/s
+```
+
+**Resultado final Parte 3: Qmax de diseño (Tr=5 años, método Racional) =
+89.85 m³/s.**
+
+**Comparación con la solución oficial:** el manuscrito da CT=0.86, CD=0.35,
+CA=0.97, P=28.47 mm, i=100.50 mm/h, Q=89.85 m³/s — **coincide exactamente**
+en todos los valores.
+
+### Resumen Ejercicio 3
+
+| Ítem | Resultado |
+|---|---|
+| Delimitación de la cuenca | Ver `scripts/ej3_cuenca_solucion_oficial.png` (Área=**8.94 km²**) |
+| Tormenta de diseño (método Racional) | Intensidad constante, uniforme en el área, duración=t_c |
+| Qmax (Tr=5 años, método Racional) | **89.85 m³/s** |
