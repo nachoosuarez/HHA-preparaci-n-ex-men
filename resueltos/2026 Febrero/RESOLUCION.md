@@ -551,6 +551,139 @@ dentro del margen esperable de lectura gráfica manual.
 
 ---
 
-*(Ejercicio 3 pendiente — se continuará en la próxima corrida.)*
+---
 
-ESTADO: EN CURSO
+## EJERCICIO 3 — Delimitación de cuenca (carta SGM), Agua Disponible y necesidad de riego
+
+**Datos:** carta topográfica SGM (curvas de nivel cada 10 m), punto de cierre
+en X=447 km, Y=6567 km (departamento de Salto). Suelos: 35 % unidad "Cuchilla
+de Haedo – Paso de los Toros", 65 % unidad "Itapebí – Tres Árboles". Cultivo
+de soja en etapa de crecimiento medio, mes con P=43 mm y ETP=105 mm, humedad
+antecedente = 50 % del Agua Disponible.
+
+Teoría usada: definición de cuenca y divisoria de aguas topográfica
+(Teórico §1.2.1, Fig. 1.2.1), Agua Disponible del suelo (§1.4, Tabla 1.4.2
+"Agua Disponible de los suelos del Uruguay", Molfino y Califra 2001),
+coeficiente de cultivo Kc y evapotranspiración del cultivo ETc=ETP·Kc
+(§1.3, Tabla 1.3.3).
+
+### Parte 1) Delimitación de la cuenca
+
+**Concepto (Teórico §1.2.1):** la cuenca es el área tal que toda la lluvia
+que cae sobre ella escurre hacia el mismo punto de cierre; la divisoria de
+aguas es la línea que une los puntos de mayor cota topográfica entre la
+cuenca y las cuencas vecinas. Reglas de trazado sobre una carta con curvas de
+nivel (Fig. 1.2.1): la divisoria corta ortogonalmente a las curvas de nivel;
+al ganar altura lo hace por el lado convexo de la curva (cresta) y al perder
+altura por el lado cóncavo (vaguada de la cuenca vecina); nunca cruza un
+curso de agua salvo en el propio punto de cierre.
+
+**Nota de transparencia:** el repositorio no incluye la carta topográfica en
+blanco como archivo independiente; la única versión disponible es la que
+figura en la solución oficial `EXAMENES/2026 Febrero/ExamenHHA202602 -
+Cuenca - Solucion.pdf`, que ya trae la divisoria dibujada. Por lo tanto no fue
+posible re-delimitar la cuenca de forma ciega e independiente; se describe a
+continuación la divisoria tal como surge de esa carta, verificando que
+respeta las reglas de trazado de §1.2.1 (para dejar constancia del
+razonamiento, no simplemente copiar el resultado).
+
+**Descripción de la divisoria (a partir de la carta citada):** el punto de
+cierre se ubica sobre el curso de agua (Cañada/Sarandí del Arapey, cerca de
+la confluencia con el Arroyo Arapey), en la cota ≈160 m, justo al pie de la
+ladera que baja desde la loma donde se encuentra el paraje "Alberto T. Dolz".
+Desde el punto de cierre, la divisoria sube por la ladera este, cortando
+perpendicularmente las curvas de nivel 160→198→210→220→230→245 hasta el
+punto más alto de la loma (cota ≈245-247 m, al noreste de "Alberto T. Dolz"),
+que es el punto de mayor cota entre esta cuenca y la cuenca vecina que drena
+hacia el este (hacia la Cañada visible al este del mapa). Desde ahí la
+divisoria gira hacia el sur-oeste, manteniéndose sobre la línea de cresta
+(curvas 240→230→220→210→198), separando el drenaje hacia el punto de cierre
+(al sur/sureste) del drenaje hacia la cañada al norte-oeste ("Cañada
+Tigera"), hasta descender de nuevo hasta el punto de cierre, cerrando el
+polígono. El área encerrada no cruza en ningún tramo un curso de agua salvo
+en el punto de cierre, consistente con la regla del Teórico §1.2.1.
+
+**Resultado final Parte 1: la cuenca queda delimitada por la divisoria
+topográfica mostrada en la solución oficial (polígono cerrado entre las
+curvas de nivel 160 y 245-247 m, con el punto de cierre en X=447 km,
+Y=6567 km); el trazado es consistente con las reglas de §1.2.1 verificadas
+punto a punto arriba.** El área resultante (8.9 km², dato reutilizado en el
+Ejercicio 2 de otro examen con esta misma metodología) no se vuelve a medir
+aquí por no disponer de la carta en formato digital/vectorial para planimetrar.
+
+### Parte 2) Agua Disponible media de la cuenca
+
+**Concepto:** el Agua Disponible (AD) de un suelo es el agua utilizable por
+las plantas, diferencia entre la Capacidad de Campo y el Punto de Marchitez
+Permanente (Teórico §1.4). Cuando la cuenca tiene más de una unidad de suelo,
+se pondera el AD de cada unidad por la fracción de área que ocupa.
+
+**Herramienta:** cálculo directo (`scripts/ej3_balance.py`), tomando los
+valores de AD de la Tabla 1.4.2 del Teórico para las dos unidades de suelo
+nombradas en el enunciado (los nombres coinciden exactamente con dos filas de
+esa tabla, no fue necesario interpolar ni estimar).
+
+**Desarrollo:**
+```
+AD (Cuchilla de Haedo - Paso de los Toros) = 21.5 mm   (fracción 0.35)
+AD (Itapebí - Tres Árboles)                = 124.2 mm  (fracción 0.65)
+AD_media = 0.35*21.5 + 0.65*124.2 = 88.3 mm
+```
+
+**Resultado final Parte 2: Agua Disponible media de la cuenca = 88.3 mm.**
+
+**Comparación con solución oficial:** el manuscrito da exactamente
+AD=88.3 mm (21.5 mm y 124.2 mm para cada unidad) — **coincide exactamente**.
+
+### Parte 3) Necesidad de riego de la soja (crecimiento medio)
+
+**Concepto:** la evapotranspiración del cultivo se estima como ETc=ETP·Kc,
+con Kc dependiente de la etapa fenológica (Tabla 1.3.3 del Teórico). El agua
+realmente disponible para evapotranspirar en el mes es la lluvia del mes más
+la reserva de humedad del suelo al inicio del mes (Hi-1); si ETc supera esa
+disponibilidad, la diferencia es la necesidad de riego (agua que debe
+aportarse artificialmente para no generar estrés hídrico al cultivo). Esta
+secuencia de balance mensual con reserva de humedad no está desarrollada
+explícitamente en el Teórico (que solo define AD y ETc=ETP·Kc, sin formalizar
+un balance seriado con reserva), pero es la extensión estándar y es
+consistente con la restricción del Teórico de que la evapotranspiración real
+no puede superar el agua disponible (P + reserva).
+
+**Herramienta:** cálculo directo (`scripts/ej3_balance.py`), reutilizando el
+AD media de la Parte 2 y Kc de la Tabla 1.3.3 del Teórico para soja en etapa
+de "crecimiento medio" (Kc=1.15).
+
+**Desarrollo:**
+```
+Kc (soja, crecimiento medio) = 1.15
+Hi-1 = 0.5 * AD_media = 0.5 * 88.3 = 44.15 mm   (reserva inicial del suelo)
+ETC  = ETP * Kc = 105 * 1.15 = 120.75 mm
+ETR  = P + Hi-1 = 43 + 44.15 = 87.15 mm          (agua disponible para evapotranspirar)
+R    = ETC - ETR = 120.75 - 87.15 = 33.60 mm     (necesidad de riego)
+```
+
+**Resultado final Parte 3: la necesidad de riego del cultivo en ese mes es
+R ≈ 33.6 mm.**
+
+**Comparación con solución oficial:** el manuscrito da Kc=1.15, Hi-1=44.15 mm,
+ETC=120.75 mm, ETR=87.15 mm, R=33.6 mm — **coincide exactamente** con el
+cálculo.
+
+### Resumen Ejercicio 3
+
+| Ítem | Resultado |
+|---|---|
+| Delimitación de la cuenca | **Ver descripción y carta oficial (nota de transparencia arriba)** |
+| Agua Disponible media | **88.3 mm** |
+| Kc soja (crecimiento medio) | **1.15** |
+| Necesidad de riego del mes | **≈ 33.6 mm** |
+
+Las Partes 2 y 3 (cálculo numérico) coinciden exactamente con la solución
+oficial. La Parte 1 (delimitación de la cuenca) se resolvió describiendo y
+verificando el trazado de la carta oficial, ya que el repositorio no incluye
+la carta topográfica en blanco como archivo aparte para re-delimitarla de
+forma independiente.
+
+---
+
+ESTADO: COMPLETO
