@@ -16,6 +16,10 @@ que Q no cambia entre partes). Ambos requieren en la misma carpeta:
 `trap_geom.m`, `eq_yc.m`, `eq_yn.m`, `froude_trap.m`, `manning_trap.m`,
 `critico.m`, `rect.m`, `tirantes_yn_yc.m`, `Mom_trap.m`.
 
+Los scripts de Octave del Ejercicio 4 (`ej4_parte1a3.m` para las Partes 1-3,
+`ej4_parte4.m` para la Parte 4) son independientes entre sí y requieren en la
+misma carpeta `colebrook.m` (factor de fricción de Darcy-Weisbach).
+
 ---
 
 ## EJERCICIO 1 — Canal trapezoidal de dos tramos entre el Lago A y el Lago B
@@ -419,3 +423,181 @@ en todos los valores.
 | Delimitación de la cuenca | Ver `scripts/ej3_cuenca_solucion_oficial.png` (Área=**8.94 km²**) |
 | Tormenta de diseño (método Racional) | Intensidad constante, uniforme en el área, duración=t_c |
 | Qmax (Tr=5 años, método Racional) | **89.85 m³/s** |
+
+---
+
+## EJERCICIO 4 — Sistema de bombeo para riego agrícola
+
+**Datos:** embalse (succión) a z₁=−5 m, descarga libre a canal de riego a
+z₂=+18 m. Bomba a cota z_A=0 m. Succión: L₁=10 m, D₁=60 mm, ε₁=0.002 mm,
+k₁=5 (pérdidas localizadas). Impulsión: L₂=100 m, D₂=60 mm (mismo diámetro
+que la succión), ε₂=0.002 mm, k₂=4 con la válvula tipo esclusa totalmente
+abierta. Curvas de la bomba dadas en tabla (Q, H, η, NPSH_req).
+
+**Teoría usada:** curva característica de la bomba (Teórico HHA §3.3.8),
+curva de la instalación (pérdidas de Darcy-Weisbach con factor de fricción
+de Colebrook-White) y punto de funcionamiento como intersección de ambas
+(§3.3.10–§3.3.11), potencia consumida (§3.3.9), cavitación y NPSH disponible
+vs. requerido (§3.3.14).
+
+### Parte 1) Punto de funcionamiento (válvula abierta, k₂=4)
+
+**a) Ecuación de la instalación.** Como el sistema descarga **libremente**
+(no hay presión de salida ni un segundo depósito grande que "absorba" la
+velocidad de salida), la energía cinética a la salida de la impulsión no se
+recupera y debe incluirse como parte de la carga que exige la instalación
+(Teórico §3.3.10):
+
+```
+Hm(Q) = [z2 + V2²/(2g)] − [z1 − hs(Q)] + hi(Q)
+hs(Q) = (k1 + f1·L1/D1) · Vs²/(2g)      (perdida en la succion)
+hi(Q) = (k2 + f2·L2/D2) · Vi²/(2g)      (perdida en la impulsion)
+```
+Donde f₁, f₂ son los factores de fricción de Darcy-Weisbach (ecuación de
+Colebrook-White, `colebrook.m`). Como D₁=D₂=60 mm en todo el recorrido,
+Vs=Vi=V=Q/A en todo punto.
+
+**Herramienta:** se recorre una malla fina de caudales, se calcula H de la
+instalación (con `colebrook.m` para f en cada iteración) y H de la bomba
+(interpolando la tabla), y el punto de funcionamiento es donde ambas curvas
+se cruzan — igual esquema que `Scripts/01_SCRIPTS/bombas Pedro/Bomba_sola.m`,
+adaptado a este enunciado (succión y descarga libre en vez de dos embalses).
+
+**Script:** `scripts/ej4_parte1a3.m`.
+
+**b) Resultado:**
+```
+Q_PF = 4.33 L/s
+H_PF = 28.24 m
+f1 = f2 = 0.0185
+```
+
+**c) Gráfico:** `scripts/ej4_HQ_parte1.png` (curva de la instalación, curva
+de la bomba y punto de funcionamiento).
+
+**Resultado final Parte 1: Q = 4.33 L/s, H = 28.24 m, f = 0.0185.**
+
+**Comparación con la solución oficial:** el manuscrito da Q=4.3 L/s,
+H=28.2 m, f₁=f₂=0.0185 — **coincide exactamente**.
+
+### Parte 2) Potencia consumida
+
+**a) Ecuación:** P = ρ·g·Q·H/η, con η interpolado de la tabla en Q_PF.
+
+**b) Resultado:**
+```
+eta(Q_PF) = 88.5 %
+P = 1000*9.81*0.00433*28.24/0.885 = 1354 W = 1.35 kW
+```
+
+**Resultado final Parte 2: Potencia consumida ≈ 1.35 kW (η=88.5 %).**
+
+**Comparación con la solución oficial:** el manuscrito da P=1343 W, η=88.5 %
+— **coincide** dentro de un margen de redondeo en la interpolación gráfica
+de la curva de la bomba.
+
+### Parte 3) Verificación de cavitación (NPSH)
+
+**a) Ecuación de NPSH disponible** (Teórico §3.3.14), aplicando Bernoulli
+entre la superficie libre del embalse y la brida de succión de la bomba:
+
+```
+NPSH_disp = H_A − z_A + (Patm−Pvap)/gamma
+H_A = z1 − hs(Q)                    (cota piezometrica en la brida de succion)
+(Patm-Pvap)/gamma ~ 10.1 m           (agua a temperatura ambiente, valor usual del curso)
+```
+
+**b) Gráfico:** `scripts/ej4_NPSH_parte1.png` (NPSH disponible y requerido
+vs. Q, con la condición de operación marcada).
+
+**c) Resultado:**
+```
+NPSH_disp = 4.14 m
+NPSH_req  = 3.54 m  (interpolado de la tabla en Q_PF)
+```
+Como NPSH_disp > NPSH_req (margen=0.59 m) ⇒ **la bomba NO cavita**.
+
+**Resultado final Parte 3: NPSH disponible = 4.14 m > NPSH requerido =
+3.54 m ⇒ no cavita (margen 0.59 m).**
+
+**Comparación con la solución oficial:** el manuscrito da NPSH_req=3.5 m,
+NPSH_disp=4.15 m (no cavita) — **coincide** casi exactamente.
+
+### Parte 4) Restricción de velocidad de salida (V<1.4 m/s) regulando la válvula
+
+**Concepto.** Como D₂ es constante en toda la impulsión, la velocidad de
+salida es la misma velocidad V=Q/A que circula por toda la impulsión: para
+restringirla basta con reducir Q, lo cual se logra aumentando la pérdida
+localizada de la válvula (k_v), que se suma al resto de las pérdidas de la
+impulsión: k2(k_v) = k2_base + k_v, con k2_base=4−0.1=3.9 (el 0.1 es el k_v
+de la posición "abierta" dada en la tabla del enunciado).
+
+**a) Búsqueda de la posición de válvula.** Se recalcula el punto de
+funcionamiento para cada una de las 4 posiciones de la tabla del enunciado
+(abierta k_v=0.1; ¼ cerrada k_v=0.3; ½ cerrada k_v=2.1; ¾ cerrada k_v=27) y
+se verifica la velocidad de salida resultante:
+
+```
+Abierta      (kv=0.10): Q=4.33 L/s, V=1.53 m/s -> no cumple
+1/4 cerrada  (kv=0.30): Q=4.32 L/s, V=1.53 m/s -> no cumple
+1/2 cerrada  (kv=2.10): Q=4.26 L/s, V=1.51 m/s -> no cumple
+3/4 cerrada  (kv=27.0): Q=3.63 L/s, V=1.28 m/s -> CUMPLE
+```
+Cerrando ¼ o incluso ½ la válvula casi no cambia el punto de funcionamiento
+(la pérdida adicional es chica frente al resto de la instalación): recién al
+cerrar la válvula ¾ partes el caudal cae lo suficiente para cumplir la
+restricción. Como esta es la primera posición (de menor a mayor cierre) que
+cumple, es también la que permite el **mayor caudal posible** cumpliendo la
+restricción.
+
+**Resultado final Parte 4a: hay que cerrar la válvula ¾ partes (k_v=27).**
+
+**b) Nuevo punto de funcionamiento:**
+```
+Q4 = 3.63 L/s
+H4 = 29.05 m
+f1 = f2 = 0.0192
+V_salida = 1.28 m/s (< 1.4 m/s, cumple)
+```
+Gráfico (curva de la instalación original vs. la nueva, y ambos puntos de
+funcionamiento): `scripts/ej4_HQ_parte4.png`.
+
+**Resultado final Parte 4b: Q=3.63 L/s, H=29.05 m, f=0.0192.**
+
+**c) Riesgo de cavitación en la nueva condición:**
+```
+Condicion original (valvula abierta): NPSHdisp=4.14 m, NPSHreq=3.54 m, margen=0.59 m
+Condicion nueva (3/4 cerrada):        NPSHdisp=4.41 m, NPSHreq=3.09 m, margen=1.32 m
+```
+El NPSH disponible depende únicamente de las condiciones de la **succión**
+(no de la válvula, que está en la impulsión), pero sí depende del caudal: al
+bajar Q, la pérdida en la succión baja y NPSH_disp sube levemente; a la vez,
+NPSH_req baja notoriamente al bajar Q (según la tabla de la bomba). El
+margen de seguridad frente a la cavitación **aumenta** (de 0.59 m a 1.32 m).
+
+**Resultado final Parte 4c: hay MENOR riesgo de cavitación que en la
+condición original**, porque el NPSH disponible no empeora (solo depende de
+la succión) mientras que, al circular menos caudal, el NPSH requerido baja
+más de lo que baja el disponible.
+
+**Comparación con la solución oficial:** el manuscrito prueba las mismas 4
+posiciones y llega a la misma conclusión: con k_v=0.3 y k_v=2.1 la velocidad
+sigue en ≈1.5 m/s (no cumple), y recién con k_v=27 (¾ cerrada) baja a
+v=1.28 m/s con H=29.1 m — **coincide exactamente**. La conclusión de menor
+riesgo de cavitación también coincide (el manuscrito razona que NPSH_disp no
+cambia por la válvula y que Q₄<Q₁, mismo argumento usado aquí).
+
+### Resumen Ejercicio 4
+
+| Ítem | Resultado |
+|---|---|
+| Q / H de funcionamiento (válvula abierta) | **4.33 L/s / 28.24 m** (f=0.0185) |
+| Potencia consumida | **1.35 kW** (η=88.5 %) |
+| NPSH disponible / requerido | **4.14 m / 3.54 m** (no cavita, margen 0.59 m) |
+| Posición de válvula para V<1.4 m/s | **¾ cerrada** (k_v=27) |
+| Q / H con válvula regulada | **3.63 L/s / 29.05 m** (V_salida=1.28 m/s) |
+| Riesgo de cavitación con válvula regulada | **Menor** (margen NPSH: 0.59 m → 1.32 m) |
+
+---
+
+## ESTADO: COMPLETO
