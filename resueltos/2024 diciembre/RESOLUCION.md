@@ -25,12 +25,14 @@ tramos), n=0.012, S₀=0.01. Tramo 1 (x=0 a 300 m): talud m₁=1. Tramo 2 (x=300
 a 600 m): talud m₂=0.5 (reducción de talud, cambio de sección "suave" sin
 pérdidas de carga). Nivel del Lago A sobre el fondo del canal: h_LA=1.80 m.
 
-**Teoría usada:** perfiles de flujo entre dos lagos y canales de pendiente
-fuerte (Teórico HHA §2.5.4), clasificación M/S de canales según y_n vs. y_c
-(§2.5.2), energía específica y tirante crítico (§2.2), ecuación diferencial
-del flujo gradualmente variado dy/dx=(S₀−S_f)/(1−Fr²) (§2.3, implementada en
-`rect.m`/`trap_geom.m`), cantidad de movimiento y tirantes conjugados para el
-resalto hidráulico (§2.3.2–2.3.3, implementado en `Mom_trap.m`).
+**Teoría usada:** ecuación diferencial del flujo gradualmente variado
+dy/dx=(S₀−S_f)/(1−Fr²) y clasificación de canales M (y_n>y_c) / S (y_n<y_c)
+(Teórico HHA §2.5.1–§2.5.2), clasificación completa de perfiles M1-M3/S1-S3
+(§2.5.3, implementada en `rect.m`/`trap_geom.m`), perfiles de flujo entre dos
+lagos y control crítico en la entrada de un canal tipo S (§2.5.4–§2.5.5),
+energía específica y tirante crítico (§2.2), cantidad de movimiento y
+tirantes conjugados para el resalto hidráulico (§2.3.3 "Resalto hidráulico",
+implementado en `Mom_trap.m`).
 
 ### Parte 1) h_LB = −0.50 m (nivel del Lago B por debajo del fondo del canal)
 
@@ -179,3 +181,139 @@ numérica.
 | Tramo 1 | tipo S, y_c1=1.357 m, y_n1=0.911 m, curva S2 | idéntico a Parte 1 |
 | Tramo 2 | tipo S, y_c2=1.560 m, y_n2=1.086 m, curva S2 hasta el final | S2 hasta x≈586.7 m, luego **resalto** (1.09→2.13 m), luego S1 hasta 2.30 m |
 | Resalto hidráulico | **no hay** (descarga libre) | **sí**, en x≈286.7 m del tramo 2 (≈13 m antes del Lago B) |
+
+---
+
+## EJERCICIO 2 — Cuenca en Tacuarembó, obra de alcantarillado y embalse de retención
+
+**Datos:** cuenca de flujo concentrado, cierre en X=500.0 km, Y=6450.0 km
+(Tacuarembó). Área=7.5 km², ΔH=90 m (cauce principal), L=3800 m (long. del
+cauce principal), S=1.6 % (pendiente media de la cuenca). Uso del suelo:
+pastizales en condición hidrológica buena. Unidad de suelos: Cuchilla de
+Haedo–Paso de los Toros (CH-PT).
+
+**Teoría usada:** método Racional y método NRCS del Número de Curva con
+hidrograma unitario sintético triangular SCS, curvas IDF de Uruguay
+(Rodríguez Fontal/Genta) y sus coeficientes de corrección por duración (CD),
+recurrencia (CT) y área (CA), tiempo de concentración de Ramser-Kirpich, y el
+criterio de cuándo usar cada método según t_c (Teórico HHA §3.1, en
+particular §3.1.2 tiempo de concentración, §3.1.4 curvas IDF y coeficientes
+CD/CT/CA, §3.1.5 método Racional/NRCS, hidrograma unitario y regla de
+selección de método según t_c). Herramienta: réplica en Python de las
+fórmulas de `Scripts examen AA/EVENTOS EXTREMOS 2025.xlsx` (hojas "método
+racional" y "NRCS"), igual que en los exámenes de 2025 y 2026 ya resueltos en
+este repositorio. Los valores base de lectura gráfica (P(3,10) del mapa de
+isoyetas, C de la Tabla 3.1.4 y NC de la Fig. 3.1.20) se toman directamente
+de la solución oficial manuscrita adjunta al examen, que ya trae esas
+lecturas.
+
+### Parte 1) Caudal máximo de diseño de la obra de alcantarillado, Tr=5 años
+
+**Concepto.** Antes de elegir el método hay que calcular el tiempo de
+concentración t_c con la fórmula de Ramser-Kirpich (Teórico §3.1.2), usando
+la pendiente del cauce principal S=ΔH/L (no la pendiente media de la cuenca,
+que en cambio se usa para leer el coeficiente C de la Tabla 3.1.4 del método
+Racional). El Teórico (§3.1.5) indica: si t_c<20 min ⇒ sólo Racional; si
+t_c>1 h ⇒ sólo NRCS; y si **20 min<t_c<1 h ⇒ calcular ambos métodos y
+adoptar el mayor** de los dos caudales, por seguridad.
+
+**Script:** `scripts/ej2_parte1.py`. Entradas: `Area=7.5 km2, dH=90 m,
+L=3800 m, Tr=5, P310=90 mm (dato oficial), NC=80 (suelo D, dato oficial),
+C_racional=0.28 (dato oficial)`.
+
+**Desarrollo:**
+```
+S cauce principal = ΔH/L = 90/3.8/10 = 2.37 %
+tc = 0.4·L^0.77/S^0.385 = 0.802 hs = 48.1 min   (20 min < tc < 1 h)
+```
+Como 20 min<t_c<1 h ⇒ se calculan ambos métodos:
+
+- **Racional** (duración=t_c): P(t_c,5)=CD·CT(5)·CA·P(3,10)=42.49 mm ⇒
+  i=52.96 mm/h ⇒ **Q_racional = C·i·A/360 = 30.9 m³/s**.
+- **NRCS** (tormenta de diseño por bloque alterno, dt=t_c/7=6.9 min, 12
+  bloques; precipitación efectiva por Número de Curva NC=80 con piso de
+  infiltración 1.2 mm/h; convolución con el hidrograma unitario triangular
+  SCS, T_p=0.539 h, T_b=1.437 h, q_p=28.96 m³/s/cm): **Q_NRCS = 35.3 m³/s**.
+
+Como Q_NRCS>Q_racional ⇒ se adopta el mayor.
+
+**Resultado final Parte 1: Qmax de diseño (Tr=5 años) = 35.3 m³/s (método
+NRCS).**
+
+**Comparación con la solución oficial:** el manuscrito da tc=0.8 h=48 min
+(idéntico), Q_racional=30.84 m³/s (vs. 30.90 calculado) y Q_NRCS=35.22 m³/s
+(vs. 35.29 calculado) — **coincide** dentro de un margen de redondeo gráfico
+en la lectura de las curvas IDF.
+
+### Parte 2) Período de retorno de inundación del camino y tiempo inundado
+
+**2.1) Tr con que se inunda el camino (Q_inund=50 m³/s).**
+
+**Concepto.** El caudal de diseño (método NRCS) crece con Tr a través del
+coeficiente CT(Tr) de las curvas IDF. Se repite el cálculo de la Parte 1 para
+distintos Tr hasta encontrar aquél cuyo caudal pico iguala Q_inund=50 m³/s.
+
+**Script:** `scripts/ej2_parte2.py`, función `hidrograma_NRCS(Tr)`
+(generaliza `ej2_parte1.py` a Tr arbitrario) + búsqueda por bisección de la
+raíz de Qmax(Tr)−50=0.
+
+**Resultado:**
+```
+Tr=10 anios -> Qmax = 47.75 m3/s  (< 50, no inunda)
+Tr=12 anios -> Qmax = 51.14 m3/s  (> 50, inunda)
+Tr exacto (interpolado) = 11.29 anios
+```
+Como el período de retorno de diseño debe ser un valor entero (o el próximo
+de la tabla de recurrencias que efectivamente supera el caudal crítico), el
+camino queda fuera de servicio **a partir de Tr=12 años**.
+
+**Comparación con la solución oficial:** el manuscrito prueba exactamente los
+mismos dos valores, Tr=10 (Q=47.71 m³/s) y Tr=12 (Q=51.08 m³/s) — **coincide
+casi exactamente** — concluyendo también **Tr=12 años**.
+
+**2.2) Tiempo que permanece inundado el camino con un evento de Tr=25 años.**
+
+**Concepto.** Se calcula el hidrograma de crecida NRCS completo para Tr=25 y
+se mide gráficamente el intervalo de tiempo en que el caudal supera
+Q_inund=50 m³/s.
+
+**Resultado:** Qmax(Tr=25)=65.15 m³/s en t=1.35 h. El hidrograma supera los
+50 m³/s entre t=1.127 h y t=1.737 h ⇒ **tiempo inundado ≈ 0.610 h = 36.6
+min**.
+
+Gráfico (respuesta gráfica pedida por el enunciado): `scripts/ej2_hidrograma_Tr25.png`,
+mostrando el hidrograma, la recta Q_inund=50 m³/s y el área/intervalo
+sombreado donde el camino queda inundado.
+
+**Comparación con la solución oficial:** el manuscrito da Qmax=65 m³/s y
+tiempo inundado=36.6 min — **coincide exactamente**.
+
+### Parte 3) Volumen mínimo del embalse de retención
+
+**Concepto.** El embalse debe acumular *todo* el volumen de escorrentía del
+evento de diseño (Tr=25 años) para que, en el caso más exigente, el camino no
+llegue a inundarse; el volumen de escorrentía total es la lámina de
+precipitación efectiva acumulada (Σ Pe, calculada con el método del Número de
+Curva) multiplicada por el área de la cuenca.
+
+**Resultado:**
+```
+Sigma Pe (Tr=25) = 30.25 mm
+Vesc = Sigma Pe * Area = 30.25 mm * 7.5 km2 = 226 896 m3
+```
+
+**Resultado final: Volumen mínimo del embalse de retención ≈ 226 900 m³.**
+
+**Comparación con la solución oficial:** el manuscrito da Vesc=227 521 m³ —
+**coincide** dentro de un margen de 0.3 %, coherente con el redondeo en la
+lectura gráfica de P(3,10) y en la tormenta de diseño.
+
+### Resumen Ejercicio 2
+
+| Ítem | Resultado |
+|---|---|
+| tc (Ramser-Kirpich) | **48.1 min** |
+| Qmax diseño (Tr=5, método NRCS) | **35.3 m³/s** |
+| Tr al que se inunda el camino (Q=50 m³/s) | **12 años** |
+| Tiempo inundado (evento Tr=25) | **36.6 min** |
+| Volumen mínimo del embalse (Tr=25) | **≈226 900 m³** |
