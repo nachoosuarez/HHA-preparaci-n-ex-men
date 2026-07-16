@@ -598,4 +598,176 @@ Todos los resultados numéricos coinciden con la solución oficial manuscrita.
 
 ---
 
-ESTADO: EN CURSO (falta Ejercicio 4)
+---
+
+## EJERCICIO 4 — Sistema de bombeo en paralelo entre un lago y un tanque elevado
+
+**Datos:** lago (fuente, superficie libre a z_L=0 m) → bombas acopladas en
+**paralelo** a cota z_A=+3 m → tanque elevado a z_T=+20 m (descarga
+sumergida). Tubería de succión e impulsión, mismo diámetro D=200 mm y
+rugosidad absoluta ε=0.15 mm; L_succión=20 m, L_impulsión=480 m. Pérdidas
+localizadas: succión = válvula de pie (k_vp=2) + codo (k_codo=0.3) ⇒
+k_s=2.3; impulsión = codo (k_codo=0.3) + descarga sumergida (k_desc=1) ⇒
+k_i=1.3. Curvas de las dos bombas (Q, H, η, NPSH_req) dadas en el
+enunciado.
+
+Teoría usada: ecuación de la energía e instalación de bombeo (Teórico HHA
+§3.3.x), factor de fricción de Darcy-Weisbach y ecuación de Colebrook-White
+para flujo turbulento en tuberías, acople de bombas en **paralelo** (mismo
+H, caudales que se suman), potencia hidráulica y eficiencia, NPSH
+disponible/requerido y criterio de cavitación.
+
+**Herramienta:** se reutilizó `Bombas_paralelo.m`
+(`Scripts/01_SCRIPTS/bombas Pedro/`), ya usado en el examen 2025_FEBRERO 1
+de este repositorio para un caso de dos bombas en paralelo con NPSH,
+adaptando la geometría/curvas de este examen. Se usa este script (en vez de
+`Bomba_sola.m`) porque el enunciado especifica explícitamente que las dos
+bombas están "acopladas en paralelo", y el script calcula automáticamente
+la curva equivalente en paralelo (mismo H, Q_eq=Q₁+Q₂), la curva de
+instalación con Colebrook-White, el punto de funcionamiento, y el NPSH
+disponible/requerido de cada bomba.
+
+### Parte 1) Punto de funcionamiento del sistema
+
+**a) Ecuación de pérdida de carga de la instalación:**
+```
+H_inst(Q) = (z_T - z_L) + [p_T/γ - p_L/γ] + (k_s + f·L_s/D)·v²/(2g) + (k_i + f·L_i/D)·v²/(2g)
+```
+con z_T=20 m, z_L=0 m ambos a presión atmosférica (p_T=p_L=0, lago y
+tanque elevado abiertos), v=Q/A (A=πD²/4, D=200 mm, misma velocidad en
+succión e impulsión al ser el mismo diámetro), y f el factor de Darcy
+obtenido de Colebrook-White (ε/D=0.15mm/200mm=0.00075) en función de
+Re=vD/ν.
+
+**Script:** `scripts/ej4_parte1.m`.
+
+**Resultado:**
+```
+Q total  = 58.08 L/s
+H        = 29.09 m
+Q Bomba1 = 34.85 L/s
+Q Bomba2 = 23.23 L/s
+f (Darcy, succion=impulsion) en el PF = 0.0193
+```
+
+**b), c)** Ver gráfico `scripts/ej4_HQ_parte1.png`: curvas H-Q de Bomba 1 y
+Bomba 2, curva equivalente del acople en paralelo (Q₁+Q₂ a igual H), curva
+de instalación, y punto de funcionamiento marcado en su intersección.
+
+**Resultado final Parte 1: Q_total≈58.1 L/s (Q_B1≈34.8 L/s, Q_B2≈23.2 L/s),
+H≈29.1 m, f≈0.0193 (igual en succión e impulsión, mismo D y ε).**
+
+**Comparación con solución oficial:** el manuscrito da Q_tot=58.0 L/s,
+H=29.0 m, Q_B1=34.8 L/s, Q_B2=23.2 L/s, f_s=f_i=0.0193 — **coincide
+prácticamente exacto**.
+
+### Parte 2) Potencia consumida por el sistema de bombeo
+
+**a) Ecuación de potencia:** Pot=γ·Q·H/η para cada bomba (con su propio Q
+y η en el punto de funcionamiento, ambas con la misma H por estar en
+paralelo), y Pot_total=Pot_B1+Pot_B2.
+
+**Script:** `scripts/ej4_parte2.m`.
+
+**Resultado:**
+```
+Eficiencia Bomba 1 en Q1_pf = 76.12 %
+Eficiencia Bomba 2 en Q2_pf = 83.56 %
+
+Potencia Bomba 1 = 13.06 kW
+Potencia Bomba 2 = 7.93 kW
+Potencia Total   = 21.00 kW
+```
+
+**Resultado final Parte 2: Potencia total ≈ 21.0 kW (13.1 kW la Bomba 1,
+7.9 kW la Bomba 2).**
+
+**Comparación con solución oficial:** el manuscrito da Pot=21.05 kW
+(13.15 kW + 7.9 kW), η_B1=75.2%, η_B2=83.4% — **coincide muy estrechamente**
+(diferencias <1.5%, atribuibles a la interpolación numérica de las curvas
+discretas dadas, `pchip`, frente a la lectura gráfica manual del
+manuscrito).
+
+### Parte 3) Verificación de cavitación (condición de diseño: 20 °C)
+
+**a) Ecuación de NPSH disponible:**
+```
+NPSHd = patm/γ - pv/γ + (H_A - z_A)
+```
+donde H_A es la carga (piezométrica + cinética) en la brida de succión de
+las bombas, calculada como H_A=z_L+p_L/γ-Δh_succión (energía en el lago
+menos las pérdidas de la tubería de succión hasta las bombas), y z_A es la
+cota de las bombas. patm/γ=10.33 m (presión atmosférica estándar a nivel
+del mar) y pv/γ(20°C)=0.24 m (valor estándar de tabla de presión de vapor
+del agua).
+
+**Script:** `scripts/ej4_parte3.m`.
+
+**Resultado:**
+```
+HA (carga de succion en el PF) = -0.737 m
+NPSHd = 10.33 - 0.24 + (-3.737) = 6.35 m
+
+NPSHr Bomba 1 en Q1_pf = 4.42 m  => NO CAVITA
+NPSHr Bomba 2 en Q2_pf = 3.53 m  => NO CAVITA
+```
+
+**Resultado final Parte 3: NPSHd≈6.35 m > NPSHr de ambas bombas en el punto
+de funcionamiento (4.42 m y 3.53 m) ⇒ ninguna de las dos bombas cavita en
+la condición de diseño (20°C).**
+
+**Comparación con solución oficial:** el manuscrito da NPSHd=6.37 m,
+NPSHr_B1=4.47 m (no cavita), NPSHr_B2=3.57 m (no cavita) — **coincide
+estrechamente** con el cálculo.
+
+### Parte 4) Riesgo de cavitación: invierno (10°C) vs. verano (30°C)
+
+**Concepto.** Como se desprecian los cambios de viscosidad y densidad con
+la temperatura, el punto de funcionamiento (Q, H, H_A) **no cambia** con la
+temperatura del agua; lo único que cambia en la fórmula de NPSHd es la
+presión de vapor p_v/γ, que **aumenta** con la temperatura. Por lo tanto,
+a mayor temperatura, menor NPSHd, y **mayor riesgo de cavitación** — la
+condición más riesgosa es la de **mayor temperatura** (verano, 30°C), no la
+de menor NPSH_requerido.
+
+**Script:** `scripts/ej4_parte4.m`.
+
+**Resultado:**
+```
+NPSHd (10 C, invierno) = 6.46 m
+NPSHd (20 C, diseño)   = 6.35 m
+NPSHd (30 C, verano)   = 6.16 m   <- menor NPSHd => condicion mas riesgosa
+
+Verificacion en 30 C:
+NPSHr Bomba 1 = 4.42 m  => NO CAVITA
+NPSHr Bomba 2 = 3.53 m  => NO CAVITA
+```
+
+**Resultado final Parte 4: la condición más riesgosa para la cavitación es
+el verano (agua a 30°C), porque la mayor presión de vapor reduce el NPSHd
+(6.16 m). Aun así, en esa condición ninguna de las dos bombas cavita
+(NPSHd=6.16 m > NPSHr_B1=4.42 m y NPSHr_B2=3.53 m).**
+
+**Comparación con solución oficial:** el manuscrito indica que a mayor
+temperatura el NPSHd es menor (compara 10°C→10.2 m, 20°C→10.1 m, 30°C→9.9 m
+de la parte "patm/γ-pv/γ" antes de sumar HA-zA) y concluye que el verano
+(30°C) es la condición más riesgosa, con NPSHd=6.17 m final y ninguna bomba
+cavita (NPSHr_B1=4.47 m, NPSHr_B2=3.57 m) — **coincide exactamente** con el
+cálculo y la conclusión.
+
+### Resumen Ejercicio 4
+
+| Ítem | Resultado |
+|---|---|
+| Q total (PF) | **58.1 L/s** (Q_B1=34.8, Q_B2=23.2 L/s) |
+| H (PF) | **29.1 m** |
+| f (Darcy) | **0.0193** |
+| Potencia total | **21.0 kW** (13.1+7.9 kW) |
+| NPSHd (20°C, diseño) | **6.35 m** — ninguna bomba cavita |
+| Condición más riesgosa | **Verano (30°C)**, NPSHd=6.16 m — ninguna bomba cavita |
+
+Todos los resultados numéricos coinciden con la solución oficial manuscrita.
+
+---
+
+ESTADO: COMPLETO
