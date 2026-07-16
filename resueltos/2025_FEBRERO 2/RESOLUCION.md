@@ -216,4 +216,213 @@ gráfico manual).
 | Dmax (tubería sin alterar y₁) | **0.122 m** |
 | Con A=0.35 m | **Remanso: y₁=1.47 m; y₃=0.55 m; resalto a 10.7 m de la tubería (y: 0.61→1.17 m); luego M2 original hasta la caída** |
 
-ESTADO: EN CURSO (falta Ejercicio 2, Ejercicio 3 y Ejercicio 4)
+---
+
+## EJERCICIO 2 — Alcantarilla en cuenca de Río Negro: caudal de diseño, hidrograma y desarrollo forestal
+
+**Datos (Tabla del enunciado):** Área = 8.0 km², ΔH = 90 m, L = 5500 m (cauce
+principal), Grupo Hidrológico B, S = 3.2 % (pendiente media de la cuenca).
+Punto de cierre en X=382.5 km, Y=6408.5 km (departamento de Río Negro). Uso
+de suelo actual: pastizales, condición hidrológica regular. Flujo
+concentrado.
+
+Teoría usada: metodologías de caudal máximo en cuencas no aforadas — Método
+Racional y Método NRCS y su rango de aplicabilidad según t_c (Teórico HHA
+§3.1.5, en particular la recomendación de no usar el método Racional para
+t_c>1 hora), curvas IDF de Uruguay y corrección por área/duración/período de
+retorno (§3.1.4), tiempo de concentración de Ramser-Kirpich (§3.1.2), método
+del Número de Curva NRCS (§3.1.5 b, Fig. 3.1.20), hidrograma unitario
+sintético triangular SCS (§3.1.5 c).
+
+**Aprendizaje previo de la herramienta:** se reutilizó el enfoque ya validado
+en el Ejercicio 2 del examen "2026 Febrero" (ya resuelto en este repositorio),
+que replica en Python (`ej2_parte1.py` etc.) las fórmulas de
+`Scripts/01_SCRIPTS/Scripts examen AA/EVENTOS EXTREMOS 2025.xlsx` (hojas
+`método racional` y `NRCS - Gande`): IDF de Uruguay (CT/CD/CA), tormenta de
+diseño por bloque alterno, precipitación efectiva por Número de Curva con
+piso de infiltración, e hidrograma unitario triangular sintético SCS
+convolucionado. Se usa Python en vez de la planilla Excel/LibreOffice
+porque este entorno no dispone de una hoja de cálculo con recálculo
+interactivo (confirmado nuevamente en esta corrida).
+
+**P₃,₁₀,ₚ (Río Negro, X=382.5 km, Y=6408.5 km):** se leyó directamente de la
+Figura 3.1.10 del Teórico (isoyetas de lluvias extremas de Uruguay, líneas
+cada 2 mm, extraída a `scripts/ej2_isoyeta_P310.png`): el punto de cierre
+cae casi exactamente sobre la isoyeta gruesa marcada "90" que cruza el
+departamento de Río Negro en esa zona ⇒ **P₃,₁₀,ₚ ≈ 90 mm**.
+
+**NC (pastizales, condición hidrológica regular, grupo B):** de la Figura
+3.1.20 del Teórico (fila "Pradera o pastizal", columna "Regular", grupo B)
+⇒ **NC = 69**.
+
+### Parte 1) Caudal máximo de diseño (Tr = 10 años) y justificación del método
+
+**Tiempo de concentración (Ramser-Kirpich, Teórico §3.1.2):**
+```
+tc = 0.4·L^0.77 / S^0.385      L en km, S en % (pendiente DEL CAUCE PRINCIPAL)
+```
+**Concepto clave (igual que en el examen 2026 Febrero):** la tabla del
+enunciado da dos pendientes con propósitos distintos: S=3.2 % es la
+*pendiente media de la cuenca* (usada en el método Racional para elegir el
+coeficiente de escorrentía C, que aquí termina no siendo necesario — ver
+más abajo), mientras que Kirpich necesita la *pendiente del cauce
+principal*: S_cauce = ΔH(m)/L(km)/10 = 90/5.5/10 = **1.636 %**. Con
+L=5.5 km:
+
+**tc = 1.2297 hs ≈ 1 h 14 min (73.8 min).**
+
+**Justificación del método:** el Teórico HHA (§3.1.5, "Método Racional")
+indica textualmente que el método Racional se recomienda para cuencas con
+t_c≤20 min y se **desaconseja para t_c>1 hora** (entre 20 min y 1 h se
+recomienda calcular ambos métodos y adoptar el mayor). Como t_c=1.23 h > 1 h,
+**el método Racional no corresponde en este caso: se utiliza únicamente el
+método NRCS** (tormenta de diseño de intensidad variable + Número de Curva +
+hidrograma unitario sintético SCS), que no tiene esa limitación de tamaño de
+cuenca.
+
+**Herramienta:** `scripts/ej2_parte1.py` (réplica en Python de las hojas
+`método racional`/`NRCS - Gande` de la planilla de eventos extremos, ya
+usada y validada en el examen 2026 Febrero): (a) fórmulas IDF de Uruguay
+P(d,Tr,p)=P₃,₁₀,ₚ·CT(Tr)·CD(d)·CA(d,Ac); (b) tormenta de diseño por bloque
+alterno con Δt=tc/7 en 12 bloques; (c) precipitación efectiva por Número de
+Curva con corrección de piso de infiltración (grupo B ⇒ 1.2 mm/h); (d)
+hidrograma unitario triangular sintético SCS (Tp=tr/2+0.6tc, Tb=2.667Tp,
+qp=2.08·A/Tp), convolucionado con los 12 pulsos de lluvia efectiva.
+
+**Resultados (`ej2_parte1.py`):**
+```
+tc = 1.2297 hs = 73.78 min ; S_cauce = 1.636 %
+CT(Tr=10) = 1.0000
+
+Tormenta de diseño (bloque alterno, Δt=tc/7=10.54 min, 12 bloques):
+  pico central de 24.24 mm, total 76.17 mm en 126.5 min.
+S = 114.12 mm ; Ia = 22.82 mm (NC=69)
+Precipitación efectiva total (corregida) = 16.99 mm
+Hidrograma unitario triangular: tr=0.1757 hs, Tp=0.8256 hs, Tb=2.2020 hs,
+  qp=20.15 m3/s/cm
+
+Qmax NRCS = 25.60 m3/s (en t=2.24 hs desde el inicio de la tormenta)
+```
+
+**Resultado final Parte 1: caudal de diseño Q₁₀ = 25.6 m³/s (único método
+válido: NRCS, ya que t_c>1 h descarta el método Racional).**
+
+**Comparación con solución oficial:** el manuscrito da P(3,10,P)=90 mm,
+tc=1.23 hs=1h14min, NC=69, Qmax=25.5 m³/s (método NRCS, sin calcular el
+Racional) — **coincide prácticamente exacto** con el cálculo (25.60 m³/s).
+
+### Parte 2) Volumen de escorrentía y gráfico del hidrograma de diseño
+
+**Concepto.** El volumen de escorrentía del evento es la integral en el
+tiempo del hidrograma de caudales (equivalente a la precipitación efectiva
+total convertida a volumen: 1 mm sobre 1 km² = 1000 m³). El caudal máximo y
+el tiempo al pico ya quedaron determinados en la Parte 1 a partir del mismo
+hidrograma.
+
+**Herramienta:** `scripts/ej2_parte2.py`, que reutiliza los arreglos
+guardados por `ej2_parte1.py` (`part1.npz`): calcula el volumen como
+Pe_total(mm)·1000·Área(km²), lo verifica integrando numéricamente Q(t) con
+la regla del trapecio (ambos caminos deben coincidir, ya que son la misma
+cantidad física expresada de dos formas), y grafica el hidrograma completo.
+
+**Resultado:**
+```
+Volumen de escorrentia = 135 932 m3
+Qmax = 25.60 m3/s ; tp = 2.24 hs desde el inicio de la tormenta
+
+Verificacion cruzada: volumen integrado de Q(t) = 135 875 m3
+(diferencia -0.04% respecto al volumen por precipitacion efectiva)
+```
+
+Gráfico: `scripts/ej2_hidrograma_parte2.png`.
+
+**Resultado final Parte 2: volumen de escorrentía ≈ 135 900 m³, con
+Qmax=25.6 m³/s en tp≈2.24 h desde el inicio de la tormenta de diseño.**
+
+**Comparación con solución oficial:** el manuscrito da Vesc=135 968 m³,
+Tp=2.20 hs (tiempo al pico del hidrograma total, coincide con el tp=2.24 hs
+calculado) y Qp=25.5 m³/s — **coincide casi exactamente** (diferencia
+<0.1% en volumen). Nota: el manuscrito también anota "Tb=0.825 hs", que en
+realidad corresponde al Tp del hidrograma unitario triangular (0.8256 hs
+calculado), no al tiempo base del hidrograma total; es un rótulo cruzado en
+los apuntes manuscritos, no una discrepancia real.
+
+### Parte 3) Desarrollo Forestal (25% del área): recálculo de Qmax, volumen e hidrograma
+
+**Concepto.** El desarrollo Forestal cubre el 25% del área de la cuenca y
+produce dos efectos sobre el modelo NRCS: (i) reduce el tiempo de
+concentración de **toda la cuenca** en un 10% (dato del enunciado, no sólo
+del área forestada), por lo que tc_nuevo=0.90·tc; (ii) cambia el Número de
+Curva de la superficie forestada a NC=82 (dato del enunciado), por lo que el
+NC representativo de toda la cuenca pasa a ser un **promedio ponderado por
+área** entre el uso actual (75% del área, NC=69) y el forestal (25% del
+área, NC=82): NC_nuevo=0.75·69+0.25·82=72.25. Como tc_nuevo sigue siendo
+mayor a 1 hora, el método Racional sigue sin corresponder y se mantiene el
+método NRCS.
+
+**Herramienta:** `scripts/ej2_parte3.py`, que repite exactamente el mismo
+procedimiento de `ej2_parte1.py`/`ej2_parte2.py` (tormenta de diseño +
+precipitación efectiva + hidrograma unitario SCS) con tc_nuevo y NC_nuevo,
+y compara contra los resultados de la condición actual (Partes 1-2,
+cargados desde `part1.npz`).
+
+**Resultados (`ej2_parte3.py`):**
+```
+tc_nuevo = 0.90 * 1.2297 = 1.1067 hs = 66.40 min
+NC_nuevo = 0.75*69 + 0.25*82 = 72.25
+
+Tormenta de diseño total = 72.68 mm (duracion 113.8 min)
+S = 97.56 mm ; Ia = 19.51 mm
+Precipitacion efectiva total = 18.75 mm
+
+Volumen de escorrentia = 150 022 m3
+Hidrograma unitario: Tp=0.7431 hs, Tb=1.9818 hs, qp=22.39 m3/s/cm
+
+Qmax = 31.34 m3/s en t=2.00 hs
+```
+
+i) **Qmax (Tr=10, con desarrollo Forestal) = 31.3 m³/s** (vs. 25.6 m³/s
+actual).
+
+ii) **Volumen de escorrentía = 150 022 m³**, con **tp = 2.00 hs** desde el
+inicio de la tormenta (vs. 135 932 m³ y tp=2.24 hs en la condición actual).
+Gráfico comparativo: `scripts/ej2_hidrograma_parte3.png`.
+
+iii) **Comparación y discusión:** el desarrollo Forestal **aumenta el
+caudal pico** (25.6→31.3 m³/s, +22%) y lo **adelanta en el tiempo**
+(tp: 2.24→2.00 h). El mecanismo es doble: por un lado, al reducirse tc un
+10%, la cuenca concentra su respuesta más rápido (hidrograma unitario más
+angosto y de mayor qp); por otro, el NC ponderado sube de 69 a 72.25 (el
+uso forestal es, contraintuitivamente en este modelo, algo más
+impermeable/escurridor que el pastizal en condición regular con este NC de
+82 dado), lo que también incrementa levemente el volumen de escorrentía
+(135 932→150 022 m³, +10%). Ambos efectos —mayor volumen concentrado en
+menos tiempo— se combinan para producir un pico sensiblemente mayor y más
+temprano.
+
+**Resultado final Parte 3: Q_NRCS(forestal)=31.3 m³/s, Vesc=150 022 m³,
+tp=2.00 hs; el caudal pico aumenta ≈22% y se adelanta ≈14 min respecto a la
+condición actual.**
+
+**Comparación con solución oficial:** el manuscrito da tc_nuevo=1.1 hs
+(66.4 min), NC=72.25, Q_NRCS=31.24 m³/s, Vesc=150.022 m³ (¡coincide con el
+número exacto!), Tp=1.98 hs, y concluye "Q pico mayor en menor tiempo pico;
+Vesc aumenta a tasa del descenso de tc, Q aumenta a mayor tasa" — **coincide
+exactamente** con el cálculo y la discusión.
+
+### Resumen Ejercicio 2
+
+| Ítem | Condición actual | Con desarrollo Forestal (25%) |
+|---|---|---|
+| tc | **73.8 min** | **66.4 min** |
+| NC | **69** | **72.25** |
+| Método válido (tc>1h) | NRCS (Racional descartado) | NRCS (Racional descartado) |
+| Qmax (Tr=10) | **25.6 m³/s** | **31.3 m³/s** |
+| Volumen de escorrentía | **135 932 m³** | **150 022 m³** |
+| Tiempo al pico | **2.24 hs** | **2.00 hs** |
+
+Todos los resultados numéricos coinciden con la solución oficial manuscrita.
+
+---
+
+ESTADO: EN CURSO (falta Ejercicio 3 y Ejercicio 4)
