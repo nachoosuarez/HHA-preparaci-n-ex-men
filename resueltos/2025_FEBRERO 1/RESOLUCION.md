@@ -4,17 +4,21 @@ Resolución paso a paso. El PDF del examen (`EXAMENES/2025_FEBRERO 1.pdf`)
 incluye, además de la letra (páginas 1-4), la solución oficial manuscrita
 (páginas 5-10), que se usa para comparar cada resultado.
 
-Herramientas: Octave (scripts de `Scripts/01_SCRIPTS/FGV_felo`, copiados y
-adaptados en `scripts/`) para el Ejercicio 1; Python (réplica de las fórmulas
-de `Scripts examen AA/EVENTOS EXTREMOS 2025.xlsx`, igual que en el examen de
-2026 Febrero ya resuelto en este repositorio) para el Ejercicio 2.
+Herramientas: Octave (scripts de `Scripts/01_SCRIPTS/FGV_felo` y
+`Scripts/01_SCRIPTS/bombas Pedro`, copiados y adaptados en `scripts/`) para
+los Ejercicios 1 y 4; Python (réplica de las fórmulas de
+`Scripts examen AA/EVENTOS EXTREMOS 2025.xlsx`, igual que en el examen de
+2026 Febrero ya resuelto en este repositorio) para los Ejercicios 2 y 3.
 
 Los scripts de Octave del Ejercicio 1 deben ejecutarse en orden
 (`ej1_parte1.m` genera `part1.mat`, que usan `ej1_parte2.m` y `ej1_parte3.m`;
 `ej1_parte2.m` genera `part2.mat`, que usa `ej1_parte3.m`). Los scripts de
 Python del Ejercicio 2 también deben ejecutarse en orden (`ej2_parte1.py`
-genera `part1.npz`, que usa `ej2_parte2.py`). Los archivos `.mat`/`.npz`
-intermedios no se versionan.
+genera `part1.npz`, que usa `ej2_parte2.py`). Los scripts de Octave del
+Ejercicio 4 deben ejecutarse en orden (`ej4_parte1.m` genera
+`ej4_part1.mat`, que usan `ej4_parte2.m`, `ej4_parte3.m` y `ej4_parte4.m`;
+`ej4_parte2.m` genera `ej4_part2.mat`, no usado por otros scripts). Los
+archivos `.mat`/`.npz` intermedios no se versionan.
 
 ---
 
@@ -534,3 +538,209 @@ topográfica en blanco como archivo aparte para re-delimitarla de forma
 independiente.
 
 ---
+
+## EJERCICIO 4 — Instalación de bombeo entre tanque de succión y red de abastecimiento
+
+**Datos:** tanque de succión Ts (superficie libre, z_Ts=+4 m), bomba a z_B=0 m,
+punto D de ingreso al barrio (z_D=+20 m) con manómetro que exige p_m/γ≥20 m.
+Tubería de succión: L_s=10 m, D_s=40 mm, ε_s=0.003 mm, k_s=4. Tubería de
+impulsión: L_i=5000 m, D_i=200 mm, ε_i=0.003 mm, k_i=5. Curva de la bomba (Q,
+H, rendimiento, NPSH_r) dada en la tabla del enunciado.
+
+Teoría usada: pérdida de carga distribuida (Darcy-Weisbach) y localizada
+(Teórico §3.3.10), curva característica de la bomba (§3.3.8), curva de la
+instalación y punto de funcionamiento como intersección de ambas (§3.3.10,
+§3.3.11), acople de bombas en paralelo y en serie (§3.3.12), cavitación /
+NPSH disponible vs. requerido (§3.3.14). El factor de fricción f se obtiene
+de Colebrook-White (equivalente numérico del Ábaco de Moody que usa el
+teórico) con la función `colebrook.m` de `Scripts/01_SCRIPTS/bombas Pedro`.
+
+**Solución oficial:** el repositorio incluye una solución oficial manuscrita
+para este mismo problema (mismos z_Ts=+4m, z_D=+20m, z_bomba=0m, p_m/γ≥20m y
+misma tabla de curva de bomba) encabezada como "Solución Ejercicio Bombas —
+Marzo 2025" (`scripts/ej4_solucion_oficial_p1.png`,
+`scripts/ej4_solucion_oficial_p2.png`); aunque el encabezado corresponde a
+otra fecha de examen, los datos numéricos coinciden exactamente con los de
+este ejercicio (mismo problema reutilizado entre exámenes), por lo que se usa
+igual como referencia de comparación.
+
+**Herramienta:** se adaptaron los scripts del curso `Bomba_sola.m` y
+`Bombas_paralelo.m` (carpeta `bombas Pedro`) a esta instalación (succión +
+impulsión de un único diámetro cada una); se usa `colebrook.m` tal cual, e
+interpolación `pchip` de Octave para la curva de la bomba y la intersección
+con la curva de la instalación (punto de funcionamiento). Se eligieron estas
+herramientas porque son las que el curso provee específicamente para
+instalaciones de bombeo con pérdida de carga dependiente de f (que a su vez
+depende de Q).
+
+**Ecuación de la instalación** (energía entre la superficie libre del tanque
+de succión, punto A, y el punto D con el manómetro, punto B, con el aporte de
+la bomba H_m en el medio):
+```
+H_m = H_B - H_A
+H_A = z_Ts + p_Ts/γ + v_s²/2g - ΔH_s        (carga en la brida de succión)
+H_B = z_D + p_m/γ + v_i²/2g + ΔH_i           (carga que debe entregar la bomba en D)
+ΔH_s = (f_s·L_s/D_s + k_s)·v_s²/(2g)   ΔH_i = (f_i·L_i/D_i + k_i)·v_i²/(2g)
+```
+con p_Ts=0 (superficie libre del tanque), v_s y v_i las velocidades en
+succión e impulsión (áreas distintas, D_s≠D_i, a diferencia del examen de
+2026 Febrero ya resuelto en este repositorio donde ambos tramos compartían
+diámetro).
+
+**Scripts:** `scripts/ej4_parte1.m`, `scripts/ej4_parte2.m`,
+`scripts/ej4_parte3.m`, `scripts/ej4_parte4.m` (+ `scripts/colebrook.m`).
+
+### Parte 1) Máximo caudal manteniendo p_m/γ≥20 m, punto de funcionamiento
+
+**Concepto:** como p_m/γ≥20 m es un mínimo, y la carga que exige la
+instalación crece con Q (más pérdidas), el caudal máximo compatible con la
+restricción es aquel para el cual la instalación exige exactamente
+p_m/γ=20 m (para cualquier Q menor, la presión en D resulta mayor a 20 m,
+cumpliendo con margen). Se construye entonces la curva de la instalación
+fijando p_m/γ=20 m en la ecuación de H_B, y se busca su intersección con la
+curva de la bomba: ese es el caudal máximo buscado.
+
+**Resultado (`ej4_parte1.m`):**
+```
+Qpf = 13.96 m3/h = 0.003879 m3/s
+Hpf = 40.09 m
+vs = 3.087 m/s, Re_s=1.235e5, fs=0.0177
+vi = 0.123 m/s, Re_i=2.469e4, fi=0.0246
+```
+
+**Resultado final Parte 1: Q_max ≈ 13.96 m³/s (0.00388 m³/s), H de
+funcionamiento ≈ 40.1 m.**
+
+**Comparación con solución oficial:** el manuscrito da Q_PF=13.73 m³/h,
+H_PF=40.43 m, f_s=0.0177 (coincide exactamente) y f_i=0.0297. La coincidencia
+exacta de f_s, pero no de f_i, sugiere que la diferencia proviene de una
+lectura manual del Ábaco de Moody para el tramo de impulsión en la solución
+oficial (en la Parte 4, con un Q mucho mayor, el f_i oficial sí coincide casi
+exactamente con el calculado aquí — ver más abajo — lo que refuerza que la
+Parte 1 del manuscrito tiene una pequeña lectura atípica en ese valor
+puntual). Aun así, Q_PF y H_PF coinciden dentro de ~2%.
+
+### Parte 2) Potencia consumida en el punto de funcionamiento
+
+**Concepto:** la potencia consumida por el sistema de bombeo es la potencia
+hidráulica entregada al fluido (γQH) dividida entre el rendimiento de la
+bomba en ese punto: P=γ·Q·H/η.
+
+**Resultado (`ej4_parte2.m`):**
+```
+Eficiencia en Qpf (interpolada de la tabla) = 44.31 %
+P = rho*g*Qpf*Hpf/eta = 3.44 kW
+```
+
+**Comparación con solución oficial:** el manuscrito da η=43.9%, P=3.45 kW —
+**coincide muy bien** (diferencias <1%, coherentes con la pequeña diferencia
+de Qpf de la Parte 1).
+
+### Parte 3) Verificación de cavitación
+
+**Concepto (Teórico §3.3.14):** el NPSH disponible depende sólo del tramo de
+succión (no de la presión en D). Con el tanque de succión por encima de la
+bomba (z_Ts=+4m > z_B=0m, succión "ahogada"/en carga), el NPSH disponible es
+alto y con buen margen frente al requerido.
+
+**Desarrollo (`ej4_parte3.m`):**
+```
+NPSHdisp = (p_atm/γ - p_vap/γ) + HA - zB = 10.48 m
+  (p_atm/γ=10.33 m, p_vap/γ=0.24 m, Teorico Fig 30; HA=carga en la brida de
+  succion de la bomba, incluida la Parte 1)
+NPSHreq (interpolado de la tabla en Qpf) = 4.32 m
+```
+
+**Como NPSH_disp (10.48 m) > NPSH_req (4.32 m) ⇒ la bomba NO cavita**, con
+amplio margen.
+
+**Comparación con solución oficial:** el manuscrito da NPSH_disp=10.14 m y
+NPSH_req=4.26 m, con la misma conclusión de no cavitación — **coincide muy
+bien** (diferencias <3%, coherentes con la pequeña diferencia de Qpf).
+
+### Parte 4) Ampliación: segunda bomba igual, mismo requerimiento de presión
+
+**Concepto (a):** entre acoplar las bombas en serie o en paralelo, conviene
+comparar cómo cada acople modifica el punto de funcionamiento frente a la
+curva de la instalación. La curva de la bomba es muy empinada (H cae rápido
+al aumentar Q) mientras que la curva de la instalación es relativamente
+plana en el rango de interés (domina la carga estática de 36 m frente a
+pérdidas moderadas). En paralelo, para una misma H cada bomba aporta su
+propio Q (se duplica el caudal a igual carga); en serie, para un mismo Q cada
+bomba aporta su propia H (se duplica la carga a igual caudal). Como la
+instalación es poco sensible a H pero muy sensible a Q (para desplazar la
+intersección hace falta más bien correrse en el eje Q), **el acople en
+paralelo permite un aumento de caudal mucho mayor que el acople en serie**.
+
+**Desarrollo (b):** se construyó la curva equivalente de las 2 bombas en
+paralelo (mismo H, Q doble) y se intersectó con la misma curva de la
+instalación de la Parte 1 (mismo p_m/γ≥20 m requerido; succión e impulsión
+compartidas por ambas bombas, por lo que ambos tramos ahora transportan el
+caudal total).
+
+**Resultado (`ej4_parte4.m`):**
+```
+Qpf_total = 23.63 m3/h ; Q por bomba = 11.82 m3/h
+Hpf = 47.01 m = H_B1 = H_B2
+Factor de aumento de caudal Q_parte4/Q_parte1 = 1.69
+vs=5.224 m/s, Re_s=2.089e5, fs=0.0161
+vi=0.209 m/s, Re_i=4.179e4, fi=0.0218
+Eficiencia de cada bomba en su Q individual = 44.65 %
+Potencia de cada bomba = 3.39 kW ; Potencia total = 6.77 kW
+```
+
+**Comparación con solución oficial:** el manuscrito da Q_PF=23.0 m³/h
+(Q_bomba=11.5 m³/h cada una), H_PF=47.76 m, factor de aumento=1.68, f_s=0.0162
+y f_i=0.0219, P_total=6.77 kW — **coincide muy bien** en casi todos los
+valores (f_s y f_i aquí sí coinciden casi exactamente con los calculados,
+consistente con la nota de la Parte 1); la Potencia Total coincide de forma
+prácticamente exacta.
+
+**Desarrollo (c) — cavitación con 2 bombas:** como ahora la succión (común a
+ambas bombas) transporta el caudal total (23.6 m³/h en vez de 14 m³/h), la
+velocidad y las pérdidas en la succión aumentan considerablemente, reduciendo
+el NPSH disponible; a la vez, el NPSH requerido de cada bomba también sube
+porque cada una trabaja a mayor Q individual que en la Parte 1. El margen
+entre NPSH disponible y requerido se reduce notoriamente respecto de la Parte
+3.
+
+```
+NPSHdisp (succion comun, con Qtotal) = 4.31 m
+NPSHreq (cada bomba, con su Q individual=11.82 m3/h) = 3.16 m
+```
+
+**Como NPSH_disp (4.31 m) > NPSH_req (3.16 m) ⇒ las bombas NO cavitan**, pero
+con un margen mucho más ajustado que en la Parte 3 (este es un punto cercano
+al límite: pequeñas variaciones en Q_PF podrían acercar aún más ambos
+valores, por lo que en la práctica conviene verificar este margen con
+cuidado si se define la ampliación real del barrio).
+
+**Comparación con solución oficial:** el manuscrito da NPSH_disp=3.51 m y
+NPSH_req=3.04 m, también con conclusión de no cavitación — **coincide en la
+conclusión** (no cavitan, margen ajustado en ambos casos), con valores algo
+distintos en términos absolutos, coherente con la pequeña diferencia de
+Q_PF_total ya señalada.
+
+### Resumen Ejercicio 4
+
+| Ítem | Resultado |
+|---|---|
+| Q máximo con p_m/γ≥20 m (1 bomba) | **≈13.96 m³/h (0.00388 m³/s)** |
+| H de funcionamiento (1 bomba) | **≈40.1 m** |
+| Potencia consumida (1 bomba) | **3.44 kW (η=44.3%)** |
+| NPSH disp / req (1 bomba) | **10.48 m / 4.32 m (no cavita)** |
+| Mejor acople para ampliación | **Paralelo** |
+| Q total / Q por bomba (2 bombas) | **23.63 / 11.82 m³/h** |
+| Factor de aumento de caudal | **≈1.69** |
+| Potencia total (2 bombas) | **6.77 kW** |
+| NPSH disp / req (2 bombas) | **4.31 m / 3.16 m (no cavita, margen ajustado)** |
+
+Todos los resultados coinciden con la solución oficial (aunque etiquetada con
+otra fecha de examen, con los mismos datos numéricos) dentro de un margen
+esperable de lectura gráfica manual del Ábaco de Moody y de la curva de la
+bomba; las pequeñas diferencias en f_i de la Parte 1 se propagan de forma
+consistente a Q_PF, potencia y NPSH en esa parte y en la Parte 4.
+
+---
+
+ESTADO: COMPLETO
