@@ -382,3 +382,155 @@ Todos los resultados numéricos coinciden con la solución oficial manuscrita,
 con diferencias menores esperables por redondeo y lectura gráfica manual.
 
 ---
+
+## EJERCICIO 3 — Delimitación de cuenca (carta SGM) e hidrograma unitario triangular del NRCS
+
+**Datos:** carta topográfica SGM (curvas de nivel cada 10 m), punto de cierre
+en X=498.8 km, Y=6283.6 km (departamento de Florida). Área de la cuenca
+A=3.21 km², tiempo de concentración tc=0.76 hs. Hietograma de precipitación
+efectiva en bloques de D=5 min: T(min)=0-5/5-10/10-15, P_ef(mm)=0/2.3/0.
+
+Teoría usada: definición de cuenca y divisoria de aguas topográfica (Teórico
+§1.2.1), definición de hidrograma unitario (§3.1.5 c, primer párrafo),
+hidrograma unitario sintético triangular del NRCS/SCS (§3.1.5 c).
+
+### Parte 1) Delimitación de la cuenca
+
+**Concepto (Teórico §1.2.1):** la cuenca es el área tal que toda la lluvia
+que cae sobre ella escurre hacia el mismo punto de cierre; la divisoria de
+aguas es la línea que une los puntos de mayor cota topográfica entre la
+cuenca y las cuencas vecinas. Reglas de trazado sobre una carta con curvas de
+nivel: la divisoria corta ortogonalmente a las curvas de nivel; al ganar
+altura lo hace por el lado convexo de la curva (cresta) y al perder altura
+por el lado cóncavo (vaguada de la cuenca vecina); nunca cruza un curso de
+agua salvo en el propio punto de cierre.
+
+**Nota de transparencia:** el repositorio no incluye la carta topográfica en
+blanco como archivo independiente; la única versión disponible es la que
+figura en la solución oficial manuscrita (página 7 del PDF del examen,
+guardada aquí como `scripts/ej3_cuenca_solucion.png`), que ya trae la
+divisoria dibujada. Por lo tanto no fue posible re-delimitar la cuenca de
+forma ciega e independiente; se describe a continuación la divisoria tal
+como surge de esa carta, verificando que respeta las reglas de trazado de
+§1.2.1 (para dejar constancia del razonamiento, no simplemente copiar el
+resultado). Este es el mismo criterio de transparencia usado para la Parte 1
+del Ejercicio 3 del examen de 2026 Febrero, ya resuelto en este repositorio.
+
+**Descripción de la divisoria (a partir de la carta citada):** el punto de
+cierre se ubica sobre el Arroyo Timote, en la zona de cota ≈110-120 m, justo
+al pie de una pequeña laguna y de la loma donde se encuentra el paraje
+"M. Canapá". Desde el punto de cierre la divisoria sube por la ladera oeste,
+cortando perpendicularmente las curvas de nivel 120→130→140, bordea por el
+oeste el paraje "M. Canapá" y el punto acotado ×131, y continúa hacia el
+sur-oeste manteniéndose sobre la línea de cresta (curva 140→130) hasta un
+punto alto cerca de ×143 (al sur), que es el punto de mayor cota entre esta
+cuenca y la cuenca vecina que drena hacia el sur. Desde ahí la divisoria gira
+hacia el este y luego al norte, volviendo a subir por cota (130→120) bordeando
+por el este el nacimiento de la cuenca (cerca de ×101, al norte del Arroyo
+Timote), para finalmente descender de nuevo por la ladera este hasta el punto
+de cierre sobre el Arroyo Timote, cerrando el polígono. El área encerrada no
+cruza en ningún tramo un curso de agua salvo en el punto de cierre,
+consistente con la regla del Teórico §1.2.1.
+
+**Resultado final Parte 1: la cuenca queda delimitada por la divisoria
+topográfica mostrada en la solución oficial (polígono cerrado en torno al
+paraje "M. Canapá", entre las curvas de nivel 110 y 143 m, con el punto de
+cierre sobre el Arroyo Timote en X=498.8 km, Y=6283.6 km); el trazado es
+consistente con las reglas de §1.2.1 verificadas arriba.** El área resultante
+(A=3.21 km², dato reutilizado en la Parte 2 de este mismo ejercicio) no se
+vuelve a medir aquí por no disponer de la carta en formato digital/vectorial
+para planimetrar.
+
+### Parte 2.1) Definición de hidrograma unitario
+
+**Concepto (Teórico §3.1.5 c):** el hidrograma unitario de una cuenca es el
+**hidrograma de escorrentía directa** resultante de una **unidad de
+precipitación efectiva** (1 mm, o 1 cm según la convención), distribuida
+**uniformemente sobre el área de la cuenca**, a una **tasa constante**, a lo
+largo de una **duración determinada** D.
+
+### Parte 2.2) Hidrograma unitario triangular del NRCS
+
+**Concepto:** el NRCS propone una forma sintética triangular para el
+hidrograma unitario, caracterizada por 3 parámetros: el tiempo al pico Tp, el
+tiempo base Tb, y el caudal pico Qp, todos función del área de la cuenca, el
+tiempo de concentración tc y la duración D del pulso de lluvia efectiva
+(Teórico §3.1.5 c):
+
+```
+Tp = D/2 + 0.6·tc
+Tb = (8/3)·Tp          (= 2.667·Tp)
+Qp = 0.208·A/Tp         (m3/s por mm de lluvia efectiva; A en km2, Tp en hs)
+```
+
+**Herramienta:** cálculo directo (`scripts/ej3_hidrograma_unitario.py`), sin
+necesidad de `fsolve` ni iteración: es una fórmula cerrada una vez conocidos
+A, tc y D. Se usa Python en vez de reescribir a mano el mismo cálculo que ya
+está automatizado en el Ejercicio 2 (`ej2_parte1.py`) para el hidrograma
+unitario de esa cuenca, reutilizando la misma lógica de convolución.
+
+**Resultado (`ej3_hidrograma_unitario.py`), con A=3.21 km², tc=0.76 hs,
+D=5 min=0.0833 hs:**
+```
+Tp = 0.4977 hs = 29.86 min  (~ 0.5 hs)
+Tb = 1.3271 hs = 79.63 min  (~ 1.33 hs)
+Qp = 1.3416 m3/s por mm de Pe  (~ 1.34 m3/s.mm)
+```
+
+**Comparación con solución oficial:** el manuscrito da Tp=0.5 hs, Tb=1.33 hs,
+Qp=1.34 m³/s.mm — **coincide exactamente** (las diferencias de la 3ª cifra
+decimal en Tp y Tb son solo redondeo de presentación).
+
+### Parte 2.3) Hidrograma del evento en el punto de cierre
+
+**Concepto:** el hidrograma de escorrentía directa del evento se obtiene
+convolucionando el hidrograma unitario (Parte 2.2, la respuesta a 1 mm de
+lluvia efectiva durante D=5 min) con la serie de precipitación efectiva del
+hietograma dado. Como sólo el bloque central (T=5-10 min, Pe=2.3 mm) tiene
+lluvia efectiva no nula (los bloques 0-5 y 10-15 min tienen Pe=0), la
+convolución se reduce a un único término: el hidrograma unitario escalado por
+2.3 mm y desplazado a partir de t=5 min (inicio del bloque con lluvia).
+
+**Desarrollo:** con Qp=1.3416 m³/s.mm,
+```
+Qmax = Qp · Pe_bloque = 1.3416 · 2.3 = 3.086 m³/s
+```
+en t = 5 min (inicio del bloque) + Tp = 29.86 min ⇒ **t ≈ 35 min** desde el
+inicio de la tormenta.
+
+**Perfil completo del hidrograma** (triangular, escalado): sube desde Q=0 en
+t=5 min hasta Qmax≈3.08 m³/s en t=35 min, y desciende hasta Q≈0 en
+t = 5 min + Tb ≈ 85 min. Puntos cada 5 min (script):
+```
+t=10min: Q=0.52   t=20min: Q=1.55   t=30min: Q=2.58   t=35min: Q=3.08 (pico)
+t=40min: Q=2.77    t=50min: Q=2.15   t=60min: Q=1.53   t=80min: Q=0.29
+```
+
+**Resultado final Parte 2.3: Qmax ≈ 3.08-3.09 m³/s en t≈35 min desde el
+inicio de la tormenta; el hidrograma es un triángulo escalado (por Pe=2.3 mm)
+del hidrograma unitario de la Parte 2.2, ya que sólo un bloque del hietograma
+tiene lluvia efectiva no nula.**
+
+**Comparación con solución oficial:** el manuscrito da
+Qmax=Qp·Pef=1.34·2.3=**3.09 m³/s**, con el hidrograma dibujado subiendo desde
+t=5 min hasta el pico en t=35 min y bajando hasta t≈80 min — **coincide
+prácticamente exacto** (3.086-3.09 m³/s según redondeo intermedio de Tp; el
+"t≈80 min" del dibujo manual es una simplificación gráfica del valor exacto
+t≈85 min que da Tb=79.63 min sin redondear).
+
+### Resumen Ejercicio 3
+
+| Ítem | Resultado |
+|---|---|
+| Delimitación de la cuenca | **Ver descripción y carta oficial (nota de transparencia arriba)** |
+| Definición de hidrograma unitario | **Hidrograma de escorrentía directa por 1 unidad de lluvia efectiva uniforme en área y tasa, en una duración D** |
+| Tp / Tb / Qp (hidrograma unitario triangular NRCS) | **0.50 hs / 1.33 hs / 1.34 m³/s·mm** |
+| Qmax del hidrograma del evento | **≈3.08-3.09 m³/s en t≈35 min** |
+
+Las Partes 2.2 y 2.3 (cálculo numérico) coinciden con la solución oficial. La
+Parte 1 (delimitación de la cuenca) se resolvió describiendo y verificando el
+trazado de la carta oficial, ya que el repositorio no incluye la carta
+topográfica en blanco como archivo aparte para re-delimitarla de forma
+independiente.
+
+---
