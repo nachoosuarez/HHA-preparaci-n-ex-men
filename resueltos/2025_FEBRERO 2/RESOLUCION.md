@@ -425,4 +425,177 @@ Todos los resultados numéricos coinciden con la solución oficial manuscrita.
 
 ---
 
-ESTADO: EN CURSO (falta Ejercicio 3 y Ejercicio 4)
+---
+
+## EJERCICIO 3 — Delimitación de cuenca (carta SGM), desnivel, tiempo de concentración y tiempo de encharcamiento (Horton)
+
+**Datos:** carta topográfica SGM (curvas de nivel cada 10 m), punto de
+cierre en el departamento de Durazno, X=477.0 km, Y=6332.0 km. Longitud del
+cauce principal L=4530 m (dato del enunciado). Hietograma observado en un
+pluviógrafo dentro de la cuenca: P(mm)=2.2, 6.0, 11.1, 4.6, 3.3, 1.8 en
+bloques de 10 min (0-60 min). Parámetros de Horton: f₀=44 mm/h, f_c=11 mm/h,
+K=2.55 h⁻¹.
+
+Teoría usada: delimitación de cuencas y divisoria de aguas sobre carta
+topográfica (Teórico HHA §3.1.1), tiempo de concentración de Ramser-Kirpich
+(§3.1.2), infiltración según el modelo de Horton y tiempo de encharcamiento
+—"ponding time"— (§3.1.3), balance de precipitación en infiltración +
+escorrentía.
+
+### Parte 1.1) Delimitación de la cuenca
+
+**Concepto.** La divisoria de aguas (línea de cumbre) se traza sobre la
+carta siguiendo la dirección perpendicular a las curvas de nivel, uniendo
+los puntos altos que separan el área que efectivamente drena hacia el punto
+de cierre del resto del terreno. Se identificaron dos lomas que flanquean
+el valle que desemboca en el punto de cierre (al oeste, cota ≈120-125 m
+cerca de la cota acotada "125.0"; al sur, una loma que alcanza ≈145 m entre
+las curvas 140 y 150) y se trazó la divisoria conectándolas, cerrando el
+polígono en el punto de cierre.
+
+**Herramienta:** delimitación gráfica manual sobre la carta (no requiere
+script; es un procedimiento de lectura/dibujo de mapa según el método del
+Teórico §3.1.1). La carta sin delimitar se guarda en
+`scripts/ej3_carta_sin_delimitar.png`; la cuenca delimitada (verificada
+contra la solución oficial del examen, que trae el mismo mapa con la
+divisoria ya trazada en la página 8 del PDF) se guarda en
+`scripts/ej3_cuenca_delimitada.png`.
+
+**Resultado: la cuenca delimitada es un polígono alargado norte-sur,
+apoyado sobre el arroyo que llega al punto de cierre (X=477.0, Y=6332.0),
+limitado al oeste y al sur por la línea de cumbre que pasa cerca de las
+cotas acotadas "119.0" y "125.0".**
+
+### Parte 1.2) Desnivel máximo del cauce principal y tiempo de concentración
+
+**Concepto.** El desnivel máximo del cauce principal es la diferencia entre
+la cota más alta del divisorio en el nacimiento del cauce principal (dentro
+de la cuenca delimitada en 1.1) y la cota del punto de cierre. Con ese
+desnivel, la longitud L=4530 m dada, y asumiendo flujo concentrado (dato
+del enunciado), se calcula el tiempo de concentración con la fórmula de
+Ramser-Kirpich (igual que en el Ejercicio 2 y en los exámenes ya resueltos
+en este repositorio).
+
+**Herramienta:** `scripts/ej3_parte1_tc.py`. Cotas leídas sobre la carta
+delimitada (interpolando entre curvas de nivel cada 10 m): cota máxima
+≈145 m (loma sur del divisorio), cota mínima (punto de cierre) ≈105 m
+(entre las curvas 100 y 110, más cerca de la de 110).
+
+**Resultado:**
+```
+Hmax = 145.0 m ; Hmin = 105.0 m ; dH = 40.0 m
+L = 4530 m = 4.530 km
+S (cauce principal) = dH/L/10 = 0.8830 %
+
+tc = 0.4*L_km^0.77/S^0.385 = 1.3430 hs = 80.58 min
+```
+
+**Resultado final Parte 1.2: desnivel máximo del cauce principal ΔH=40 m
+(cota máxima 145 m, cota mínima 105 m), tiempo de concentración tc≈1.34 hs
+(80.6 min).**
+
+**Comparación con solución oficial:** el manuscrito da Hmax=145 m,
+Hmin=105 m, ΔH=40 m, tc=1.34 hs — **coincide exactamente**.
+
+### Parte 2.1) Tiempo de encharcamiento (infiltración de Horton)
+
+**Concepto.** El tiempo de encharcamiento ("ponding time") es el instante a
+partir del cual la intensidad de la lluvia supera la capacidad de
+infiltración del suelo: antes de ese instante toda la lluvia infiltra (no
+hay exceso de precipitación); a partir de él, el suelo se satura
+superficialmente y comienza a generarse escorrentía. Con datos de lluvia en
+bloques (no continuos), el criterio práctico es comparar, al inicio de cada
+bloque, la intensidad media del bloque i (mm/h) con la capacidad de Horton
+f(t)=f_c+(f₀-f_c)·e^(-Kt) evaluada en el tiempo transcurrido desde el
+inicio del evento (aproximación válida aquí porque el encharcamiento se da
+apenas comienza el segundo bloque, sin que haya "tiempo perdido" apreciable
+que requiera corregir el origen de tiempos de la curva de Horton).
+
+**Herramienta:** `scripts/ej3_parte2_horton.py`: evalúa f(t) de Horton al
+inicio de cada bloque de 10 min y la compara con la intensidad de ese
+bloque.
+
+**Resultado:**
+```
+Bloque  t(min)   P(mm)   i(mm/h)   f(t_ini)(mm/h)
+  1        0     2.2     13.20      44.00
+  2       10     6.0     36.00      32.57   <- i > f: comienza a encharcar
+  3       20    11.1     66.60      25.10
+  4       30     4.6     27.60      20.22
+  5       40     3.3     19.80      17.03
+  6       50     1.8     10.80      14.94
+
+Tiempo de encharcamiento t_ench = 10 min (i=36.00 mm/h > f=32.57 mm/h)
+```
+
+**Resultado final Parte 2.1: el tiempo de encharcamiento es t_ench=10 min
+(justo al comenzar el segundo bloque de lluvia), con i=36.0 mm/h >
+f(10min)=32.6 mm/h.**
+
+**Comparación con solución oficial:** el manuscrito da t_ench=10 min
+(i=36 mm/h, f=32.6 mm/h) — **coincide exactamente**.
+
+### Parte 2.2) Esquema tasa de infiltración/intensidad vs. tiempo; volúmenes de infiltración acumulada y de escurrimiento
+
+**Concepto.** Antes del encharcamiento (bloque 1, 0-10 min) toda la lluvia
+infiltra (la intensidad nunca supera f₀). A partir de t_ench=10 min, en
+cada bloque se compara la intensidad de lluvia con f(t): mientras i(t)>f(t)
+el suelo sigue encharcado y la infiltración real ocurre a la tasa de
+capacidad f(t) (se integra la curva de Horton); en cuanto i(t) cae por
+debajo de f(t) (lo que ocurre en el bloque 6, ya que f(t) nunca baja de
+f_c=11 mm/h y la intensidad del bloque 6 es 10.8 mm/h < f_c), el suelo deja
+de estar limitado por capacidad y vuelve a infiltrar el 100% de la lluvia
+de ese bloque. El volumen de escorrentía es, por balance, la precipitación
+total menos el volumen infiltrado.
+
+**Herramienta:** `scripts/ej3_parte2_horton.py` (continuación): identifica
+los bloques capacidad-limitados (2 a 5, entre t=10 y t=50 min) e integra
+analíticamente f(t) en ese tramo; suma los bloques 1 y 6 completos (lluvia-
+limitados); grafica intensidad de lluvia (barras) y capacidad de Horton
+(curva) vs. tiempo.
+
+**Resultado:**
+```
+Bloques capacidad-limitados (encharcados): [2, 3, 4, 5]
+Bloques limitados por la lluvia (infiltran completo): [1, 6]
+
+V_infiltrado bloque 1 (0-10min)                    = 2.200 mm
+V_infiltrado capacidad (10-50min, integral Horton) = 14.248 mm
+V_infiltrado bloque 6 (50-60min)                   = 1.800 mm
+
+VOLUMEN DE INFILTRACION ACUMULADA Vinf = 18.248 mm
+Precipitación total del evento          = 29.000 mm
+VOLUMEN DE ESCORRENTIA Vesc = 29.0 - 18.25 = 10.752 mm
+```
+
+Gráfico: `scripts/ej3_horton_infiltracion.png` (intensidad de lluvia en
+barras, capacidad de infiltración de Horton en curva roja, tiempo de
+encharcamiento marcado en verde; el área de las barras por debajo de la
+curva roja es el volumen infiltrado, y el área de las barras por encima de
+la curva roja —sólo entre t=10 y 30 min, donde las barras superan la curva—
+es el volumen de escorrentía).
+
+**Resultado final Parte 2.2: volumen de infiltración acumulada
+Vinf≈18.25 mm; volumen de escorrentía Vesc≈10.75 mm (29.0 mm de lluvia
+total − 18.25 mm infiltrados).**
+
+**Comparación con solución oficial:** el manuscrito da Vinf=18,25 mm y
+Vesc=10,75 mm (29 mm−18,25 mm) — **coincide exactamente**.
+
+### Resumen Ejercicio 3
+
+| Ítem | Resultado |
+|---|---|
+| Cuenca delimitada | Polígono N-S apoyado en el arroyo del punto de cierre (X=477.0, Y=6332.0) |
+| Cota máxima / mínima del cauce | **145 m / 105 m** |
+| Desnivel máximo ΔH | **40 m** |
+| Tiempo de concentración tc | **1.34 hs (80.6 min)** |
+| Tiempo de encharcamiento | **10 min** (i=36.0 mm/h > f=32.6 mm/h) |
+| Volumen de infiltración acumulada | **18.25 mm** |
+| Volumen de escorrentía | **10.75 mm** |
+
+Todos los resultados numéricos coinciden con la solución oficial manuscrita.
+
+---
+
+ESTADO: EN CURSO (falta Ejercicio 4)
