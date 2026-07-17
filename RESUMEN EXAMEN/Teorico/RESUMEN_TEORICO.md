@@ -25,7 +25,7 @@ Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
 | A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 6 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
-| B1. Delimitación de cuencas y divisoria de aguas | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| B1. Delimitación de cuencas y divisoria de aguas | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
 | B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
 | B4. Método Racional (y criterio de selección según tc) | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
@@ -377,7 +377,9 @@ y se **invierte numéricamente** CT(Tr) (no tiene forma cerrada para Tr; se
 resuelve por bisección/`fsolve`/Buscar Objetivo) para obtener el período de
 retorno de ese evento. Es el mismo procedimiento usado para encontrar el Tr
 que hace que un caudal de diseño alcance un valor crítico (ver B4), aplicado
-directamente sobre la lámina/intensidad en vez de sobre el caudal.
+directamente sobre la lámina/intensidad en vez de sobre el caudal (ejemplo
+completo: 2024 feb, Ej.3 parte 2 — intensidad máxima de un evento registrado
+en pluviógrafo, P=26mm en d=10min, P(3,10)=79mm ⇒ Tr≈30 años).
 
 Cita: Teórico HHA §3.1.4; Formulómetro "Eventos extremos — Relaciones
 Intensidad Duración Frecuencia".

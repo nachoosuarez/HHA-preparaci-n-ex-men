@@ -354,4 +354,93 @@ por redondeo en la discretización.
 
 ---
 
-## ESTADO: EN CURSO (Ejercicios 1 y 2 completos; faltan Ejercicios 3 y 4)
+## EJERCICIO 3 — Cuenca de la cañada del Arbelo: delimitación y período de retorno de un evento observado (25 puntos)
+
+**Datos:** punto de cierre en X=494.4 km, Y=6171.8 km (departamento de
+Canelones, cerca de "Puntas de Cañada Grande"), carta topográfica SGM con
+curvas de nivel cada 5 m (`EXAMENES/2024 febrero.pdf`, página 3). Evento
+extremo registrado en un pluviógrafo representativo de la cuenca,
+hietograma en 6 bloques de 10 min: P(mm)=3, 6, 12, 26, 9, 4.
+
+Teoría usada: delimitación de cuencas y divisoria de aguas sobre carta
+topográfica (Teórico HHA §3.1.1, Resumen Teórico §B1), curvas IDF de
+Uruguay e inversión de CT(Tr) para hallar el período de retorno de un
+evento observado (§3.1.4, §B3).
+
+### Parte 1) Delimitación de la cuenca
+
+**Concepto.** La divisoria de aguas (línea de cumbre) separa, en cada
+punto, la dirección en la que escurre la lluvia hacia uno u otro lado;
+se traza perpendicular a las curvas de nivel, por las lomas y espolones
+que rodean el valle del cauce, cerrando un polígono que pasa por el
+punto de cierre. En la carta se ubicó el punto de cierre (marcador
+naranja impreso en el PDF, sobre la "cañada del Arbelo") y se identificó
+que el cauce baja de sur a norte: las curvas de nivel decrecen de
+≈55-65 m al sur (zona de nacientes, cerca de "Puntas de Cañada Grande")
+a ≈34-37 m al norte del punto de cierre. La cuenca a delimitar es
+entonces el área **al sur** del punto de cierre, acotada al oeste por la
+loma que la separa del valle de la **cañada del Juncal** (cauce vecino,
+visible al suroeste) y al este por la loma que la separa del tributario
+que baja hacia "Puntas de Cañada Grande".
+
+**Herramienta:** delimitación gráfica manual sobre la carta (no requiere
+script de cálculo; procedimiento de lectura de mapa del Teórico §3.1.1).
+Se extrajo la página 3 del PDF del examen a imagen
+(`scripts/ej3_carta_sin_delimitar.png`, con PyMuPDF) y se trazó la
+divisoria sobre ella con `scripts/ej3_parte1_delimitacion.py`, siguiendo
+los espolones/lomas visibles entre las curvas de nivel.
+
+**Resultado:** `scripts/ej3_cuenca_delimitada.png`. La cuenca delimitada
+es un polígono alargado sur-norte de aproximadamente 1.5-2 km de largo,
+apoyado sobre la cañada del Arbelo, con vértice norte en el punto de
+cierre (cota ≈40 m) y ensanchándose hacia el sur hasta la línea de
+cumbre que corre por las cotas ≈55-65 m (zona de nacientes).
+
+**Resultado final Parte 1: cuenca delimitada al sur del punto de cierre
+(X=494.4, Y=6171.8), entre las lomas que la separan de la cañada del
+Juncal (oeste) y del tributario de Puntas de Cañada Grande (este),
+cerrando en la línea de cumbre ≈55-65 m.**
+
+**Nota de precisión:** al no contar con la solución oficial manuscrita
+para esta parte (el manuscrito del examen sólo desarrolla numéricamente
+la Parte 2 de este ejercicio) ni con una carta digital vectorizada, la
+divisoria trazada es una lectura manual aproximada sobre el escaneo
+disponible — igual precisión con la que se traza a mano en el examen
+real, pero sin verificación cruzada contra una solución oficial (a
+diferencia del resto de los ejercicios de este examen).
+
+### Parte 2) Período de retorno de la intensidad máxima registrada
+
+**Concepto.** El bloque de mayor precipitación del hietograma observado
+(26 mm en el intervalo t=30-40 min, es decir d=10 min) representa la
+intensidad máxima puntual del evento. Se invierte la relación IDF de
+Uruguay —como precipitación **puntual** (sin CA, porque es la lectura de
+un único pluviógrafo, no una lámina de diseño areal)— despejando CT(Tr) y
+resolviendo numéricamente por el Tr correspondiente (mismo procedimiento
+que en §B3, "Encontrar el Tr de un evento observado").
+
+**Herramienta:** cálculo directo con las funciones CD/CT (Python,
+replicando las fórmulas de la planilla de eventos extremos) y bisección
+para invertir CT(Tr) — no tiene forma cerrada.
+
+**Script:** `scripts/ej3_parte2_Tr.py`. Entradas: `P310=79mm` (isoyetas
+Fig. 3.1.10 en X=494.4km, Y=6171.8km), `P_obs=26mm`, `d=10min`.
+
+**Resultado:**
+```
+CD(d=10min) = 0.2718
+CT(Tr) objetivo = P_obs/(P310*CD) = 26/(79*0.2718) = 1.2109
+
+Tr (interpolado) = 29.76 años  =>  Tr = 30 años
+```
+
+**Resultado final Parte 2: Tr ≈ 30 años.**
+
+**Comparación con solución oficial:** el manuscrito da
+P=P(3,10,p)·CT(Tr)·CD(d), con P(3,10)=79 mm y el bloque máximo=26 mm,
+CD(1/6)=0.272 ⇒ CT(Tr)=26/(79·0.272)=1.21 ⇒ **Tr=30 años** — **coincide
+exactamente**.
+
+---
+
+## ESTADO: EN CURSO (Ejercicios 1, 2 y 3 completos; falta Ejercicio 4)
