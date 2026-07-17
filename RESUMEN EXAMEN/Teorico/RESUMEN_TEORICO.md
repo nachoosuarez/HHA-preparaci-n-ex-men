@@ -1,18 +1,18 @@
-# Resumen Teórico HHA — depurado a partir de los 4 exámenes resueltos
+# Resumen Teórico HHA — depurado a partir de los exámenes resueltos
 
-Este resumen se construyó leyendo completos los 4 exámenes ya resueltos en
-`resueltos/` (2024 diciembre, 2025 Febrero 1, 2025 Febrero 2 y 2026 Febrero,
-todos con `ESTADO: COMPLETO`) y extrayendo de ahí **todos los temas y
-fórmulas que efectivamente fueron preguntados**, fusionando los que se
-repiten entre exámenes en una sola sección enriquecida. Las fórmulas se
+Este resumen se construyó leyendo completos los exámenes ya resueltos en
+`resueltos/` (2024 diciembre, 2025 Febrero 1, 2025 Febrero 2, 2026 Febrero,
+2024 Julio y 2024 marzo) y extrayendo de ahí **todos los temas y fórmulas
+que efectivamente fueron preguntados**, fusionando los que se repiten entre
+exámenes en una sola sección enriquecida. Las fórmulas se
 verificaron/precisaron contra `Teórico HHA.pdf` y `01_Formulometro2025.pdf`
 (citados como "Formulómetro"). Objetivo: alcanzar para repasar sin releer
-los 4 `RESOLUCION.md` completos.
+todos los `RESOLUCION.md` completos.
 
 Convención de nombres cortos de examen: **2024 dic** = 2024 diciembre;
 **2025 feb 1** = 2025_FEBRERO 1 (27/feb/2025); **2025 feb 2** = 2025_FEBRERO 2
 (5/feb/2025); **2026 feb** = 2026 Febrero (3/feb/2026); **2024 jul** = 2024
-Julio.
+Julio; **2024 mar** = 2024 marzo (1/mar/2024).
 
 ## Índice de temas
 
@@ -33,11 +33,11 @@ Julio.
 | B7. Volumen de escorrentía y embalses de retención | 2 | 2024 dic, 2025 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 1 | 2025 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 1 | 2026 feb |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
-| C2. Curva de la bomba y punto de funcionamiento | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
-| C3. Potencia consumida por el sistema de bombeo | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
-| C4. Cavitación: NPSH disponible vs. requerido | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
-| C5. Bombas en serie y en paralelo | 2 | 2025 feb 1, 2025 feb 2 |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| C2. Curva de la bomba y punto de funcionamiento | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| C3. Potencia consumida por el sistema de bombeo | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| C4. Cavitación: NPSH disponible vs. requerido | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| C5. Bombas en serie y en paralelo | 3 | 2025 feb 1, 2025 feb 2, 2024 mar |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 1 | 2024 dic |
 
 ---
@@ -713,6 +713,15 @@ Con bombas en paralelo compartiendo succión/impulsión, esos tramos ahora
 transportan el caudal **total**, lo que aumenta sus pérdidas y reduce el
 NPSH disponible común (C4), aunque cada bomba individualmente trabaje a
 menor Q que si operara sola.
+
+**Criterio rápido para elegir serie vs. paralelo (número mínimo de bombas).**
+En **paralelo**, el H entregado nunca supera el H máximo de la curva de UNA
+sola bomba (todas ven la misma H, sólo se suma Q): si la carga estática a
+vencer (Hm en Q≈0, p.ej. z2−z1+p2/γ) ya supera el máximo de la curva H(Q) de
+una bomba, ningún número de bombas en paralelo puede elevar el agua —hace
+falta **serie** (que sí suma cargas). Se verifica comparando
+max(H_bomba(Q)) contra la carga estática de la instalación **antes** de
+resolver el punto de funcionamiento completo (2024 mar, Ej.4).
 
 Cita: Teórico HHA §3.3.13 "Acoplamiento de bombas".
 
