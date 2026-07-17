@@ -18,11 +18,11 @@ Julio; **2024 mar** = 2024 marzo (1/mar/2024).
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
-| A2. Energía específica y tirante crítico | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
-| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 4 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul |
+| A1. Ecuación de FGV y clasificación de canales M/S | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| A2. Energía específica y tirante crítico | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar |
+| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 5 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
@@ -220,9 +220,38 @@ fondo (abertura mínima para no superar un tirante límite aguas arriba,
 posición del resalto aguas abajo); para empalmar tramos de un canal con
 distinto talud/ancho sin pérdida de carga.
 
+**Compuerta con descarga AHOGADA (a > conjugado de la condición de aguas
+abajo).** Si el tirante que impone la condición de aguas abajo (y3, p.ej.
+≈yn si el resalto queda lejos de cualquier otro control) es mayor que el
+conjugado de la apertura a en descarga libre, el resalto queda "ahogado"
+contra la compuerta: en la sección (2), inmediatamente aguas abajo, hay
+**flujo dividido** — el agua fluye con velocidad sólo por la franja de
+espesor a (área mojada de velocidad Am2=b·a), mientras que la porción de
+sección entre a y el tirante real y2 está prácticamente en reposo (aporta
+sólo hidrostática, con área completa A2=b·y2). Se resuelve en dos pasos:
+
+```
+1) Momentum entre (2) y (3):  yG2·A2 + Q²/(g·Am2) = yG3·A3 + Q²/(g·A3) = M(y3)
+   Rectangular: b·y2²/2 + Q²/(g·b·a) = M(y3)          (fzero en y2)
+2) Energía entre (1) y (2):   y1 + Q²/(2g·A1²) = y2 + Q²/(2g·Am2²)
+   Rectangular: y1 + Q²/(2g·(b·y1)²) = y2 + Q²/(2g·(b·a)²)     (fzero en y1)
+```
+
+Chequeo previo (equivalente a comparar a* vs. y_aguas_abajo): **a >
+conjugado(y3) ⟺ descarga ahogada**; si a < conjugado(y3), la descarga es
+libre (ver fórmula de arriba). El caso frontera (a = conjugado(y3)) es el
+resalto libre justo pegado a la compuerta (2024 mar, Ej.1, con y3≈yn).
+
+**Cuándo se usa.** Para verificar si el resalto queda "ahogado" en la
+compuerta (a>conjugado del tirante de aguas abajo) y, en ese caso, hallar
+el tirante aguas arriba y1 sin necesidad de ubicar la posición del resalto
+(que en descarga libre sí se busca integrando la rama supercrítica y
+cruzando su conjugado con la rama subcrítica, como en A3).
+
 Cita: Teórico HHA §2.2 (transiciones de energía), §2.3.2–2.3.3
-(conjugados/resalto), §2.5.5 (compuerta de fondo entre dos lagos), §2.5.6
-(cambio de pendiente/sección).
+(conjugados/resalto), §2.3.4 "Descarga ahogada de una compuerta" (Fig.
+2.3.7, momentum con flujo dividido), §2.5.5 (compuerta de fondo entre dos
+lagos), §2.5.6 (cambio de pendiente/sección).
 
 ## A6. Tensión rasante de fondo en FGV
 
