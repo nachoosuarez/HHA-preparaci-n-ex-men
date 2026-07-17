@@ -2,7 +2,7 @@
 
 Este resumen se construyó leyendo completos los exámenes ya resueltos en
 `resueltos/` (2024 diciembre, 2025 Febrero 1, 2025 Febrero 2, 2026 Febrero,
-2024 Julio, 2024 marzo y 2024 febrero) y extrayendo de ahí **todos los
+2024 Julio, 2024 marzo, 2024 febrero y 2023 diciembre) y extrayendo de ahí **todos los
 temas y fórmulas que efectivamente fueron preguntados**, fusionando los
 que se repiten entre exámenes en una sola sección enriquecida. Las
 fórmulas se verificaron/precisaron contra `Teórico HHA.pdf` y
@@ -13,16 +13,16 @@ Convención de nombres cortos de examen: **2024 dic** = 2024 diciembre;
 **2025 feb 1** = 2025_FEBRERO 1 (27/feb/2025); **2025 feb 2** = 2025_FEBRERO 2
 (5/feb/2025); **2026 feb** = 2026 Febrero (3/feb/2026); **2024 jul** = 2024
 Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
-(5-6/feb/2024).
+(5-6/feb/2024); **2023 dic** = 2023 diciembre (11/dic/2023).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
-| A2. Energía específica y tirante crítico | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb |
+| A1. Ecuación de FGV y clasificación de canales M/S | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
+| A2. Energía específica y tirante crítico | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 6 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
@@ -180,6 +180,33 @@ si hay un segundo lago aguas abajo se verifica si controla (remanso) o no
 (caída libre), agregando un resalto si corresponde. En canales de dos tramos
 con distinto talud/geometría, el empalme entre tramos se resuelve por
 conservación de E si la transición es "suave" (sin pérdidas).
+
+**Canal de dos tramos con distinta PENDIENTE (mismo b, n), entre dos lagos**
+(2023 dic, Ej.1). El **cambio de pendiente** en sí mismo puede ser un
+control crítico, igual que una caída libre, cuando el tramo aguas arriba
+del cambio es mild y el de aguas abajo es steep. Para decidir dónde está
+el control de todo el sistema (y por lo tanto cómo hallar Q), conviene
+**probar primero la hipótesis más simple** (tramo 1 steep ⇒ control
+crítico directo en la entrada, Q en forma cerrada) y verificar que sea
+autoconsistente (yn1<yc con el Q hallado):
+- Si **tramo 1 resulta steep**: la hipótesis es consistente, Q sale
+  directo de la ecuación de energía del lago con y=yc en x=0 (A2). El
+  lago descarga su caudal máximo **sin que importe lo que pase aguas
+  abajo**, salvo verificar al final si un lago de salida bajo (hLB<yc)
+  actúa como caída libre (no controla) o si hLB>yc y controla con una
+  rama subcrítica que puede generar un **resalto** en el tramo 1 (A3).
+- Si **tramo 1 resulta mild** con ese Q (contradicción): el control
+  crítico de la entrada NO es válido — el lago no puede forzar más
+  caudal que el que el tramo 1 deja pasar aguas abajo. El control pasa
+  a estar en el **cambio de pendiente** (y=yc ahí, como una caída libre
+  "interna"): se **itera Q** (`fzero`/shooting) integrando la curva M2
+  del tramo 1 hacia atrás desde el cambio de pendiente hasta la entrada,
+  hasta que la energía en la entrada cierre con h_Lago.
+- Si el segundo tramo (tras el cambio de pendiente) es steep y el lago de
+  salida queda por debajo de su tirante normal, ese lago **no controla
+  nada**: en flujo supercrítico la información no viaja hacia aguas
+  arriba, así que toda la rama de salida es una curva S2/S3 fija, sin
+  resalto, con el ajuste final al nivel del lago concentrado en el borde.
 
 Cita: Teórico HHA §2.5.3 (caída libre), §2.5.4 (perfiles entre dos lagos,
 casos M y S), §2.5.5 (perfil con compuerta de fondo entre dos lagos), §2.5.6

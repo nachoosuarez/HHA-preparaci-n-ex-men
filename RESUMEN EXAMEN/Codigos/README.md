@@ -48,6 +48,19 @@ duplicar archivos:
   al resolver 2024 marzo Ej.1, primer examen con compuerta ahogada en
   sección rectangular).
 
+## Canales de dos tramos con cambio de pendiente entre dos lagos
+
+No se agregó ninguna función nueva al toolkit `FGV_rectangular/` para este
+caso (2023 dic, Ej.1): se resuelve **encadenando** las mismas funciones
+cerradas (`froude_rect`, `manning_rect`, `Mom_rect`, `rect.m`+`ode23`) una
+vez con la pendiente de cada tramo, más una función auxiliar exam-specific
+de "shooting" (`residuo_entrada.m`, en `resueltos/2023 diciembre/scripts/`,
+no en el toolkit canónico porque su firma depende del layout particular del
+problema) para iterar Q cuando el control no está en la entrada sino en el
+cambio de pendiente. Ver el método completo en
+`RESUMEN EXAMEN/Teorico/RESUMEN_TEORICO.md` §A4 y el script comentado
+`resueltos/2023 diciembre/scripts/Ejercicio1_FGV_dostramos.m`.
+
 ## Notas de limpieza aplicadas
 
 - Se corrigió un typo de índice en `FGV_trapezoidal/caudal_S_ini.m`
