@@ -26,12 +26,12 @@ Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 6 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
-| B4. Método Racional (y criterio de selección según tc) | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
-| B6. Condición de humedad antecedente (AMC) | 3 | 2025 feb 1, 2026 feb, 2024 mar |
-| B7. Volumen de escorrentía y embalses de retención | 2 | 2024 dic, 2025 feb 2 |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| B4. Método Racional (y criterio de selección según tc) | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| B6. Condición de humedad antecedente (AMC) | 4 | 2025 feb 1, 2026 feb, 2024 mar, 2024 feb |
+| B7. Volumen de escorrentía y embalses de retención | 3 | 2024 dic, 2025 feb 2, 2024 feb |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 1 | 2025 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 1 | 2026 feb |
 | C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
@@ -504,8 +504,10 @@ Corrección de NC si AMC I o III (a partir de NC(II) de tabla):
 (no la tormenta de diseño): se ubica la estación del año (activa/inactiva en
 Uruguay: la estación de crecimiento es aprox. primavera-verano) y se compara
 la P5d dada con los umbrales de la tabla para decidir si corresponde AMC
-I/II/III, y corregir el NC antes de calcular Pe (B5). En los 2 exámenes donde
-aparece, el evento cayó siempre en AMC II (no hizo falta corregir NC).
+I/II/III, y corregir el NC antes de calcular Pe (B5). En los 4 exámenes donde
+aparece, el evento cayó siempre en AMC II (no hizo falta corregir NC) — p.ej.
+2024 feb, Ej.2 parte 3: P5d=15mm en estación inactiva, dentro del rango
+12.7–27.94mm.
 
 Cita: Teórico HHA §3.1.5 b) / Fig. 3.1.21; Formulómetro "Condiciones de
 humedad antecedente".

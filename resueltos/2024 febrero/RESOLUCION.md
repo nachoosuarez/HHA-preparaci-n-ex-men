@@ -194,4 +194,164 @@ redondeo manual de los tirantes alternos en la resolución original.
 
 ---
 
-## ESTADO: EN CURSO (Ejercicio 1 completo; faltan Ejercicios 2, 3 y 4)
+## EJERCICIO 2 — Alcantarilla en el norte de Artigas (25 puntos)
+
+**Datos:** cuenca de drenaje Área=6.3 km², ΔH=180 m (cauce principal),
+L=3750 m (cauce principal), pendiente **media de la cuenca** S=3.1%
+(dato de tabla, ¡distinta de la pendiente del cauce principal que
+alimenta Kirpich!), coordenadas del punto de cierre X=400 km, Y=6600 km.
+Uso de suelo: pastizales, condición hidrológica mala. Suelos: Rivera 25%
+(grupo hidrológico B) + Itapebí-Tres Árboles 75% (grupo hidrológico D).
+Flujo concentrado.
+
+Teoría usada: criterio de selección Racional/NRCS según tc (Resumen
+Teórico §B4), Número de Curva ponderado por unidad de suelo (§B5),
+condición de humedad antecedente AMC (§B6), volumen de escorrentía (§B7),
+curvas IDF de Uruguay y coeficientes CD/CT/CA (§B3).
+
+### Parte 1) Caudal de diseño Tr=10 años, volumen de escorrentía, hietograma e hidrograma
+
+**Concepto.** Primero hay que decidir qué método corresponde según el
+tiempo de concentración (§B4): se calcula tc por Kirpich con la pendiente
+del **cauce principal** (ΔH/L/10 = 180/3.75km/10 = 4.8%, **no** la
+pendiente media de la cuenca de la tabla, que sólo sirve para elegir el
+coeficiente C del método Racional). Con 20 min < tc < 1 h el criterio
+exige calcular **ambos** métodos (Racional y NRCS) y adoptar el **mayor**
+caudal. Para el NC se pondera por área las dos unidades cartográficas de
+suelo (§B5, NC ponderado). El volumen de escorrentía es la suma de la
+precipitación efectiva de los 12 bloques de la tormenta de diseño,
+multiplicada por el área (§B7).
+
+**Herramienta:** Python replicando las fórmulas de la hoja `Cálculos
+(grande)` de `Eventos extremos.xlsx` (ver
+`RESUMEN EXAMEN/Teorico/COMO_USAR_EVENTOS_EXTREMOS.md`) — en este entorno
+no hay Excel interactivo, así que se reproducen las mismas fórmulas
+celda por celda en Python (Kirpich, IDF Uruguay CD/CT/CA, método
+Racional, bloque alterno + Número de Curva + hidrograma unitario
+triangular SCS), igual que en los exámenes de hidrología ya resueltos en
+este repositorio.
+
+**Script:** `scripts/ej2_parte1.py`. Entradas: `Area=6.3 km2, dH=180m,
+L=3750m, Tr=10, P310=98mm (isoyetas Fig. 3.1.10 en X=400km,Y=6600km), C=0.38
+(Tabla 3.1.4, pastizales cond. mala, pendiente 2-7%), NC_Rivera=79 (grupo
+B), NC_ItapebiTresArboles=89 (grupo D)`.
+
+**Resultado:**
+```
+S canal principal (Kirpich) = 180/3.75/10 = 4.80 %   (<> S media cuenca=3.1%, usada solo para C)
+tc = 0.4*L^0.77/S^0.385 = 0.6050 hs = 36.30 min       => 20min<tc<1h: calcular AMBOS metodos
+
+NC ponderado = 0.25*79 + 0.75*89 = 86.50
+
+--- METODO RACIONAL (duracion = tc) ---
+CD(tc)=0.4924 ; CA(tc,A)=0.9842 ; P(area)=47.49mm ; i=78.50 mm/h
+Q_racional = 0.38*78.50*630/360 = 52.20 m3/s
+
+--- METODO NRCS (bloque alterno, dt=tc/7=5.19min) ---
+S=39.64mm ; Ia=7.93mm
+SUMA Pe corregido = 30.05 mm
+Qmax NRCS = 72.08 m3/s en t=1.02 hs desde el inicio de la tormenta
+
+Q racional=52.20 m3/s < Q NRCS=72.08 m3/s => se adopta el MAYOR: NRCS
+Volumen de escorrentia = 30.05mm * 6.3km2 * 1000 = 189299 m3 = 0.189 hm3
+```
+
+Hietograma de diseño (bloque alterno) e hidrograma de crecida:
+`scripts/ej2_hietograma_hidrograma_parte1.png`.
+
+**Resultado final Parte 1: Q diseño (Tr=10 años) ≈ 72.1 m³/s (método
+NRCS, mayor que el Racional=52.2 m³/s), volumen de escorrentía ≈0.189
+hm³, tiempo de demora en alcanzar Qmax ≈1.0 h desde el inicio del
+evento.**
+
+**Comparación con solución oficial:** el manuscrito da P(3,10)=98mm,
+tc=36min, C=0.38⇒Q_HR=52.2 m³/s, NC ponderado=86.5⇒Q_NRCS=71.7 m³/s
+(adopta el mayor, NRCS), volumen de escorrentía V=0.189 hm³, tiempo al
+pico t=1.04 h — **coincide** con los valores obtenidos (diferencias
+≤0.5% en Q_NRCS y en t, por el detalle de discretización del bloque
+alterno; volumen de escorrentía coincide exactamente).
+
+### Parte 2) Período de retorno tras el aumento del 35% en tc
+
+**Concepto.** La alcantarilla ya está construida con la capacidad fijada
+en la Parte 1 (Q diseño≈72.1 m³/s). Una modificación del cauce aumenta
+tc un 35%; con ese tc nuevo, se busca el período de retorno Tr cuyo
+caudal NRCS iguala exactamente esa capacidad ya construida (iterando Tr,
+"Buscar Objetivo", ver §6.9 del instructivo de la planilla).
+
+**Herramienta:** mismo modelo NRCS de la Parte 1 (Python), pero con
+tc_nuevo=1.35·tc y barriendo/biseccionando Tr hasta que Qmax_NRCS(Tr)
+coincida con el caudal de diseño ya fijado.
+
+**Script:** `scripts/ej2_parte2.py`.
+
+**Resultado:**
+```
+tc_nuevo = 1.35 * 0.6050 hs = 0.8167 hs = 49.00 min
+
+Tr=12 -> Qmax=70.04 m3/s
+Tr=13 -> Qmax=71.68 m3/s   (el mas cercano por debajo)
+Tr=14 -> Qmax=73.19 m3/s
+
+Tr (interpolado) = 13.26 años
+```
+
+**Resultado final Parte 2: Tr ≈ 13 años** (con el tc aumentado, el
+caudal que antes tenía un período de retorno de 10 años ahora se alcanza
+con un período de retorno menor, ≈13 años en vez de un valor mayor,
+porque una cuenca más lenta —tc mayor— concentra el mismo volumen de
+lluvia en un pico más bajo, así que hace falta una lluvia algo más
+intensa, de Tr apenas mayor a 10, para reproducir el mismo caudal pico
+que antes daba exactamente Tr=10).
+
+**Comparación con solución oficial:** el manuscrito da tc_nuevo=1.35·tc=
+0.82 h=49 min ⇒ **Tr≈13 años** — **coincide exactamente**.
+
+### Parte 3) Verificación de un evento extremo observado en julio
+
+**Concepto.** Se evalúa si un evento de precipitación **ya observado**
+(hietograma dado, no la tormenta de diseño por bloque alterno) —en las
+condiciones modificadas de la cuenca (Parte 2)— genera un caudal mayor
+al de diseño. Primero hay que fijar la condición de humedad antecedente
+(§B6): P5d=15 mm en estación inactiva cae en el rango 12.7–27.94 mm ⇒
+**AMC II**, el NC no se corrige (sigue siendo 86.5). Como el hietograma
+observado viene en 12 bloques de 7 min y tc_nuevo/7=49/7=7 min
+exactamente, se puede convolucionar directamente con el mismo hidrograma
+unitario triangular de la Parte 2 (Tp, Tb con tc_nuevo), usando la
+precipitación efectiva por Número de Curva **sin** el piso de
+infiltración adicional (Hoja 4 de la planilla, ver
+`COMO_USAR_EVENTOS_EXTREMOS.md` §4) porque acá ya no se arma una
+tormenta de diseño por bloque alterno sino que se usa el hietograma real
+en su orden cronológico.
+
+**Herramienta:** Python, precipitación efectiva incremental por NC
+(fórmula de Hoja 4) sobre el hietograma dado, convolucionada con el
+hidrograma unitario triangular SCS de tc_nuevo (mismo Tp/Tb de la Parte
+2).
+
+**Script:** `scripts/ej2_parte3.py`.
+
+**Resultado:**
+```
+P5d=15mm, estacion inactiva => AMC II => NC=86.5 (sin corregir)
+
+Hietograma observado (12 bloques de 7 min), total = 59.0 mm
+SUMA Pe = 28.75 mm
+
+Qmax evento observado = 51.15 m3/s en t=1.37 hs
+```
+
+Gráfico: `scripts/ej2_hidrograma_parte3.png`.
+
+**Resultado final Parte 3: Q evento ≈ 51.2 m³/s < Q diseño ≈ 72.1 m³/s
+⇒ el evento de julio NO superó la capacidad de diseño de la
+alcantarilla.**
+
+**Comparación con solución oficial:** el manuscrito da NC(II)=86.5
+(estación inactiva, P5d=15mm) y Q=50.86 m³/s < Q diseño ⇒ no se supera
+— **coincide** con el resultado obtenido (51.15 m³/s), diferencia <1%
+por redondeo en la discretización.
+
+---
+
+## ESTADO: EN CURSO (Ejercicios 1 y 2 completos; faltan Ejercicios 3 y 4)
