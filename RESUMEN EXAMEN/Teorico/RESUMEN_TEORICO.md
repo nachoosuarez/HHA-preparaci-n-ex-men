@@ -36,10 +36,10 @@ Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
 | B7. Volumen de escorrentía y embalses de retención | 3 | 2024 dic, 2025 feb 2, 2024 feb |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 1 | 2025 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 1 | 2026 feb |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
-| C2. Curva de la bomba y punto de funcionamiento | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
-| C3. Potencia consumida por el sistema de bombeo | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
-| C4. Cavitación: NPSH disponible vs. requerido | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| C2. Curva de la bomba y punto de funcionamiento | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| C3. Potencia consumida por el sistema de bombeo | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| C4. Cavitación: NPSH disponible vs. requerido | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | C5. Bombas en serie y en paralelo | 4 | 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 1 | 2024 dic |
 
@@ -745,6 +745,31 @@ para hallar (Qpf,Hpf) (2024 feb, Ej.4 parte 1).
 
 Cita: Teórico HHA §3.3.10 "Curva de la instalación" (Ec. 15, 18, 19);
 Formulómetro "Bombas — Carga hidráulica" / "Curva de la Instalación".
+
+**Instalación con bifurcación en ramas idénticas (una sola bomba, red
+ramificada)** (2023 jul, Ej.4). No confundir con C5 (bombas en
+serie/paralelo, donde hay más de una bomba): acá hay **una sola bomba**
+que alimenta, después de un nodo de bifurcación, dos (o más) tuberías
+IDÉNTICAS que descargan por separado (p.ej. a la atmósfera, con
+tobera). Por simetría, cada rama transporta la MITAD del caudal total
+que pasa por la bomba (si son N ramas idénticas, cada una lleva Q/N).
+La ecuación de la instalación se arma encadenando dos tramos con
+caudales distintos: succión+impulsión con el caudal TOTAL Q (hasta el
+nodo), y nodo→salida de una rama con el caudal Q/N:
+
+```
+Hm(Q) = H_salida − H_entrada + Σ(succión+impulsión, con Q) + Σ(una rama, con Q/N)
+H_salida = v_salida²/2g + z_salida     (si descarga libre, ver arriba)
+v(succión/impulsión) = Q/A    ;    v(una rama) = (Q/N)/A_rama
+```
+
+Se itera igual que cualquier curva de instalación (C2), pero cuidando
+de **no** usar el caudal total en las velocidades de las ramas — es un
+error común (detectado en la propia solución oficial manuscrita de este
+examen: reportaron correctamente la fórmula v_rama=(Q/2)·4/(πD²) pero
+al reemplazar usaron el Q total en vez de Q/2, dando una v_rama al
+doble de la real, aunque el resto del desarrollo —Qpf, Hpf— sí usó la
+fórmula correcta).
 
 ## C2. Curva de la bomba y punto de funcionamiento
 

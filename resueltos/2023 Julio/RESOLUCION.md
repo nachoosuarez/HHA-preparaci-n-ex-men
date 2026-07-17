@@ -484,3 +484,156 @@ verificarse numéricamente; se comparó visualmente contra la solución
 oficial escaneada (mismo criterio metodológico, ver imágenes).
 
 ---
+
+## Ejercicio 4 — Sistema de bombeo con bifurcación en dos tuberías idénticas
+
+### Enunciado (resumen)
+
+Instalación de riego: un reservorio (R) alimenta, por succión (1,
+L1=15 m, D1=50 mm, k1=6), una bomba (cota zA=0.8 m, curva característica
+H-Q-η-NPSHreq dada en tabla), que impulsa por (2, L2=450 m, D2=50 mm,
+k2=4, más una válvula reguladora kv) hasta un nodo de bifurcación (T),
+desde donde el caudal se reparte en dos tuberías IDÉNTICAS (3) y (4,
+L=30 m, D=32 mm, k=2 cada una) que descargan a la atmósfera a través de
+toberas (Dt=25 mm) a cota z2=1.5 m. Rugosidad absoluta ε=0.05 mm en
+todas las tuberías.
+
+1) Con z1=−6 m (nivel del reservorio) y Q=1.5 l/s (regulado con la
+   válvula): a) evaluar si la bomba cavita (NPSHdisp vs. NPSHreq,
+   presentando la ecuación de NPSHdisp); b) si cavita, proponer al
+   menos 2 alternativas de solución.
+2) Con z1=−4 m y kv=5: a) hallar el punto de funcionamiento del sistema
+   (ecuación de la instalación, gráfico H-Q); b) indicar la potencia
+   consumida por la bomba en ese punto.
+
+### Teoría (RESUMEN_TEORICO.md, sección C — Bombeo)
+
+- **C1** Ecuación de la instalación (Darcy-Weisbach + Colebrook-White),
+  con la particularidad de que, aguas abajo de la bifurcación, cada
+  rama transporta la MITAD del caudal total (dos tuberías idénticas en
+  paralelo desde el mismo nodo) — caso no documentado todavía en el
+  resumen teórico, se agrega en esta corrida.
+- **C4** Cavitación: NPSHdisp depende únicamente del tramo de succión
+  (no de la impulsión ni de la bifurcación), con la "trampa común" del
+  término cinético que se cancela algebraicamente (no sumarlo dos
+  veces).
+
+Cita: Teórico HHA §3.3.10 "Curva de la instalación", §3.3.14
+"Cavitación"; Formulómetro "Bombas — Carga hidráulica" / "Cavitación".
+
+### Herramienta y por qué
+
+Se usó Octave con el toolkit canónico `RESUMEN EXAMEN/Codigos/Bombas`
+(`colebrook.m` para el factor de fricción; `interp1` con `pchip` para
+interpolar la tabla de la bomba, siguiendo el mismo patrón de
+`Bomba_sola.m`) porque el enunciado es un problema estándar de
+instalación de bombeo con succión + impulsión + curva de catálogo, con
+la única particularidad de la bifurcación en dos ramas idénticas aguas
+abajo (que se resuelve repartiendo el caudal por mitades, sin necesitar
+ninguna función nueva del toolkit — a diferencia del caso de "bombas en
+paralelo" de C5, acá es una sola bomba con una red de tuberías
+ramificada, no dos bombas). Script adaptado a este examen (+ copia de
+`colebrook.m` como dependencia):
+`resueltos/2023 Julio/scripts/Ejercicio4_bombeo_bifurcacion.m`.
+
+### Paso a paso
+
+**Parte 1) z1=−6 m, Q=1.5 l/s — ¿cavita la bomba?**
+
+NPSHdisp depende sólo de la succión (C4); no hace falta resolver el
+punto de funcionamiento para esta parte, Q ya es un dato:
+```
+v1 = Q/A1 = 0.7639 m/s ; Re1 = 3.82e4 ; f1 (Colebrook) = 0.0250
+ΔH_succión = (f1·L1/D1 + k1)·v1²/2g = 0.4014 m
+
+NPSHdisp = (z1 − ΔH_succión) − zA + (Patm−Pvap)/γ
+         = (−6.00 − 0.4014) − 0.80 + 10.09 = 2.889 m
+```
+NPSHreq interpolado de la tabla de la bomba en Q=1.5 l/s (es uno de los
+puntos exactos de la tabla) = **3.4 m**.
+
+```
+NPSHdisp (2.89 m)  <  NPSHreq (3.4 m)  =>  LA BOMBA CAVITA
+```
+
+**Alternativas para evitar la cavitación** (aumentar NPSHdisp): 1)
+disminuir la cota de la bomba zA; 2) aumentar la carga a la entrada de
+la bomba (operar con el reservorio a un nivel más alto); 3) disminuir
+las pérdidas de la succión (aumentar D1 y/o reducir k1, p.ej. accesorios
+menos restrictivos).
+
+**Parte 2) z1=−4 m, kv=5 — punto de funcionamiento y potencia.**
+
+Ecuación de pérdida de carga de la instalación, combinando el tramo
+reservorio→nodo (con el caudal TOTAL Q) y el tramo nodo→tobera de una
+rama (con el caudal Q/2, por simetría entre las dos ramas idénticas):
+```
+Hm(Q) = H2 − H1 + (f1·L1/D1+k1)·v1²/2g + (f2·L2/D2+k2+kv)·v2²/2g + (f3·L3/D3+k3)·v3²/2g
+
+H1 = z1  (reservorio, superficie libre, presión atm., v≈0)
+H2 = vT²/2g + z2   (descarga libre por la tobera: no se recupera la energía cinética de salida)
+
+v1 = v2 = Q/A1  (succión e impulsión, mismo diámetro D1=D2=50 mm, mismo caudal total)
+v3 = (Q/2)/A3   (cada rama lleva la mitad del caudal total)
+vT = (Q/2)/AT   (velocidad de salida por la tobera de cada rama)
+```
+Interceptando `Hm(Q)` con la curva de la bomba (interpolada de la
+tabla), se obtiene el punto de funcionamiento:
+```
+Qpf = 2.007 l/s  ;  Hpf = 20.47 m
+v1=v2 = 1.022 m/s ; Re1=Re2 = 5.11e4 ; f1=f2 = 0.0239
+v3=v4 = 1.248 m/s ; Re3=Re4 = 3.99e4 ; f3=f4 = 0.0262
+vT (tobera) = 2.044 m/s
+```
+Eficiencia interpolada en Qpf: η=68.83%. Potencia consumida:
+```
+Pot = γ·Qpf·Hpf/η = 1000·9.81·0.002007·20.47/0.6883 ≈ 586 W
+```
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| Parte 1: NPSHdisp / NPSHreq (Q=1.5 l/s) | 2.89 m / 3.4 m |
+| **Parte 1: ¿cavita?** | **SÍ** |
+| Parte 1: alternativas | Bajar zA; subir el nivel del reservorio; reducir pérdidas de succión |
+| Parte 2: punto de funcionamiento | **Qpf ≈ 2.01 l/s ; Hpf ≈ 20.5 m** |
+| **Parte 2: potencia consumida** | **≈ 586 W** |
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| NPSHreq (Q=1.5 l/s) | 3.4 m | 3.4 m | 0 |
+| ΔH succión | (no explícito) | 0.401 m | — |
+| NPSHdisp | 2.9 m | 2.89 m | ≈0 |
+| ¿Cavita? | Sí | Sí | — |
+| Qpf | 2.0 l/s | 2.01 l/s | ≈0 |
+| Hpf | 21.1 m | 20.47 m | ≈3% |
+| v1=v2 | 1.0 m/s | 1.02 m/s | ≈0 |
+| f1=f2 | 0.024 | 0.0239 | ≈0 |
+| η(Qpf) | 68.5% | 68.83% | ≈0 |
+| Potencia | 593 W | 586 W | ≈1% |
+
+Coincidencia muy buena en NPSH (Parte 1), Qpf, velocidades de
+succión/impulsión y eficiencia. La única discrepancia notable es Hpf
+(≈3%) y, con ella, la potencia (≈1%, porque además compensa con un η
+algo mayor). Se detectó una **inconsistencia interna en el propio
+desarrollo manuscrito oficial**: la ecuación que ellos mismos escriben
+para las ramas es correcta (`v3=(Q/2)·4/(πD3²)`, con el caudal de CADA
+rama = mitad del total, coherente con "por ser ambas tuberías
+idénticas, circulan por cada una Qpf/2"), pero el valor numérico que
+reportan después (v3=2.45 m/s, vT=4 m/s) corresponde a haber usado el
+caudal TOTAL Qpf en vez de Qpf/2 en esa fórmula (con Qpf/2=1.0 l/s y
+D3=32 mm da v3≈1.24 m/s, no 2.45 m/s — verificado también con el
+factor de fricción que ellos mismos reportan, f3=0.026, muy cercano al
+f3=0.0262 de este cálculo con v3≈1.24 m/s, lo que confirma que el
+error es sólo en el reporte final de v3/vT y no se propagó al resto
+del desarrollo, ya que Qpf y Hpf sí resultan consistentes con la curva
+de instalación construida correctamente). Se adoptan acá los valores
+recalculados con la fórmula correcta (Qpf/2 en las ramas), que son
+autoconsistentes con toda la cadena de cálculo.
+
+---
+
+## ESTADO: COMPLETO
