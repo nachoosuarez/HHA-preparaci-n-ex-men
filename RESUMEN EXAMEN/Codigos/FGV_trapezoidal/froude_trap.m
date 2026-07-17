@@ -3,20 +3,20 @@
 % fsolve/fzero (p.ej. dentro de fgv_trap.m para hallar yc). Equivalente
 % "estilo par" de eq_yc.m. Requiere trap_geom.m.
 function ec = froude_trap(y,par)
-% Funciï¿½n auxiliar que calcula la diferencia entre 1 y el nï¿½mero de Froude
+% Función auxiliar que calcula la diferencia entre 1 y el número de Froude
 % calculado con el tirante.
 % INPUTS
-% par vector de parï¿½metros de entrada
-% y tirante de entrada con el que calcularï¿½ el Froude
+% par vector de parámetros de entrada
+% y tirante de entrada con el que calculará el Froude
 % OUTPUTS
 % ec apartamiento del Froude respecto a 1
  
-%% Descomposiciï¿½n del vector de parï¿½metros de entrada
+%% Descomposición del vector de parámetros de entrada
 Q = par(1);% caudal (m3/s)
 b = par(2);% ancho de fondo (m)
 m = par(3);% pendiente taludes laterales 1V:mH
  
-%% Funciï¿½n
-[B,A,P,R,yG,D]=trap_geom(y,b,m);% funciï¿½n que calcula parï¿½metros geomï¿½tricos de la secciï¿½n
+%% Función
+[B,A,P,R,yG,D]=trap_geom(y,b,m);% función que calcula parámetros geométricos de la sección
 ec=(Q^2)*B./(9.8*A.^3)-1;% diferencia entre el Froude estimado con y que tiende al yc con 1
 

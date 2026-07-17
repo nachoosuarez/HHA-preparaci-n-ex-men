@@ -6,13 +6,13 @@
 % de borde de fgv_trap.m). Requiere trap_geom.m, eq_yn.m, eq_yc.m.
 function [yn,yc] = tirantes_yn_yc(Q,n,m,b,S)
 
-  % estimaciï¿½n inicial
+  % estimación inicial
   y_ini = 1;
 
   % tirante normal (Manning)
   yn = fsolve(@(y) eq_yn(y,Q,n,m,b,S), y_ini);
 
-  % tirante crï¿½tico
+  % tirante crítico
   yc = fsolve(@(y) eq_yc(y,Q,m,b), y_ini);
 
 endfunction

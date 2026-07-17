@@ -15,7 +15,7 @@
 % critico_lleno.m â€” se aclara acÃ¡ para evitar confusiÃ³n, sin modificar
 % el comentario original de abajo.)
 %%%%% FGV en Canal Circular %%%%%
-%AVISO:
+%AVISO: 
 %Las funciones "circ.m", "froude_circ.m", "manning_circ.m", "circ_geom.m" y "critico.m" deben estar en la misma carpeta que este script "fgv_circ.m"
 
 %% Datos de entrada
@@ -26,8 +26,8 @@ d = 1;% diametro en m
 S = 0.001;% pendiente de fondo 0.000018;
 n = 0.014;% n de Manning
 
-% Calculo tirante crï¿½tico
-yc=min(d,(Q^2*(pi/4)^2/9.8)^(1/5));% Estimaciones inicales de tirante crï¿½tico
+% Calculo tirante crítico
+yc=min(d,(Q^2*(pi/4)^2/9.8)^(1/5));% Estimaciones inicales de tirante crítico
 par=[Q d];% vector con parametros 
 yc=fzero(@(y) froude_circ(y,par), yc);% tirante critico
 [Bc,Ac,Pc,Rc,yGc,Dc]=circ_geom(yc,d);
@@ -63,22 +63,22 @@ x_ini=500;% x inicial en m
 x_end=0;% x final en m, tner en cuenta el signo si voy aguas arriba o aguas abajo. x crece hacia aguas abajo
 y_ini=0.9;% y (tirante) inicial en m 0.975
 
-% Resoluciï¿½n
+% Resolución
 par=[Q d S n];% vector con parametros 
-options = odeset('Events',@(x,y) critico_lleno(x,y,yc,d));% para parar la resolucion de la ec. dif. cuando se llega al tirante crï¿½tico
+options = odeset('Events',@(x,y) critico_lleno(x,y,yc,d));% para parar la resolucion de la ec. dif. cuando se llega al tirante crítico
 [xdum,ydum]=ode23(@(x,y) circ(x,y,par),[x_ini,x_end],y_ini,options);% x es el vector con las x donde se calcularon los valores de y
 y=real(ydum(imag(ydum)==0));% Se toman valores reales porque el criterio de parada a flujo lleno no para siempre la resolucion a tiempo
 x=xdum(imag(ydum)==0);
 y_end=y(end);
 
-%% Grï¿½fico
+%% Gráfico
 figure(1)
 clf
 p1=plot([x(1), x(end)],-[x(1), x(end)]*S,'k');%zb cota del lecho
 hold on
 plot([x(1), x(end)],-[x(1), x(end)]*S+d,'k');%zb cota del lecho
 p2=plot(x,y-x*S,'b');%zf cota de la superficie libre
-p3=plot([x(1), x(end)],[yc-x(1)*S, yc-x(end)*S],'r');%zc cota de la superfice libre en flujo crï¿½tico
+p3=plot([x(1), x(end)],[yc-x(1)*S, yc-x(end)*S],'r');%zc cota de la superfice libre en flujo crítico
 p4=plot([x(1), x(end)],[yn1-x(1)*S, yn1-x(end)*S],'g');%zn cota de la superfice libre en flujo normal
 p4=plot([x(1), x(end)],[yn2-x(1)*S, yn2-x(end)*S],'g');%zn cota de la superfice libre en flujo normal
 

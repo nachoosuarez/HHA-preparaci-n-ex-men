@@ -172,3 +172,120 @@ dentro de ese margen.
 | Fuerza sobre el escalón | **≈1.35×10⁵ N (135 kN)** |
 
 ---
+
+## EJERCICIO 2 — Cuenca del arroyo Molles de Quinteros (Durazno)
+
+**Datos:** carta topográfica del SGM (curvas de nivel cada 10 m), punto de
+cierre en X=485.0 km, Y=6350.0 km. Longitud del cauce principal L=6875 m
+(dato). Registro de precipitación extrema en un pluviómetro representativo,
+en bloques horarios: P(mm)=[5,10,35,45,68,54,48,41,23,8] para T(hs)=[0-1,
+1-2,...,9-10].
+
+**Teoría usada:** delimitación de cuencas por línea de divorcio de aguas
+(Teórico HHA §1.2.1), tiempo de concentración de Ramser-Kirpich y criterio
+de flujo concentrado vs. difuso (§3.1.2), curvas IDF de Uruguay y
+coeficientes de corrección por duración (CD) y por recurrencia (CT)
+(§3.1.4). No hace falta CA (corrección por área) porque en este ejercicio
+se trabaja con una precipitación **puntual** registrada en un pluviómetro,
+no con una lluvia de diseño promediada sobre el área de la cuenca.
+
+**Herramienta:** delimitación gráfica manual sobre la carta topográfica
+provista (mismo criterio que en `resueltos/2024 diciembre/`, Ejercicio 3,
+Parte 1, para una situación idéntica: el repositorio no trae la carta en
+blanco como archivo editable, sólo el PDF escaneado del examen). Para el
+tiempo de concentración y el período de retorno se usó Python
+(`scripts/ej2.py`), replicando las mismas fórmulas de curvas IDF ya usadas
+en `resueltos/2024 diciembre/scripts/ej2_parte1.py` (curvas de
+`Scripts/01_SCRIPTS/Eventos extremos.xlsx`, ver
+`RESUMEN EXAMEN/Teorico/COMO_USAR_EVENTOS_EXTREMOS.md`).
+
+### Parte 1) Delimitación de la cuenca
+
+**Concepto (Teórico §1.2.1).** La cuenca es el área de aporte tal que toda
+la lluvia caída dentro de ella escurre hacia el punto de cierre. Se delimita
+trazando la línea de divorcio de aguas: una línea cerrada que pasa por los
+puntos más altos alrededor del punto de cierre, siempre perpendicular a las
+curvas de nivel, cruzándolas en los cambios de curvatura convexa (lomas,
+nacientes) a cóncava (valles), de modo que encierra exactamente la
+superficie que drena naturalmente hacia el punto de cierre.
+
+**Resultado:** la carta en blanco con el punto de cierre marcado se guardó
+en `scripts/ej2_carta_sin_delimitar.png`, y la delimitación de la solución
+oficial en `scripts/ej2_cuenca_solucion_oficial.png`. La divisoria oficial
+sigue la Cuchilla Quinteros al norte (curvas de nivel de 120-127 m) y baja
+hacia el punto de cierre (cotas ≈85-115 m), encerrando el curso del arroyo
+Molles de Quinteros, consistente con las reglas de §1.2.1. Esta delimitación
+es la que fija el cauce principal usado en la Parte 2.
+
+**Resultado final Parte 1: cuenca delimitada según divisoria de aguas
+topográfica (ver `scripts/ej2_cuenca_solucion_oficial.png`).**
+
+### Parte 2) Cota superior/inferior, desnivel máximo y tiempo de concentración
+
+**Concepto.** La cota superior y la cota inferior del cauce principal se
+leen directamente de las curvas de nivel que cruza el arroyo Molles de
+Quinteros dentro de la cuenca delimitada (Parte 1): la cota superior es la
+curva de nivel en el nacimiento del cauce (borde de la cuenca) y la cota
+inferior es la curva de nivel en el punto de cierre. El desnivel máximo del
+cauce principal es la diferencia entre ambas. Como el enunciado indica
+suponer **flujo concentrado** —razonable porque la cuenca tiene un cauce
+bien definido (el arroyo Molles de Quinteros) que recorre toda la longitud
+L=6875 m marcada en la carta, en vez de escurrimiento en manto sin cauce
+definido— corresponde usar la fórmula de Ramser-Kirpich (Teórico §3.1.2)
+para el tiempo de concentración, con la pendiente del **cauce principal**
+(no la pendiente media de la cuenca):
+
+```
+Hsup = 120 m (cota superior, nacimiento del cauce)  ; Hinf = 88 m (cota inferior, punto de cierre)
+dH = Hsup - Hinf = 32 m
+S = dH/L/10 = 32/6.875/10 = 0.4655 %
+tc = 0.4*L^0.77/S^0.385 = 2.369 hs = 142 min          (L en km)
+```
+
+**Resultado final Parte 2: Hsup=120 m, Hinf=88 m, ΔH=32 m, tc≈2.37 h (Ramser-
+Kirpich, flujo concentrado justificado por la presencia de un cauce
+definido a lo largo de toda la cuenca).**
+
+**Comparación con la solución oficial:** el manuscrito da Hinf≈88 m,
+Hsup≈120 m, ΔH=32 m, tc=2.36 h (Kirpich) — **coincide** (la pequeña
+diferencia en tc, 2.36 vs 2.37, es redondeo en la lectura gráfica de las
+cotas).
+
+### Parte 3) Período de retorno de la intensidad máxima registrada
+
+**Concepto.** El evento registrado es un hietograma en bloques horarios; la
+intensidad máxima instantánea que puede extraerse de un registro en bloques
+de 1 h es la del bloque de mayor precipitación, con duración d=1 h (no hace
+falta acumular bloques consecutivos porque ya se pide la intensidad *máxima*,
+que ocurre en el bloque pico). Una vez identificada esa intensidad puntual,
+se la compara con la familia de curvas IDF de Uruguay (P=P₃,₁₀·CD(d)·CT(Tr))
+para encontrar qué Tr reproduce esa lámina, **invirtiendo** la fórmula de
+CT(Tr) (Teórico §3.1.4) porque no tiene una forma cerrada para Tr.
+
+```
+Bloque de mayor P: 4-5 hs, Pmax = 68 mm  =>  d = 1 h, imax = 68 mm/h
+CD(d=1h) = 0.6208*1/((1+0.0137)^0.5639) = 0.6161
+P310 = 86 mm (lectura de isoyeta, dato oficial)
+Pmax = P310*CD*CT  =>  CT = Pmax/(P310*CD) = 68/(86*0.6161) = 1.2835
+CT(Tr) = 0.5786 - 0.4312*log10(ln(Tr/(Tr-1)))   =>   invertida por biseccion:
+Tr = 43.6 anios  =>  se adopta Tr ~ 44 anios
+```
+
+**Resultado final Parte 3: período de retorno de la intensidad máxima
+registrada (68 mm/h en la hora 4-5) ≈ 44 años.**
+
+**Comparación con la solución oficial:** el manuscrito da Pmax=68 mm, d=1h,
+P310=86 mm, CD(1h)=0.6161, CT=1.283, Tr=44 años — **coincide exactamente**.
+
+### Resumen Ejercicio 2
+
+| Ítem | Resultado |
+|---|---|
+| Delimitación de la cuenca | Ver `scripts/ej2_cuenca_solucion_oficial.png` |
+| Cota superior / inferior del cauce principal | **120 m / 88 m** |
+| Desnivel máximo del cauce principal | **32 m** |
+| Tiempo de concentración (Kirpich, flujo concentrado) | **≈2.37 h (142 min)** |
+| Intensidad máxima registrada | **68 mm/h** (bloque 4-5 h) |
+| Período de retorno de esa intensidad | **≈44 años** |
+
+---

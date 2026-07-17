@@ -24,9 +24,9 @@ Julio.
 | A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 4 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
-| B1. Delimitación de cuencas y divisoria de aguas | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
+| B1. Delimitación de cuencas y divisoria de aguas | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
 | B4. Método Racional (y criterio de selección según tc) | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
 | B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
 | B6. Condición de humedad antecedente (AMC) | 2 | 2025 feb 1, 2026 feb |
@@ -333,7 +333,19 @@ para construir la tormenta de diseño por **bloque alterno**: se divide tc en
 12 intervalos Δt=tc/7, se calcula P(d,Tr,A) para cada duración acumulada
 d=k·Δt (k=1..12), se obtienen los incrementos de lluvia por diferencia, y se
 reordenan (bloque alterno: el mayor al centro, decreciendo hacia los
-extremos) para formar el hietograma de diseño.
+extremos) para formar el hietograma de diseño. Si en cambio el enunciado da
+una **precipitación puntual** ya registrada (pluviómetro, hietograma
+observado en bloques) en vez de pedir una tormenta de diseño sobre una
+cuenca, se omite CA (no hay área que promediar) y la relación se reduce a
+P=P(3,10)·CD(d)·CT(Tr).
+
+**Encontrar el Tr de un evento observado (inverso).** Dado un P (o una
+intensidad i=P/d) ya registrado con su duración d, se despeja CT=P/(P(3,10)·CD(d))
+y se **invierte numéricamente** CT(Tr) (no tiene forma cerrada para Tr; se
+resuelve por bisección/`fsolve`/Buscar Objetivo) para obtener el período de
+retorno de ese evento. Es el mismo procedimiento usado para encontrar el Tr
+que hace que un caudal de diseño alcance un valor crítico (ver B4), aplicado
+directamente sobre la lámina/intensidad en vez de sobre el caudal.
 
 Cita: Teórico HHA §3.1.4; Formulómetro "Eventos extremos — Relaciones
 Intensidad Duración Frecuencia".

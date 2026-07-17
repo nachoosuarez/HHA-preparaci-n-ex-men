@@ -9,7 +9,7 @@
 % rect_geom.m.
 function [M,yconj]=Mom_rect(y,b,Q)
 
-% Funciï¿½n que calcula el momento y el tirante conjugado para un canal
+% Función que calcula el momento y el tirante conjugado para un canal
 % rectangular para un tirante, ancho de canal y caudal dados
 %
 % INPUTS
@@ -24,24 +24,24 @@ function [M,yconj]=Mom_rect(y,b,Q)
 % Calculo del momento
 [B,A,P,R,yG,D]=rect_geom(y,b);
 M=yG.*A+Q^2./(9.8.*A);    % momento
-Fr2=(Q^2)*B./(9.8.*A.^3); % nï¿½mero de Froude al cuadrado
+Fr2=(Q^2)*B./(9.8.*A.^3); % número de Froude al cuadrado
 %
-% Bï¿½squeda del tirante conjugado
-yconj=y.*(-1 + sqrt(1 + 8.*Fr2))/2;% Soluciï¿½n para caso rectangular
+% Búsqueda del tirante conjugado
+yconj=y.*(-1 + sqrt(1 + 8.*Fr2))/2;% Solución para caso rectangular
 
 function eM=conj_rect(y,par)
-% Sub-funciï¿½n auxiliar que calcula el error relativo entre el momento dado y el
+% Sub-función auxiliar que calcula el error relativo entre el momento dado y el
 % momento calculado usando el tirante conjugado estimado, que se buscara
 % minimizar.
 % INPUTS
-% par vector de entrada de parï¿½metros fijos
-% y variable de entrada a la funciï¿½n cuyo valor se seleccionara para
-% minimizar el error eM. En este caso cuando se llama a esta sub-funciï¿½n dentro de fzero la
+% par vector de entrada de parámetros fijos
+% y variable de entrada a la función cuyo valor se seleccionara para
+% minimizar el error eM. En este caso cuando se llama a esta sub-función dentro de fzero la
 % variable de entrada en yconj.
 % OUTPUTS
 % eM error relativo
 %
-% descomposiciï¿½n del vector de parï¿½metros en las variables originales
+% descomposición del vector de parámetros en las variables originales
 Q = par(1);
 b = par(2);
 M = par(3);

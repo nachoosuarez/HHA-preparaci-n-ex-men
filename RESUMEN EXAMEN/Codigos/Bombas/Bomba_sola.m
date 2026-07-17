@@ -20,7 +20,7 @@ nu = 1e-6;
 epsilon1 = 0.00005;
 epsilon2 = 0.00005;
 
-% Succiï¿½n
+% Succión
 Ls = 15;
 Ds = 0.15;
 z1 = -4;
@@ -30,7 +30,7 @@ ks = 1;
 % Cota bomba
 zB = 0;
 
-% Impulsiï¿½n
+% Impulsión
 Li = 600;
 D1 = 0.15;
 z2 = 30;
@@ -57,7 +57,7 @@ Hm = zeros(size(Qmalla));
 NPSHdisp = zeros(size(Qmalla));
 
 %========================
-% Cï¿½LCULOS
+% CÁLCULOS
 %========================
 for i = 1:length(Qmalla)
 
@@ -67,7 +67,7 @@ for i = 1:length(Qmalla)
     Ai = pi*D1^2/4;
     At = pi*Dt^2/4;
 
-    %---- Succiï¿½n
+    %---- Succión
     vs = Qi/As;
     Re1 = vs*Ds/nu;
     f1 = colebrook(Re1, epsilon1/Ds);
@@ -78,7 +78,7 @@ for i = 1:length(Qmalla)
 
     HA = z1 + p1/(ro*g) + vs^2/(2*g) - deltaS;
 
-    %---- Impulsiï¿½n
+    %---- Impulsión
     vi = Qi/Ai;
     Re2 = vi*D1/nu;
     f2 = colebrook(Re2, epsilon1/D1);
@@ -90,7 +90,7 @@ for i = 1:length(Qmalla)
     vt = Qi/At;
     HB = z2 + p2/(ro*g) + vt^2/(2*g) + deltaI;
 
-    %---- Curva de la instalaciï¿½n
+    %---- Curva de la instalación
     Hm(i) = HB - HA;
 
     %---- NPSH disponible
@@ -99,13 +99,13 @@ for i = 1:length(Qmalla)
 endfor
 
 %========================
-% FIGURA 1 ï¿½ H-Q y ?-Q
+% FIGURA 1 – H-Q y ?-Q
 %========================
 plot(Qmalla, Hb, 'b-', 'LineWidth', 1.5, ...
-     'DisplayName','Curva caracterï¿½stica de la bomba (H-Q)');
+     'DisplayName','Curva característica de la bomba (H-Q)');
 
 plot(Qmalla, Hm, 'm-', 'LineWidth', 1.3, ...
-     'DisplayName','Curva de la instalaciï¿½n (H-Q)');
+     'DisplayName','Curva de la instalación (H-Q)');
 
 % Punto de funcionamiento
 [~, idx] = min(abs(Hb - Hm));
@@ -118,10 +118,10 @@ plot(Qpf, Hpf, 'bo', 'MarkerSize', 7, ...
 
 % Proyecciones punteadas H-Q
 plot([Qpf Qpf], [0 Hpf], 'k--', 'LineWidth', 1.0, ...
-     'DisplayName','Proyecciï¿½n vertical PF (H-Q)');
+     'DisplayName','Proyección vertical PF (H-Q)');
 
 plot([0 Qpf], [Hpf Hpf], 'k--', 'LineWidth', 0.8, ...
-     'DisplayName','Proyecciï¿½n horizontal PF (H-Q)');
+     'DisplayName','Proyección horizontal PF (H-Q)');
 
 % Curva de eficiencia
 plot(Q, eta, '-', 'Color',[1 0.5 0], 'LineWidth',1.3, ...
@@ -131,10 +131,10 @@ plot(Q, eta, '-', 'Color',[1 0.5 0], 'LineWidth',1.3, ...
 eta_pf = interp1(Q, eta, Qpf, "pchip");
 
 plot([Qpf Qpf], [0 eta_pf], 'k--', 'LineWidth', 0.8, ...
-     'DisplayName','Proyecciï¿½n vertical PF (?-Q)');
+     'DisplayName','Proyección vertical PF (?-Q)');
 
 plot([0 Qpf], [eta_pf eta_pf], 'k--', 'LineWidth', 0.8, ...
-     'DisplayName','Proyecciï¿½n horizontal PF (?-Q)');
+     'DisplayName','Proyección horizontal PF (?-Q)');
 
 xlabel('Caudal Q [m^3/s]');
 ylabel('Carga H [m] / Eficiencia ? [%]');
@@ -151,7 +151,7 @@ P = ro*g*Qpf*Hpf/(eta_pf/100);
 fprintf('Potencia al eje = %.2f kW\n', P/1000);
 
 %========================
-% CAVITACIï¿½N
+% CAVITACIÓN
 %========================
 NPSHdisp_pf = NPSHdisp(idx);
 NPSHr_pf = interp1(Q, NPSHr, Qpf, "pchip");
@@ -163,7 +163,7 @@ else
 end
 
 %========================================================
-% FIGURA 2 ï¿½ NPSH - Q
+% FIGURA 2 – NPSH - Q
 %========================================================
 figure(2); clf; hold on; grid on;
 
@@ -178,14 +178,14 @@ plot(Q, NPSHr, 'r-', 'LineWidth', 1.5, ...
 % Punto de funcionamiento
 plot(Qpf, NPSHdisp_pf, 'bo', 'MarkerSize', 7, ...
      'MarkerFaceColor','b', ...
-     'DisplayName','Condiciï¿½n de operaciï¿½n');
+     'DisplayName','Condición de operación');
 
 % Proyecciones punteadas
 plot([Qpf Qpf], [0 NPSHdisp_pf], 'k--', 'LineWidth', 1.0, ...
-     'DisplayName','Proyecciï¿½n vertical PF');
+     'DisplayName','Proyección vertical PF');
 
 plot([0 Qpf], [NPSHdisp_pf NPSHdisp_pf], 'k--', 'LineWidth', 0.8, ...
-     'DisplayName','Proyecciï¿½n horizontal PF');
+     'DisplayName','Proyección horizontal PF');
 
 xlabel('Caudal Q [m^3/s]');
 ylabel('NPSH [m]');
@@ -200,12 +200,12 @@ legend('Location','eastoutside');
 % Si quiero sacar la altura a la que llega la bomba 
 %Me tienen que dar un manometro esa presion va *1000*9.8
 %Dsp lo que hago es ir al script de la bomba y poner
-%En succiï¿½n los datos como van
+%En succión los datos como van
 %En impulsion pongo:
 %Largo=0
 %Ki=0
 %z altura bomba
 %P2 la del manometro 
-%Corro y saco Q_inst y lo meto en la ecuaciï¿½n:
+%Corro y saco Q_inst y lo meto en la ecuación:
 %(Z_bomba+P/ro+ Q^2/2gA^2)= Z_quiero + ((f2 L2/D2)+K2)Q^2/2gA^2
 %========================================================

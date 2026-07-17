@@ -3,20 +3,20 @@
 % fsolve/fzero (usada dentro de fgv_rect.m para refinar yc). Requiere
 % rect_geom.m.
 function ec = froude_rect(y,par)
-% Funciï¿½n auxiliar que calcula la diferencia entre 1 y el nï¿½mero %de Froude
+% Función auxiliar que calcula la diferencia entre 1 y el número %de Froude
 % calculado con el tirante.
 %
 % INPUTS
-% par vector de parï¿½metros de entrada
-% y   tirante de entrada con el que calcularï¿½ el Froude
+% par vector de parámetros de entrada
+% y   tirante de entrada con el que calculará el Froude
 %
 % OUTPUTS
 % ec apartamiento del Froude respecto a 1
 %
-% Descomposiciï¿½n del vector de parï¿½metros de entrada
+% Descomposición del vector de parámetros de entrada
 Q = par(1);% caudal (m3/s)
 b = par(2);% ancho de fondo (m)
 %
-% Funciï¿½n
-[B,A,P,R,yG,D]=rect_geom(y,b);% funciï¿½n que calcula parï¿½metros geom. de la sec.
+% Función
+[B,A,P,R,yG,D]=rect_geom(y,b);% función que calcula parámetros geom. de la sec.
 ec=(Q^2)*B./(9.8*A.^3)-1;% diferencia entre el Froude estimado con y que tiende al yc con 1

@@ -12,11 +12,11 @@
 % conjugados_trap.m / encontrar_resalto.m en su lugar. Requiere
 % trap_geom.m.
 function [y2_sol, E1_sol] = descarga_ahogada(M3, Q, b, m, a)
-%se conserva la energï¿½a entre 1-2 y se conserva el momento entre 2-3
-% Funciï¿½n que resuelve el sistema de energï¿½a y momento para una compuerta
-% con descarga ahogada, donde las incï¿½gnitas son:
+%se conserva la energía entre 1-2 y se conserva el momento entre 2-3
+% Función que resuelve el sistema de energía y momento para una compuerta
+% con descarga ahogada, donde las incógnitas son:
 %   y2 = tirante aguas abajo
-%   E1 = energï¿½a especï¿½fica aguas arriba
+%   E1 = energía específica aguas arriba
 %
 % INPUTS:
 % M3 momento aguas abajo (m^3)
@@ -27,11 +27,11 @@ function [y2_sol, E1_sol] = descarga_ahogada(M3, Q, b, m, a)
 %
 % OUTPUTS:
 % y2_sol tirante aguas abajo (m)
-% E1_sol energï¿½a especï¿½fica aguas arriba (m)
+% E1_sol energía específica aguas arriba (m)
 
 g = 9.8;
 
-% ï¿½rea en movimiento bajo compuerta (fijo)
+% Área en movimiento bajo compuerta (fijo)
 [~, Am, ~, ~, ~, ~] = trap_geom(a, b, m);
 
 % Estimaciones iniciales
@@ -40,7 +40,7 @@ E1_0 = y2_0 + (Q^2)/(2*g*Am^2);
 
 x0 = [y2_0; E1_0];
 
-% Resoluciï¿½n del sistema no lineal
+% Resolución del sistema no lineal
 sol = fsolve(@(x) sistema_ec(x, M3, Q, b, m, Am), x0);
 
 y2_sol = sol(1);
@@ -59,14 +59,14 @@ E1 = x(2);
 
 g = 9.8;
 
-% Geometrï¿½a completa de la secciï¿½n 2
+% Geometría completa de la sección 2
 [~, A2, ~, ~, yG2, ~] = trap_geom(y2, b, m);
 
-% Ecuaciï¿½n de energï¿½a:
+% Ecuación de energía:
 % E1 = y2 + (Q^2)/(2*g*Am^2)
 F(1) = y2 + (Q^2)/(2*g*Am^2) - E1;
 
-% Ecuaciï¿½n de momento:
+% Ecuación de momento:
 % M2 = yG2*A2 + (Q^2)/(g*Am) = M3
 M2 = yG2*A2 + (Q^2)/(g*Am);
 F(2) = M2 - M3;

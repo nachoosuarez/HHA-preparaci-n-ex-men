@@ -6,23 +6,23 @@
 % FGV_trapezoidal â€” ese, pese al nombre, es en realidad la versiÃ³n
 % trapezoidal (usa trap_geom.m con talud m). Requiere rect_geom.m.
 function dydx = rect(x,y,par)
-% funciï¿½n que estima la pendiente de la superficie libre para el cï¿½lculo
+% función que estima la pendiente de la superficie libre para el cálculo
 % del tirante en FGV
 % INPUT
-% x variable muda para pasar la condiciï¿½n de parada cuando se llega al
-% tirante crï¿½tico
+% x variable muda para pasar la condición de parada cuando se llega al
+% tirante crítico
 % y tirante (m)
-% par vector de parï¿½metros de entrada
+% par vector de parámetros de entrada
  
-%% Descomposiciï¿½n del vector de parï¿½metros de entrada
+%% Descomposición del vector de parámetros de entrada
 Q = par(1);% caudal (m3/s)
 b = par(2);% ancho de fondo (m)
 S = par(3);% pendiente de fondo
 n = par(4);% n de Manning
  
-%% Ecuaciï¿½n de FGV
-[B,A,P,R,yG,D]=rect_geom(y,b);% funciï¿½n que calcula parï¿½metros geomï¿½tricos de la secciï¿½n
-Fr2=(Q^2)*B/(9.8*(A)^3);% nï¿½mero de Froude al cuadrado
-Sf=((Q^2)*(n^2))/((A)^(2)*(R^(4/3)));% pendiente de energï¿½a
+%% Ecuación de FGV
+[B,A,P,R,yG,D]=rect_geom(y,b);% función que calcula parámetros geométricos de la sección
+Fr2=(Q^2)*B/(9.8*(A)^3);% número de Froude al cuadrado
+Sf=((Q^2)*(n^2))/((A)^(2)*(R^(4/3)));% pendiente de energía
  
 dydx = (S-Sf)/(1-Fr2);%dy/dx derivada del tirante

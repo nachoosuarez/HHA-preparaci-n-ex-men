@@ -7,7 +7,7 @@
 % cÃ¡lculo de canal rectangular (caso particular de trap_geom.m con m=0,
 % pero con fÃ³rmulas cerradas mÃ¡s simples).
 function [B,A,P,R,yG,D]=rect_geom(y,b)
-% funciï¿½n que calcula los parï¿½metros geomï¿½tricos de una secciï¿½n rectangular
+% función que calcula los parámetros geométricos de una sección rectangular
 %
 % INPUT
 % y tirante (m)
@@ -15,11 +15,11 @@ function [B,A,P,R,yG,D]=rect_geom(y,b)
 %
 % OUTPUT
 % B   ancho superficial (m)
-% A   ï¿½rea (m^3)
-% P   perï¿½metro mojado (m)
-% R   radio hidrï¿½ulico (m)
+% A   área (m^3)
+% P   perímetro mojado (m)
+% R   radio hidráulico (m)
 % yG  distancia desde la superficie libre al baricentro de la seccion (m)
-% D   profundidad hidrï¿½ulica (m)
+% D   profundidad hidráulica (m)
 %
 B=b; 
 A=b.*y;

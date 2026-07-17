@@ -7,7 +7,7 @@
 % (escalÃ³n de fondo, compuerta sin pÃ©rdidas). Requiere rect_geom.m.
 function [E,yalt]=Eesp_rect(y,b,Q)
 
-%  Funciï¿½n que calcula la energï¿½a especifica y el tirante alterno para un canal
+%  Función que calcula la energía especifica y el tirante alterno para un canal
 % rectangular para un tirante, ancho de canal y caudal dados
 %
 % INPUTS
@@ -16,35 +16,35 @@ function [E,yalt]=Eesp_rect(y,b,Q)
 % Q caudal (m^3/s)
 %
 % OUTPUTS
-% Energï¿½a especifica (m)
+% Energía especifica (m)
 % yalt tirante alterno de y (m)
 %
-% Calculo de la energï¿½a especifica
+% Calculo de la energía especifica
 [B,A,P,R,yG,D]=rect_geom(y,b);
 U=Q./A;% velocidad media
-E=y+U.^2/(2*9.8);% energï¿½a especifica
-Fr2=(Q^2)*B./(9.8.*A.^3);% nï¿½mero de Froude al cuadrado
+E=y+U.^2/(2*9.8);% energía especifica
+Fr2=(Q^2)*B./(9.8.*A.^3);% número de Froude al cuadrado
 %
 % Busqueda del tiernte alterno
 yalt=y./(-1 + sqrt(1 + 8./Fr2))*2;% Sol. para caso rectangular
 
 function eE=alt_rect(y,par)
-% Funciï¿½n auxiliar que calcula el error relativo entre la energï¿½a
-% especifica dada y la energï¿½a especifica calculada usando el tirante alterno estimado, que se buscara
+% Función auxiliar que calcula el error relativo entre la energía
+% especifica dada y la energía especifica calculada usando el tirante alterno estimado, que se buscara
 % minimizar.
 % INPUTS
-% par vector de parï¿½metros de entrada
-% y variable de entrada a la funciï¿½n cuyo valor se seleccionara para minimizar el error eE
+% par vector de parámetros de entrada
+% y variable de entrada a la función cuyo valor se seleccionara para minimizar el error eE
 % OUTPUTS
 % eE error relativo
 %
-% descomposiciï¿½n del vector de parï¿½metros en las variables originales
+% descomposición del vector de parámetros en las variables originales
 Q = par(1);
 b = par(2);
 E = par(3);
 
-[B,A,P,R,yG,D]=rect_geom(y,b);% funciï¿½n que calcula parï¿½metros geomï¿½tricos de la 
-% secciï¿½n (algunos de los cuales no son usados en esta sub-funciï¿½n), debe estar en el mismo directorio.
+[B,A,P,R,yG,D]=rect_geom(y,b);% función que calcula parámetros geométricos de la 
+% sección (algunos de los cuales no son usados en esta sub-función), debe estar en el mismo directorio.
 U=Q/A;% velocidad media
-eE=E/(y+U^2/(2*9.8))-1;% error relativo entre el valor de la energï¿½a especifica 
+eE=E/(y+U^2/(2*9.8))-1;% error relativo entre el valor de la energía especifica 
 % dada y la calculada con el valor de la variable de entrada y.
