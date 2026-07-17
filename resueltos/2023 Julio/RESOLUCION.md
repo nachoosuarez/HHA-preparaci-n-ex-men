@@ -216,3 +216,118 @@ resalto con el desarrollo manuscrito confirma que el resto de la
 solución oficial sí corresponde a estos mismos datos.
 
 ---
+
+## Ejercicio 3 — Delimitación de cuenca (cañada de Arbelo, Canelones) + tiempo de concentración
+
+### Enunciado (resumen)
+
+1) Delimitar la cuenca de la cañada de Arbelo (departamento de
+   Canelones), punto de cierre X=520 km, Y=6160 km, sobre la carta
+   topográfica SGM adjunta (curvas de nivel cada 5 m).
+2) Definir qué se entiende por tiempo de concentración de una cuenca
+   hidrográfica.
+3) Determinar el desnivel máximo del cauce principal y el tiempo de
+   concentración de la cuenca, asumiendo que la longitud del cauce
+   principal es L=7850 m y que el flujo puede considerarse concentrado.
+
+### Teoría (RESUMEN_TEORICO.md)
+
+- **B1** Delimitación de cuencas y divisoria de aguas: la divisoria se
+  traza perpendicular a las curvas de nivel, ganando altura por el lado
+  convexo (lomas/cuchillas, hacia las nacientes) y perdiendo altura por
+  el lado cóncavo (vaguadas de cuencas vecinas), sin cruzar nunca un
+  curso de agua salvo en el propio punto de cierre.
+- **B2** Tiempo de concentración (Ramser-Kirpich): tc es el tiempo de
+  viaje de la partícula de agua que recorre el trayecto hidráulicamente
+  más largo hasta el punto de cierre — el instante en que toda la
+  cuenca empieza a aportar simultáneamente.
+
+Cita: Teórico HHA §1.2.1 "Cuenca como sistema hidrológico", §3.1.2
+"Tiempo de concentración"; Formulómetro "Morfología de Cuencas" /
+"Eventos extremos — Tiempo de Concentración".
+
+### Herramienta y por qué
+
+**Parte 1:** delimitación gráfica manual sobre la carta (Teórico
+§1.2.1, sin fórmula cerrada) — se extrajo a imagen la página con la
+carta en blanco (`scripts/ej3_carta_sin_delimitar.png`, página 3 del
+PDF) y la página con la delimitación de la solución oficial
+(`scripts/ej3_carta_solucion_oficial.png`, página 8 del PDF, con el
+polígono de la cuenca ya trazado a mano).
+
+**Parte 3:** Python (`scripts/Ejercicio3_tc.py`) replicando la fórmula
+cerrada de Ramser-Kirpich (no requiere `fsolve` ni ninguna herramienta
+numérica, es una expresión directa en L y S) sobre las cotas leídas en
+la delimitación de la carta — mismo patrón ya usado en
+`resueltos/2025_FEBRERO 2/RESOLUCION.md`, Ejercicio 3 Parte 1.2.
+
+### Paso a paso
+
+**Parte 1) Delimitación de la cuenca.**
+
+El punto de cierre (marcador circular en la carta) se ubica sobre el
+curso de la cañada de Arbelo, inmediatamente al sur de un cruce de
+caminos, en la zona norte de la hoja. Desde ahí se trazó la divisoria
+de aguas perpendicular a las curvas de nivel, subiendo por las lomas
+que separan el valle de la cañada de Arbelo de las cuencas vecinas
+(cañada del Juncal al oeste, otros tributarios de la cañada Grande al
+este): el resultado es una cuenca alargada en forma de "hoja", angosta
+cerca del punto de cierre y ensanchándose hacia el norte, hasta cerrar
+en las nacientes del curso principal (loma al norte del área, cota
+máxima ≈66 m). Ver `scripts/ej3_carta_solucion_oficial.png` (polígono
+trazado a mano en la solución oficial) comparado con
+`scripts/ej3_carta_sin_delimitar.png` (carta sin delimitar, tal como se
+entrega en el examen).
+
+**Parte 2) Definición de tiempo de concentración.**
+
+El tiempo de concentración es el tiempo requerido para que el punto
+hidráulicamente más alejado de la cuenca (el que está a mayor distancia
+en tiempo de viaje, no necesariamente en distancia física) aporte su
+escurrimiento al punto de cierre. Equivalentemente: el tiempo requerido
+para que **toda la cuenca** empiece a contribuir simultáneamente al
+caudal de salida. Es el criterio que fija la duración de la tormenta de
+diseño en el método Racional (B4 de `RESUMEN_TEORICO.md`).
+
+**Parte 3) Desnivel máximo y tiempo de concentración.**
+
+Cotas leídas sobre la delimitación (interpolando entre curvas de nivel
+cada 5 m): la naciente del cauce principal está cerca de la cota 66 m
+(loma norte) y el punto de cierre está cerca de la cota 38 m.
+
+```
+ΔH = Hmax - Hmin = 66 - 38 = 28 m
+L  = 7850 m = 7.850 km                        (dato del enunciado)
+S  = ΔH(m) / L(km) / 10 = 28/7.850/10 = 0.3567 %
+
+Ramser-Kirpich (flujo concentrado):
+tc = 0.4 · L^0.77 / S^0.385 = 0.4·(7.850)^0.77/(0.3567)^0.385 = 2.9072 h ≈ 2.91 h (174.4 min)
+```
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| Parte 1: cuenca delimitada | Polígono alargado cerrando en el punto de cierre (X=520, Y=6160), ver `ej3_carta_solucion_oficial.png` |
+| Parte 2: definición de tc | Tiempo para que el punto hidráulicamente más alejado (=toda la cuenca) aporte al punto de cierre |
+| Desnivel máximo del cauce principal, ΔH | **28 m** (66 m → 38 m) |
+| Pendiente del cauce principal, S | **0.357 %** |
+| **Tiempo de concentración, tc (Ramser-Kirpich)** | **2.91 h ≈ 174 min** |
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| ΔH | 28 m | 28 m | 0 |
+| L | 7850 m | 7850 m | 0 (dato) |
+| tc | 2.91 h | 2.9072 h | ≈0 |
+
+Coincidencia exacta: la definición de tc (Parte 2) coincide en sustancia
+con la respuesta manuscrita oficial ("tiempo requerido para que el
+punto hidráulicamente más alejado de la cuenca llegue al punto de
+cierre, es decir, el tiempo requerido para que toda la cuenca aporte al
+punto de cierre"). La Parte 1 (delimitación gráfica) no tiene forma de
+verificarse numéricamente; se comparó visualmente contra la solución
+oficial escaneada (mismo criterio metodológico, ver imágenes).
+
+---
