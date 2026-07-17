@@ -316,4 +316,135 @@ final, ya que el método adoptado en la parte a es el Racional).
 
 ---
 
-## ESTADO: EN CURSO (falta Ejercicio 3, 4)
+---
+
+## Ejercicio 3 — Delimitación de cuenca (Florida) + evento extremo observado
+
+### Enunciado (resumen)
+
+1) Delimitar la cuenca de la cañada Sin Nombre (departamento de Florida),
+punto de cierre X=447.3 km, Y=6199.7 km, sobre la carta topográfica SGM
+adjunta (curvas de nivel cada 5 m).
+2) El mes anterior ocurrió un evento extremo con precipitación acumulada
+total de 185 mm; en los 5 días previos al evento llovió 62 mm. El suelo
+de la cuenca es la unidad cartográfica "Cerro Chato", cobertura pasturas
+naturales en condición hidrológica REGULAR. Determinar: 3.1) el volumen
+de escorrentía total (mm) asociado al evento; 3.2) el coeficiente de
+escorrentía asociado a todo el evento.
+
+### Teoría (RESUMEN_TEORICO.md)
+
+- **B1** Delimitación de cuencas y divisoria de aguas (perpendicular a
+  curvas de nivel, convexo=cresta/cóncavo=vaguada, nunca cruza el cauce
+  salvo en el cierre).
+- **B6** Condición de humedad antecedente (AMC): P5d se compara contra
+  umbrales según la estación (activa/inactiva) para decidir si corregir
+  el NC de tabla (AMC II) a AMC I (seco) o AMC III (húmedo).
+- **B5** Precipitación efectiva por el método del Número de Curva (NRCS).
+
+Cita: Teórico HHA §1.2.1 (morfología de cuencas), §3.1.5 b) / Fig. 3.1.21
+(AMC), §3.1.6 (Número de Curva); Formulómetro "Morfología de Cuencas" /
+"Condiciones de humedad antecedente".
+
+### Herramienta y por qué
+
+**Parte 1:** delimitación gráfica manual sobre la carta (Teórico §1.2.1,
+sin fórmula cerrada) — se extrajeron a imagen la página en blanco
+(`scripts/ej3_carta_sin_delimitar.png`) y la página con la solución
+oficial (`scripts/ej3_cuenca_solucion_oficial.png`, ambas de
+`EXAMENES/2023 diciembre.pdf`).
+
+**Parte 2:** Python replicando la fórmula NRCS de precipitación efectiva y
+la corrección de NC por AMC (B5/B6), en vez de la planilla de eventos
+extremos, porque acá el dato es un evento **ya observado** con P total y
+Pe pedidas directamente (no hay que armar la tormenta de diseño por
+bloque alterno — ver COMO_USAR_EVENTOS_EXTREMOS.md, "Hoja 4" es para
+hietogramas por bloques, pero acá alcanza con la lámina total del
+evento). Script: `resueltos/2023 diciembre/scripts/Ejercicio3_parte2_AMC.py`.
+
+### Paso a paso
+
+**Parte 1) Delimitación de la cuenca.**
+
+En la carta se ubicó el punto de cierre (marcador rojo, sobre la cañada
+Sin Nombre, cerca de la localidad de Independencia — departamento de
+Florida, consistente con el enunciado) inmediatamente aguas abajo de la
+confluencia de dos brazos del curso de agua: uno que baja de norte a sur
+paralelo a la ruta/"Cuchilla del Pintado", y un tributario que se une
+desde el oeste. La solución oficial resalta en la carta justamente ese
+curso principal y su confluencia (imagen `ej3_cuenca_solucion_oficial.png`)
+como paso previo a trazar la divisoria.
+
+A partir de esa red de drenaje, la divisoria se traza perpendicular a las
+curvas de nivel, por las lomas que rodean el valle de ambos brazos:
+ganando altura hacia las nacientes de cada brazo (lado convexo de las
+curvas) y cerrando en el punto de cierre. La cuenca resultante es un
+polígono que engloba ambos brazos del curso de agua, apoyado al norte y
+al oeste en las lomas que la separan de las cuencas vecinas (visibles en
+la carta como las cabeceras de los demás cursos de agua que no confluyen
+hacia el punto de cierre), y cerrando al sureste en el punto de cierre
+mismo.
+
+**Nota de precisión:** el manuscrito de la solución oficial resalta el
+curso de agua y su confluencia pero no dibuja explícitamente el polígono
+completo de la divisoria (o no es legible en el escaneo disponible); la
+descripción de arriba es una lectura manual sobre la carta siguiendo el
+procedimiento del Teórico §1.2.1, con la misma precisión con la que se
+traza a mano en el examen real, pero sin verificación numérica cruzada
+de área/perímetro contra un polígono oficial (misma limitación señalada
+en `resueltos/2024 febrero/RESOLUCION.md`, Ejercicio 3 Parte 1, para un
+caso similar).
+
+**Parte 2) Volumen de escorrentía y coeficiente de escorrentía del evento.**
+
+El evento ocurrió en julio (invierno en Uruguay ⇒ estación **inactiva**).
+Con P5d=62 mm, se compara contra los umbrales de AMC para estación
+inactiva (B6):
+```
+P5d = 62 mm > 27.94 mm (umbral AMC III, estación inactiva)  =>  condición AMC III (suelo húmedo)
+```
+Se corrige el NC de tabla (NC(II)=69, Cerro Chato/pasturas naturales
+condición regular/Grupo B) a AMC III:
+```
+NC(III) = 23·NC(II) / (10 + 0.13·NC(II)) = 83.66 ≈ 83.7
+```
+Retención potencial máxima y abstracción inicial:
+```
+S = 25.4·(1000/NC(III) − 10) = 49.62 mm  <  P=185 mm  =>  hay escorrentía
+Ia = 0.2·S = 9.92 mm
+```
+Precipitación efectiva (volumen de escorrentía total, en lámina):
+```
+Pe = (P − Ia)² / (P + 0.8S) = (185−9.92)² / (185+0.8·49.62) = 136.42 mm
+```
+Coeficiente de escorrentía de todo el evento:
+```
+C = Pe / P = 136.42 / 185 = 0.74
+```
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| Parte 1: cuenca delimitada | Polígono que engloba los dos brazos del curso de agua, cerrando en el punto de cierre (X=447.3, Y=6199.7), ver `ej3_cuenca_solucion_oficial.png` |
+| AMC del evento | **AMC III** (P5d=62 mm > 27.94 mm, estación inactiva) |
+| NC corregido | **83.7** (de NC(II)=69) |
+| **Parte 3.1: volumen de escorrentía (lámina)** | **136.4 mm** |
+| **Parte 3.2: coeficiente de escorrentía del evento** | **0.74** |
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| NC(III) | 83.7 | 83.66 | ≈0 |
+| S | 49.6 mm | 49.62 mm | ≈0 |
+| Pe (volumen de escorrentía) | 136.4 mm | 136.42 mm | ≈0 |
+| C (coeficiente de escorrentía) | 0.74 | 0.74 | ≈0 |
+
+Coincidencia exacta en la Parte 2. La Parte 1 (delimitación gráfica) no
+tiene forma de verificarse numéricamente contra la solución oficial por
+las razones explicadas arriba (nota de precisión).
+
+---
+
+## ESTADO: EN CURSO (falta Ejercicio 4)
