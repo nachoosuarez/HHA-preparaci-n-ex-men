@@ -217,6 +217,159 @@ solución oficial sí corresponde a estos mismos datos.
 
 ---
 
+## Ejercicio 2 — Diseño de alcantarilla, evento observado y período de retorno de un pluviógrafo
+
+### Enunciado (resumen)
+
+Cuenca en Canelones (punto de cierre X=494.7 km, Y=6170.9 km): Área=5.5 km²,
+ΔH=80 m, L=3715 m, Grupo Hidrológico C, pendiente media S=6.5%. Uso de suelo:
+pastizales en condición hidrológica MALA. Flujo concentrado.
+
+1) Determinar el caudal máximo de diseño de la alcantarilla, Tr=10 años,
+   justificando el método.
+2) Una vez construida la obra, ocurre un evento extremo con hietograma
+   observado (12 bloques de 7 min, P en mm: 1.9, 2.1, 2.4, 2.8, 3.7, 6.2,
+   15.3, 4.5, 3.2, 2.6, 2.2, 2.0), con P5d=64 mm en los 5 días previos.
+   Determinar el caudal máximo en el punto de cierre para ese evento.
+3) Determinar el período de retorno de la intensidad máxima de
+   precipitación de este evento, registrada en un pluviógrafo.
+
+### Teoría (RESUMEN_TEORICO.md, sección B)
+
+- **B2** Tiempo de concentración (Ramser-Kirpich).
+- **B3** Curvas IDF de Uruguay (CD/CT/CA) — incluye el procedimiento
+  inverso para hallar el Tr de un evento ya registrado (Parte 3 de este
+  ejercicio).
+- **B4** Método Racional, con el criterio de selección de método según tc.
+- **B5** Método NRCS (Número de Curva + hidrograma unitario triangular
+  SCS), incluyendo la variante con el hietograma **observado** en su
+  orden cronológico real (sin bloque alterno) para verificar la
+  respuesta de una obra ya construida a un evento real.
+- **B6** Condición de humedad antecedente (AMC): P5d se compara contra
+  los umbrales según la estación (activa/inactiva) para corregir el NC.
+
+Cita: Teórico HHA §3.1.2–§3.1.6; Formulómetro "Eventos extremos —
+Tiempo de Concentración" / "Relaciones IDF" / "Método Racional" /
+"Método NRCS" / "Condiciones de humedad antecedente".
+
+### Herramienta y por qué
+
+Se usó Python (`numpy`, sin `scipy` disponible en el entorno — se
+implementó una bisección manual donde hacía falta) replicando las
+fórmulas de la planilla `Eventos extremos.xlsx` (hoja "Cálculos
+(grande)", ver `COMO_USAR_EVENTOS_EXTREMOS.md`) en vez de operar la
+planilla Excel directamente, siguiendo el mismo patrón ya usado en los
+demás exámenes resueltos (`resueltos/*/scripts/ej2_parte*.py`): el
+cálculo requiere iterar (bloque alterno de 12 pasos, convolución del
+hidrograma unitario, inversión numérica de CT(Tr)), que en Python es
+más rápido de verificar y de adaptar a tres sub-partes con datos
+distintos que editar celda por celda. Scripts (uno por parte, cada uno
+reutilizable/adaptable a otro examen con los mismos pasos):
+`resueltos/2023 Julio/scripts/Ejercicio2_parte1_racional_NRCS.py`,
+`Ejercicio2_parte2_evento_AMC.py`, `Ejercicio2_parte3_Tr_pluviografo.py`.
+
+### Paso a paso
+
+**Parte 1) Caudal de diseño (Tr=10 años).**
+
+Tiempo de concentración (Ramser-Kirpich, flujo concentrado):
+```
+S (cauce ppal) = ΔH/L/10 = 80/3.715/10 = 2.1534 %
+tc = 0.4·L(km)^0.77/S^0.385 = 0.8178 hs = 49.07 min
+```
+Como 20 min < tc < 1 h, corresponde calcular **ambos** métodos (Racional
+y NRCS) y adoptar el mayor caudal (B4).
+
+Método Racional (C=0.38, pastizales pendiente 2-7%, Tabla 3.1.4;
+P(3,10)=80 mm dato del enunciado; CT(10)=1):
+```
+d=tc=0.8178 hs ; CD(d)=0.5634 ; CA(d,A)=0.9879
+P(d,10,A) = P310·CD·CT·CA = 44.53 mm ; i = P/d = 54.44 mm/h
+Qmax racional = C·i·A(ha)/360 = 0.38·54.44·550/360 = 31.61 m³/s
+```
+
+Método NRCS (NC=86, pastizales/condición MALA/Grupo C; tormenta de
+diseño por bloque alterno, dt=tc/7=7.01 min, 12 bloques; piso de
+infiltración 1.2 mm/h por ser Grupo C):
+```
+S = 25.4·(1000/86−10) = 41.35 mm ; Ia = 0.2·S = 8.27 mm
+ΣPe (tormenta de diseño) = 26.11 mm
+Hidrograma unitario SCS: Tp=0.549 hs, Tb=1.465 hs, qp=0.208·A/Tp (por mm)
+Qmax NRCS (convolución) = 40.54 m³/s
+```
+Como Qmax NRCS (40.54 m³/s) > Qmax Racional (31.61 m³/s), **se adopta el
+método NRCS**: Qmax de diseño = **40.54 m³/s**.
+
+**Parte 2) Caudal del evento observado (con corrección de NC por AMC).**
+
+El evento ocurre en julio (invierno en Uruguay ⇒ estación **inactiva**).
+Con P5d=64 mm (B6):
+```
+P5d = 64 mm > 27.94 mm (umbral AMC III, estación inactiva) => condición AMC III (húmedo)
+NC(III) = 23·NC(II)/(10+0.13·NC(II)) = 23·86/(10+0.13·86) = 93.39
+```
+Se sustituye la tormenta de diseño por el hietograma **realmente
+ocurrido** (12 bloques de 7 min, en su orden cronológico real, sin
+reordenar por bloque alterno — coincide con el mismo dt=tc/7 de la
+Parte 1, así que se reutiliza el mismo hidrograma unitario):
+```
+S = 25.4·(1000/93.39−10) = 17.98 mm ; Ia = 0.2·S = 3.60 mm
+P total del evento = 48.90 mm ; ΣPe (efectiva) = 32.43 mm
+Qmax del evento (convolución con el mismo HU triangular de la Parte 1) = 49.90 m³/s
+```
+Como 49.90 m³/s > 40.54 m³/s (el caudal de diseño de la Parte 1), **el
+evento superó la capacidad de diseño de la alcantarilla**.
+
+**Parte 3) Período de retorno de la intensidad máxima registrada.**
+
+El bloque de mayor intensidad del hietograma observado es P=15.3 mm en
+d=7 min (el mismo bloque que domina el pico del hidrograma de la Parte
+2). Al ser un dato **puntual** de un pluviógrafo (no una tormenta de
+diseño sobre una cuenca), no corresponde corrección por área (CA=1). Se
+despeja CT y se invierte numéricamente CT(Tr) (B3, procedimiento
+inverso; bisección manual, ya que no está disponible `scipy` en el
+entorno):
+```
+CD(d=7min=0.1167 hs) = 0.2286
+CT objetivo = P/(P310·CD·CA) = 15.3/(80·0.2286·1) = 0.8370
+CT(Tr) = 0.5786 − 0.4312·log10(ln(Tr/(Tr−1))) = 0.8370  =>  Tr ≈ 4.50 años (bisección)
+```
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| tc (Ramser-Kirpich) | 0.818 h ≈ 49.1 min (20 min<tc<1h ⇒ calcular ambos métodos) |
+| Qmax método Racional (Tr=10) | 31.61 m³/s |
+| Qmax método NRCS (Tr=10) | 40.54 m³/s |
+| **Parte 1: Qmax de diseño de la alcantarilla** | **40.54 m³/s** (NRCS, mayor de los dos) |
+| AMC del evento observado | AMC III (P5d=64 mm > 27.94 mm, estación inactiva) |
+| NC corregido (evento) | 93.39 (de NC(II)=86) |
+| **Parte 2: Qmax del evento observado** | **49.90 m³/s** (supera la capacidad de diseño) |
+| **Parte 3: Tr de la intensidad máxima registrada** | **≈4.5 años** |
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| tc | 0.817 h (49 min) | 0.8178 h (49.07 min) | ≈0 |
+| Qmax Racional | 31.62 m³/s | 31.61 m³/s | ≈0 |
+| i (Racional) | 54.46 mm/h | 54.44 mm/h | ≈0 |
+| NC (Parte 1, tabla) | 86 | 86 | 0 (dato) |
+| Qmax NRCS (Parte 1) | 40.35 m³/s | 40.54 m³/s | ≈0.5% |
+| NC(III) (Parte 2) | 93.39 | 93.39 | ≈0 |
+| Qmax evento observado (Parte 2) | 49.85 m³/s | 49.90 m³/s | ≈0.1% |
+| CD (Parte 3) | 0.2286 | 0.2286 | 0 |
+| CT objetivo (Parte 3) | 0.8366 | 0.8370 | ≈0 |
+| Tr (Parte 3) | ≈4.5 años | 4.50 años | 0 |
+
+Coincidencia prácticamente total en las tres partes; las diferencias de
+±0.5% en los caudales NRCS se deben a redondeos en la discretización
+manual del bloque alterno/hidrograma en la solución oficial vs. la
+malla numérica fina usada en Python.
+
+---
+
 ## Ejercicio 3 — Delimitación de cuenca (cañada de Arbelo, Canelones) + tiempo de concentración
 
 ### Enunciado (resumen)

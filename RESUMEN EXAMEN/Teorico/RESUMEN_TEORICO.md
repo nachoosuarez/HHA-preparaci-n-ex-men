@@ -29,10 +29,10 @@ Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
-| B4. Método Racional (y criterio de selección según tc) | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
-| B6. Condición de humedad antecedente (AMC) | 5 | 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| B4. Método Racional (y criterio de selección según tc) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| B6. Condición de humedad antecedente (AMC) | 6 | 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B7. Volumen de escorrentía y embalses de retención | 3 | 2024 dic, 2025 feb 2, 2024 feb |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 1 | 2025 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 1 | 2026 feb |
@@ -426,7 +426,9 @@ retorno de ese evento. Es el mismo procedimiento usado para encontrar el Tr
 que hace que un caudal de diseño alcance un valor crítico (ver B4), aplicado
 directamente sobre la lámina/intensidad en vez de sobre el caudal (ejemplo
 completo: 2024 feb, Ej.3 parte 2 — intensidad máxima de un evento registrado
-en pluviógrafo, P=26mm en d=10min, P(3,10)=79mm ⇒ Tr≈30 años).
+en pluviógrafo, P=26mm en d=10min, P(3,10)=79mm ⇒ Tr≈30 años; otro ejemplo,
+2023 jul Ej.2 parte 3 — P=15.3mm en d=7min, P(3,10)=80mm, CA=1 (dato
+puntual, sin corrección por área) ⇒ CT=0.837 ⇒ Tr≈4.5 años).
 
 Cita: Teórico HHA §3.1.4; Formulómetro "Eventos extremos — Relaciones
 Intensidad Duración Frecuencia".
