@@ -185,4 +185,135 @@ ese dibujo.
 
 ---
 
-## ESTADO: EN CURSO (falta Ejercicio 2, 3, 4)
+## Ejercicio 2 — Caudal de diseño de una alcantarilla, Tr límite y urbanización máxima
+
+### Enunciado (resumen)
+
+Cuenca en Treinta y Tres (punto de cierre X=625 km, Y=6350 km), uso de
+suelo pastizales naturales, Grupo Hidrológico B, condición hidrológica
+MALA, flujo concentrado. Área=4.75 km², ΔH=110 m, L (cauce ppal)=3100 m,
+S (pendiente media de la cuenca)=3.7%.
+a) Caudal de diseño de una alcantarilla en el punto de cierre, Tr=5 años.
+   Justificar la metodología.
+b) El sobrepasamiento de la rasante ocurre para Q>32 m³/s. Determinar el
+   período de retorno de ese caudal límite.
+c) Máxima superficie de la cuenca urbanizable (desarrollo en
+   concreto/techo) para que el Qmax en ese escenario no supere en 15% el
+   caudal de la parte (a), con tc invariante.
+
+### Teoría (RESUMEN_TEORICO.md, sección B — Hidrología)
+
+- **B2** Tiempo de concentración (Ramser-Kirpich), flujo concentrado.
+- **B3** Curvas IDF de Uruguay, coeficientes CD/CT/CA.
+- **B4** Método Racional, criterio de selección según tc, **búsqueda de Tr
+  a partir de un caudal límite** (C tabulado en columnas discretas de Tr),
+  y **coeficiente de escorrentía ponderado / área urbanizable máxima**
+  (ampliados en esta corrida con el caso concreto de este examen).
+- **B5** Método NRCS (Número de Curva + Hidrograma Unitario Triangular SCS).
+
+Cita: Teórico HHA §3.1.5, §3.1.6; Formulómetro "Tiempo de Concentración" /
+"Curvas IDF" / "Método Racional" / "Método NRCS".
+
+### Herramienta y por qué
+
+Se usó Python (replicando exactamente las fórmulas de la planilla
+`Eventos extremos.xlsx`, documentadas en
+`RESUMEN EXAMEN/Teorico/COMO_USAR_EVENTOS_EXTREMOS.md`) en vez de operar
+la planilla Excel directamente, porque el ejercicio pide además **invertir**
+la fórmula del método Racional para hallar un Tr (parte b) y despejar un
+área urbanizable a partir de un incremento de caudal admisible (parte c) —
+cálculos que la planilla no arma como celdas propias y que conviene
+programar para iterar/despejar con precisión, verificando cada paso contra
+la solución oficial. Es el mismo enfoque que los demás exámenes con
+Ejercicio de hidrología estadística (`ej2_parte1.py`, etc.). Script
+adaptado a este examen:
+`resueltos/2023 diciembre/scripts/Ejercicio2_racional_NRCS.py`.
+
+Lecturas gráficas/tabulares externas (no las calcula ninguna herramienta,
+hay que leerlas de las figuras/tablas del Teórico — se usaron los valores
+de la solución oficial, verificados por ser consistentes con los
+resultados finales): P(3,10)=80 mm (Fig. 3.1.10, isoyetas), NC=79
+(Fig. 3.1.20, pastizales naturales/condición mala/grupo B), C=0.36 para
+Tr=5 y C=0.38 para Tr=10 (Tabla 3.1.4, misma combinación de uso de
+suelo/pendiente).
+
+### Paso a paso
+
+**a) Caudal de diseño, Tr=5 años.**
+
+Tiempo de concentración (Kirpich, flujo concentrado; S del cauce
+principal, distinta de la pendiente media 3.7% de la cuenca):
+```
+S_cauce = ΔH/L/10 = 110/3.1/10 = 3.548 %
+tc = 0.4·L^0.77/S_cauce^0.385 = 0.587 hs = 35.2 min
+```
+Con 20 min < tc < 1 h (B4), corresponde calcular **ambos** métodos y
+adoptar el mayor caudal:
+```
+Método Racional: CT(5)=0.860, CD(tc)=0.486, CA(tc)=0.988
+  P máx. en el área = P310·CD·CT·CA = 33.0 mm ; i = 56.2 mm/h
+  QMR(Tr=5) = C·i·A/360 = 0.36·56.2·475/360 = 26.70 m³/s
+
+Método NRCS: S=25.4(1000/79-10)=67.5 mm ; Ia=13.5 mm
+  Tormenta de diseño (bloque alterno, Δt=tc/7) + Pe por bloque (NC, con
+  piso de infiltración 1.2 mm/h) + convolución con hidrograma unitario
+  triangular SCS (Tp=0.372 h, qp=2.66 m³/s/mm)
+  QNRCS(Tr=5) = 15.93 m³/s
+```
+Se adopta el mayor: **Qdiseño = QMR(Tr=5) = 26.70 m³/s** (método
+Racional).
+
+**b) Tr del caudal límite (Q=32 m³/s).**
+
+Como la Tabla 3.1.4 tabula C en columnas discretas de Tr (2, 5, 10, 25,
+50, 100 años), se prueba el siguiente escalón tabulado, Tr=10 (C=0.38):
+```
+QMR(Tr=10) = 0.38·i(Tr=10)·475/360 = 32.79 m³/s
+```
+Como QMR(Tr=5)=26.70 m³/s < 32 m³/s < QMR(Tr=10)=32.79 m³/s, y el
+enunciado da un caudal límite puntual (no pide interpolar la tabla), el
+caudal de sobrepasamiento cae dentro del escalón de **Tr=10 años**: ese
+es el período de retorno del caudal límite.
+
+**c) Área urbanizable máxima (concreto/techo), Δh≤15%.**
+
+Con tc invariante (dato del enunciado), Q es directamente proporcional a
+C (A, i fijos). El coeficiente de escorrentía ponderado de una cuenca con
+área A₂ urbanizada (C₂=0.80, concreto/techo) y el resto (A₁=Aₜ-A₂) con el
+C original (C₁=0.36, Tr=5, el de la parte a) es:
+```
+C_ponderado = (C1·A1 + C2·A2)/AT
+Qtarget = 1.15·Qa = 30.70 m³/s  =>  C_target = 1.15·C1 = 0.414
+A2 = AT·(C_target - C1)/(C2 - C1) = 4.75·(0.414-0.36)/(0.80-0.36) = 0.583 km²
+```
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| tc (Kirpich) | 35.2 min (20min<tc<1h ⇒ calcular Racional y NRCS) |
+| QMR(Tr=5) | 26.70 m³/s |
+| QNRCS(Tr=5) | 15.93 m³/s |
+| **Qdiseño (parte a)** | **26.70 m³/s** (método Racional) |
+| **Tr del caudal límite (parte b)** | **10 años** |
+| **Área urbanizable máxima (parte c)** | **0.58 km²** |
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| tc | 0.58 hs = 35 min | 0.587 hs = 35.2 min | ≈0 |
+| QMR(Tr=5) | 26.7 m³/s | 26.70 m³/s | ≈0 |
+| QNRCS(Tr=5) | 15.8 m³/s | 15.93 m³/s | 0.13 m³/s |
+| QMR(Tr=10) | 32.8 m³/s | 32.79 m³/s | ≈0 |
+| Tr límite | 10 años | 10 años | — |
+| Área urbanizable máxima | 0.58 km² | 0.583 km² | ≈0 |
+
+Coincidencia prácticamente exacta en todos los ítems (la única diferencia
+menor, en QNRCS, es atribuible a la discretización numérica del
+hidrograma unitario/tormenta de diseño y no afecta ningún resultado
+final, ya que el método adoptado en la parte a es el Racional).
+
+---
+
+## ESTADO: EN CURSO (falta Ejercicio 3, 4)

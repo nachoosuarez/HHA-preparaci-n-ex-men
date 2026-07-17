@@ -26,10 +26,10 @@ Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 6 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
-| B4. Método Racional (y criterio de selección según tc) | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
+| B4. Método Racional (y criterio de selección según tc) | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
 | B6. Condición de humedad antecedente (AMC) | 4 | 2025 feb 1, 2026 feb, 2024 mar, 2024 feb |
 | B7. Volumen de escorrentía y embalses de retención | 3 | 2024 dic, 2025 feb 2, 2024 feb |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 1 | 2025 feb 2 |
@@ -449,6 +449,38 @@ tc > 1 h               =>  sólo método NRCS (Racional se desaconseja para cuen
 exámenes resueltos aparece en los 4 (en 2025 feb 2, con tc≈1.23h>1h, el
 Racional se descarta explícitamente por el criterio de arriba, sin
 calcularlo, y se usa sólo NRCS).
+
+**Hallar el Tr de un caudal límite dado** (2023 dic, Ej.2 parte b). Si el
+enunciado da un caudal límite (p.ej. el que empieza a sobrepasar una
+rasante) y pide su período de retorno, hay que invertir Q=C·i·A/360 en Tr.
+`CT(Tr)` es continua y se puede despejar/iterar, pero **C sale de una
+tabla (Tabla 3.1.4) tabulada en columnas DISCRETAS de Tr** (típicamente
+2, 5, 10, 25, 50, 100 años) — no es una función continua de Tr. La forma
+práctica de resolverlo es **probar los Tr tabulados** (con su C
+correspondiente) hasta encontrar el escalón donde Q cruza el valor límite,
+y adoptar ese Tr tabulado como respuesta (no interpolar entre columnas).
+
+**Coeficiente de escorrentía ponderado y área urbanizable máxima**
+(2023 dic, Ej.2 parte c; ver también B5 para el NC ponderado análogo del
+método NRCS). Si una fracción A₂ de la cuenca (área total Aₜ) se urbaniza
+(desarrollo en concreto/techo, C₂≈0.8-0.95) y el resto (A₁=Aₜ-A₂) conserva
+su C₁ original, el coeficiente de escorrentía efectivo de toda la cuenca es
+el promedio ponderado por área:
+
+```
+C_ponderado = (C1·A1 + C2·A2) / AT = (C1·AT + A2·(C2-C1)) / AT
+```
+
+Si además **tc no cambia** (dato del enunciado, o supuesto porque la red de
+drenaje no se modifica), entonces i y A permanecen fijos en Q=C·i·A/360, y
+por lo tanto **Q es directamente proporcional a C**. Esto permite despejar
+en forma cerrada el área urbanizable máxima A₂ que no exceda un incremento
+admisible de caudal (p.ej. "que Qmax no supere en x% el caudal original"):
+
+```
+Q_admisible = (1+x)·Q_original  =>  C_target = (1+x)·C_original   (por proporcionalidad directa)
+A2 = AT · (C_target − C1) / (C2 − C1)
+```
 
 Cita: Teórico HHA §3.1.5 "Metodologías para determinación del caudal de
 diseño"; Formulómetro "Cálculo de Caudales Máximos — Método Racional".
