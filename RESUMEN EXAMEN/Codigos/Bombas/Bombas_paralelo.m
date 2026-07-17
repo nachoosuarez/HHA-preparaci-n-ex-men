@@ -17,7 +17,7 @@ nu = 0.000001;
 epsilon1 = 0.00005; %m
 epsilon2 = 0.00005; %m
 
-% Succión
+% Succiï¿½n
 Ls = 20; %metros
 Ds = 0.11; %metros
 z1 = -4; %metros
@@ -27,7 +27,7 @@ p1 = 0; %SI ES TANQUE O CAIDA LIBRE ES 0
 % Cota de las bombas
 zB = 0.5; %metros
 
-% Impulsión
+% Impulsiï¿½n
 Li = 0; %metros
 Di = 0.08; %metros
 %Li2 = 850; %metros
@@ -49,27 +49,27 @@ H2 = [26.75 26.4 26.1 25.6 25 24.4 23.7 23.1 22.5 21.4 19.8 18];
 eta2 = [23 51.8 65.6 73.6 78.2 81.7 85.1 88.6 89.7 88.6 86.3 82.8];
 NPSHr2 = [2.7 3.24 3.46 3.78 4.1 4.64 5.29 6.05 6.7 7.34 7.99 8.53];
 
-% Rango total posible del caudal según las curvas reales
+% Rango total posible del caudal segï¿½n las curvas reales
 Qmin = max([min(Q1), min(Q2)]);
 
 if numel(Q1) == numel(Q2)
-    % Misma cantidad de puntos: Qmax = suma de los últimos caudales
+    % Misma cantidad de puntos: Qmax = suma de los ï¿½ltimos caudales
     Qmax = Q1(end) + Q2(end);
 else
-    % Distinta cantidad de puntos: Qmax = último valor del vector más largo
+    % Distinta cantidad de puntos: Qmax = ï¿½ltimo valor del vector mï¿½s largo
     Qmax = max([Q1(end), Q2(end)]);
 end
 
 % Malla caudal
 Q = linspace(Qmin, Qmax, 200);
 
-% Interpolación
+% Interpolaciï¿½n
 Hb1 = interp1(Q1,H1,Q,"pchip");
 Hb2 = interp1(Q2,H2,Q,"pchip");
 Qb = Q1 + Q2;
 H_eq = interp1(Qb, H1, Q, "pchip");  % H de bomba equivalente vs Q
 
-% GRÁFICAS, curvas caracteristicas
+% GRï¿½FICAS, curvas caracteristicas
 plot(Q1,H1,"Color",[1 0.5 0],"LineWidth",1.0); %curva bomba 1
 plot(Q2,H2,"b-","LineWidth",1.0); %curva bomba 2
 plot(Q,H_eq,"Color",[1 0 0],"LineWidth",1.5); %curva bomba equivalente
@@ -85,7 +85,7 @@ for i = 1:length(Q)
     Ai = pi*(Di^2)/4;
     %Ai2 = pi*(Di2^2)/4;
 
-    % Succión
+    % Succiï¿½n
     vs = Q(i)/As;
     Re1 = vs*Ds/nu;
     f1 = colebrook(Re1,epsilon1/Ds);
@@ -94,7 +94,7 @@ for i = 1:length(Q)
     deltaS =deltadistS + deltalocS;
     HA = z1 + (p1/(ro*g)) + ((vs^2)/(2*g)) - deltaS; %carga antes de entrar a la bomba
 
-    % Impulsión tramo 1
+    % Impulsiï¿½n tramo 1
     vi = Q(i)/Ai;
     Re2 = vi*Di/nu;
     f2 = colebrook(Re2,epsilon1/Di);
@@ -103,7 +103,7 @@ for i = 1:length(Q)
     deltaI = deltadistI + deltalocI;
 
     %Por si hay un trapo con otro diametro o epsilon ya sea impusion o succion
-    % Impulsión tramo 2
+    % Impulsiï¿½n tramo 2
     %vi2 = Q(i)/Ai2;
     %Re3 = vi2*Di2/nu;
     %f3 = colebrook(Re3,epsilon2/Di2);
@@ -115,22 +115,27 @@ for i = 1:length(Q)
     %Agrego una  nueva area de tobera
 
     HB = z2 + (p2/(ro*g)) + ((vi^2)/(2*g)) + deltaI; %carga despues de la bomba
-    % Instalación
+    % Instalaciï¿½n
     Hm(i) = HB - HA;
 
     % NPSH disponible para las bombas
-    NPSHdisp1 = [NPSHdisp1 10.1 + HA - zB];       % bomba 1 curva verde oscuro
-    NPSHdisp2 = [NPSHdisp2 10.1 + HA - zB]; % bomba 2 curva celeste
+    % OJO: se resta vs^2/(2*g) porque HA (mas arriba en este mismo loop)
+    % ya es carga TOTAL (piezometrica+cinetica) y ese termino se cancela
+    % algebraicamente en la definicion de NPSH (ver nota igual en
+    % Bomba_sola.m; bug detectado y corregido resolviendo 2023 dic Ej.4
+    % contra la solucion oficial).
+    NPSHdisp1 = [NPSHdisp1 10.1 + HA - zB - vs^2/(2*g)];       % bomba 1 curva verde oscuro
+    NPSHdisp2 = [NPSHdisp2 10.1 + HA - zB - vs^2/(2*g)]; % bomba 2 curva celeste
 
 endfor
-plot(Q, Hm, 'm-', 'LineWidth', 1.2);   % curva de instalación
+plot(Q, Hm, 'm-', 'LineWidth', 1.2);   % curva de instalaciï¿½n
 
-% Punto de funcionamiento: intersección H_eq(Q) = Hm(Q)
+% Punto de funcionamiento: intersecciï¿½n H_eq(Q) = Hm(Q)
 diffH = abs(H_eq - Hm);
 [~, idx] = min(diffH);
 
 Qpf = Q(idx);        % caudal en el PF
-Hpf = H_eq(idx);     % (o Hm(idx), son prácticamente iguales)
+Hpf = H_eq(idx);     % (o Hm(idx), son prï¿½cticamente iguales)
 
 plot(Qpf, Hpf, 'o', 'MarkerSize', 6, ...
     "MarkerFaceColor",[0.5 0 1], "MarkerEdgeColor","none");
@@ -139,18 +144,18 @@ plot(Qpf, Hpf, 'o', 'MarkerSize', 6, ...
 Q1_pf = interp1(H1, Q1, Hpf, "pchip");   % caudal bomba 1 en Hpf
 Q2_pf = interp1(H2, Q2, Hpf, "pchip");   % caudal bomba 2 en Hpf
 
-% Líneas punteadas
-% vertical para el caudal total (equivalente + instalación)
+% Lï¿½neas punteadas
+% vertical para el caudal total (equivalente + instalaciï¿½n)
 plot([Qpf Qpf], [0 Hpf], 'k--', 'LineWidth', 1.0, 'HandleVisibility','off');
 
 % verticales para cada bomba individual
 plot([Q1_pf Q1_pf], [0 Hpf], 'k--', 'LineWidth', 0.8, 'HandleVisibility','off');
 plot([Q2_pf Q2_pf], [0 Hpf], 'k--', 'LineWidth', 0.8, 'HandleVisibility','off');
 
-% línea horizontal a la carga de funcionamiento
+% lï¿½nea horizontal a la carga de funcionamiento
 plot([0 max(Q)], [Hpf Hpf], 'k--', 'LineWidth', 0.8, 'HandleVisibility','off');
 
-xlabel("Caudal Q [m³/s]");
+xlabel("Caudal Q [mï¿½/s]");
 ylabel("Carga H [m]");
 
 %Resultados
@@ -169,10 +174,10 @@ plot(Q, NPSHdisp2, '-', 'Color',[0 0.75 1],'LineWidth',1.2);
 plot(Q1, NPSHr1, '--', 'Color',[0 0.5 0],'LineWidth',1.0);
 plot(Q2, NPSHr2, '--', 'Color',[0 0.75 1],'LineWidth',1.0);
 
-legend("Bomba 1","Bomba 2","Serie","Instalación","Punto de funcionamiento", ...
+legend("Bomba 1","Bomba 2","Serie","Instalaciï¿½n","Punto de funcionamiento", ...
        "NPSHdisp Bomba 1","NPSHdisp Bomba 2","NPSHr Bomba 1","NPSHr Bomba 2");
 
-%Chequeo de cavitación
+%Chequeo de cavitaciï¿½n
 
 % NPSH disponible en el PF (son iguales)
 NPSHdisp_pf = interp1(Q, NPSHdisp1, Qpf, "pchip");
@@ -199,7 +204,7 @@ else
 end
 
 %======================
-% RESUMEN NUMÉRICO
+% RESUMEN NUMï¿½RICO
 %======================
 fprintf("\n----- RESUMEN NPSH -----\n");
 fprintf("NPSH disponible en PF       = %.3f m\n", NPSHdisp_pf);
@@ -219,14 +224,14 @@ eta2_pf = interp1(Q2, eta2, Q2_pf, "pchip");
 plot(Q1, eta1, 'Color',[1 0.5 0], 'LineWidth',1.2);
 plot(Q2, eta2, 'b-',           'LineWidth',1.2);
 
-xlabel("Caudal Q [m³/s]");
+xlabel("Caudal Q [mï¿½/s]");
 ylabel("Eficiencia [%]");
 
 legend("Eficiencia Bomba 1", "Eficiencia Bomba 2", "location", "southeast");
 
 % Eficiencias y cargas en el punto de trabajo
 %---------------------------------------------
-% Marcar los puntos de funcionamiento en el gráfico
+% Marcar los puntos de funcionamiento en el grï¿½fico
 %---------------------------------------------
 plot(Q1_pf, eta1_pf, 'o', 'MarkerSize', 4, ...
     "MarkerFaceColor",[1 0.5 0], "MarkerEdgeColor","none", "HandleVisibility","off");
@@ -234,7 +239,7 @@ plot(Q1_pf, eta1_pf, 'o', 'MarkerSize', 4, ...
 plot(Q2_pf, eta2_pf, 'o', 'MarkerSize', 4, ...
     "MarkerFaceColor",'b', "MarkerEdgeColor","none", "HandleVisibility","off");
 
-% Líneas punteadas para cada bomba, en su propio Q_pf
+% Lï¿½neas punteadas para cada bomba, en su propio Q_pf
 plot([Q1_pf Q1_pf], [0 eta1_pf], 'k--', 'LineWidth', 0.8, "HandleVisibility","off");
 plot([Q2_pf Q2_pf], [0 eta2_pf], 'k--', 'LineWidth', 0.8, "HandleVisibility","off");
 
@@ -248,12 +253,12 @@ fprintf("Eficiencia Bomba 1 en Q1_pf = %.2f %%\n", eta1_pf);
 fprintf("Eficiencia Bomba 2 en Q2_pf = %.2f %%\n", eta2_pf);
 
 
-% Cálculo de potencias (en W)
+% Cï¿½lculo de potencias (en W)
 P1 = (ro * g * Q1_pf * Hpf) / (eta1_pf/100);
 P2 = (ro * g * Q2_pf * Hpf) / (eta2_pf/100);
 Ptotal = P1 + P2;
 
-% Conversión a kW
+% Conversiï¿½n a kW
 P1_kW = P1 / 1000;
 P2_kW = P2 / 1000;
 Ptotal_kW = Ptotal / 1000;

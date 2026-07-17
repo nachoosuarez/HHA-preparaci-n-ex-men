@@ -34,11 +34,11 @@ Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
 | B7. Volumen de escorrentía y embalses de retención | 3 | 2024 dic, 2025 feb 2, 2024 feb |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 1 | 2025 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 1 | 2026 feb |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
-| C2. Curva de la bomba y punto de funcionamiento | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
-| C3. Potencia consumida por el sistema de bombeo | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
-| C4. Cavitación: NPSH disponible vs. requerido | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
-| C5. Bombas en serie y en paralelo | 3 | 2025 feb 1, 2025 feb 2, 2024 mar |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
+| C2. Curva de la bomba y punto de funcionamiento | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
+| C3. Potencia consumida por el sistema de bombeo | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
+| C4. Cavitación: NPSH disponible vs. requerido | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
+| C5. Bombas en serie y en paralelo | 4 | 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 1 | 2024 dic |
 
 ---
@@ -798,6 +798,23 @@ condición más exigente es siempre la de mayor temperatura, aunque el punto
 de funcionamiento no cambie con la temperatura, ya que se desprecian los
 cambios de viscosidad/densidad).
 
+**Trampa común: el término cinético de HA se CANCELA, no se suma de
+nuevo.** Si se calcula HA por Bernoulli desde la superficie libre del
+tanque/lago de origen (cota z0, presión atmosférica, v≈0) hasta la brida
+de succión: `HA = z0 - ΔH(succión)` (en presión manométrica, **sin**
+sumar ningún término `v²/(2g)` de la succión). Es un error común agregar
+el término cinético de la succión a HA y usarlo así en la fórmula de
+NPSH_disp de arriba: por la propia definición de NPSH (que ya incluye
+`+v²/(2g)` explícitamente), ese término se cancela algebraicamente contra
+el que traería HA si se calculara con velocidad — sumarlo en ambos lados
+lo cuenta dos veces y da un NPSH_disp mayor al real (se detectó y corrigió
+este bug en `RESUMEN EXAMEN/Codigos/Bombas/Bomba_sola.m`,
+`Bombas_serie.m` y `Bombas_paralelo.m` resolviendo 2023 dic Ej.4: con el
+término duplicado el NPSH_disp daba ≈0.4 m más alto que el oficial). Ojo:
+esa HA "sin velocidad" es sólo para NPSH — la HA que sí necesita el
+término cinético (`z0+p0/γ+v²/2g-ΔH`) es la que entra en la ecuación de
+la **instalación** Hm=HB-HA (C1), que es un cálculo distinto.
+
 **Bomba en aspiración (succión negativa).** Si la bomba está instalada por
 encima del nivel del tanque de succión (z_bomba>z_tanque), ese desnivel
 **resta** al NPSH disponible (hay que "levantar" el agua además de vencer
@@ -854,6 +871,29 @@ una bomba, ningún número de bombas en paralelo puede elevar el agua —hace
 falta **serie** (que sí suma cargas). Se verifica comparando
 max(H_bomba(Q)) contra la carga estática de la instalación **antes** de
 resolver el punto de funcionamiento completo (2024 mar, Ej.4).
+
+**Bombas en paralelo con succiones INDEPENDIENTES** (2023 dic, Ej.4 parte
+4; se pide sólo plantear las ecuaciones, sin resolver numéricamente). Si
+cada bomba tiene su propio tramo de succión (en vez de una succión única
+compartida), ya no existe una "bomba equivalente" simple — hay que
+plantear un sistema con el nodo donde se juntan las dos impulsiones
+individuales antes de la impulsión común (si la hay), o directamente en
+la brida de descarga de cada bomba si la impulsión también es
+independiente hasta destino:
+
+```
+Qtotal = Q1 + Q2
+H1(Q1) = HN + ΔH(impulsión común, con Qtotal)     (bomba 1 hasta el nodo N + tramo común)
+HN = H0 + ΔH(succión 1, con Q1) − HB1(Q1)          (carga en N por el camino de la bomba 1; HB1 = curva de catálogo)
+HN = H0 + ΔH(succión 2, con Q2) − HB2(Q2)          (mismo nodo N, por el camino de la bomba 2 — debe dar igual)
+```
+
+4 incógnitas (Q1, Q2, HN, Qtotal), a resolver con `fsolve` (no hay forma
+cerrada ni intersección directa de curvas H-Q como en el caso de succión
+única). El NPSHdisp de cada bomba también se calcula por separado, con
+la ΔH(succión) de su propio tramo y su propio caudal individual (a
+diferencia del caso de succión compartida, donde NPSHdisp es común a
+ambas bombas y se calcula con el caudal total, ver C4).
 
 Cita: Teórico HHA §3.3.13 "Acoplamiento de bombas".
 

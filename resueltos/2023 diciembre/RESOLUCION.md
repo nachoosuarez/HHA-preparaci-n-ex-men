@@ -447,4 +447,148 @@ las razones explicadas arriba (nota de precisión).
 
 ---
 
-## ESTADO: EN CURSO (falta Ejercicio 4)
+---
+
+## Ejercicio 4 — Sistema de bombeo: dos bombas iguales en paralelo
+
+### Enunciado (resumen)
+
+Trasvase de agua entre dos cuerpos de agua (fuente z0=-4 m; destino
+z1=30 m) con **dos bombas iguales acopladas en paralelo** (cota de las
+bombas zA=+0.5 m), succión e impulsión **únicas y compartidas** (se
+separan sólo en el acople de las bombas, sin pérdida ahí):
+succión D1=300 mm, plástico ε1=0.007 mm, L1=50 m, k1=6; impulsión
+D2=600 mm, fundición dúctil ε2=0.1 mm, L2=15000 m, k2=8. Curva de
+catálogo de cada bomba dada en tabla (Q, H, η, NPSHreq).
+1) Punto de funcionamiento del sistema (ecuación de la instalación,
+gráfico H-Q).
+2) Potencia consumida por el sistema y por cada bomba.
+3) Verificar que las bombas no cavitan.
+4) Ecuaciones para el punto de funcionamiento si las bombas tuvieran
+succiones independientes.
+
+### Teoría (RESUMEN_TEORICO.md, sección C — Bombeo)
+
+- **C1** Ecuación de la instalación (Darcy-Weisbach + Colebrook-White).
+- **C2** Curva de la bomba y punto de funcionamiento.
+- **C3** Potencia consumida.
+- **C4** Cavitación (NPSHdisp vs NPSHreq) — **incluye, ampliada en esta
+  corrida, la trampa del término cinético de HA** (ver más abajo).
+- **C5** Bombas en paralelo: mismo H, caudales se suman (bomba
+  equivalente).
+
+Cita: Teórico HHA §2.1.2 "Cálculo del punto de funcionamiento", §2.1.4
+"Cavitación en bombas", §2.1.5 "Bombas asociadas en paralelo".
+
+### Herramienta y por qué
+
+Se usó Octave con el toolkit canónico `RESUMEN EXAMEN/Codigos/Bombas`
+(`colebrook.m` para el factor de fricción) porque el enunciado es
+exactamente un problema de punto de funcionamiento + potencia +
+cavitación de un sistema de bombeo con bombas en paralelo, el caso de
+uso central de ese toolkit. **No se reutilizó directamente
+`Bombas_paralelo.m`**: al resolver este ejercicio y cruzar el NPSHdisp
+calculado contra el oficial se detectó que ese script (y también
+`Bomba_sola.m` y `Bombas_serie.m`) tenían un **bug real** en la fórmula
+de NPSHdisp (sumaban dos veces el término cinético de la succión — ver
+nota abajo y `RESUMEN EXAMEN/Codigos/README.md`); se corrigieron los
+tres archivos del toolkit canónico y se escribió un script nuevo y más
+simple para este ejercicio (succión/impulsión únicas compartidas, sin
+necesidad de la lógica de succiones separadas de `Bombas_paralelo.m`).
+Script: `resueltos/2023 diciembre/scripts/Ejercicio4_bombas_paralelo.m`.
+
+**Nota sobre el bug de NPSH corregido:** `HA` (carga en la succión) por
+Bernoulli desde la superficie libre del lago fuente es `z0-ΔH(succión)`,
+**sin** término cinético — ese término se cancela algebraicamente con el
+que ya trae la propia definición de NPSH (`NPSH=p/γ+v²/2g-pvap/γ`). Los
+tres scripts sumaban `vs²/(2g)` dentro de `HA` (correcto para la
+instalación, Hm=HB-HA) y **reutilizaban esa misma HA** en la fórmula de
+NPSHdisp sin restar ese término, contándolo dos veces. Con los datos de
+este ejercicio la diferencia es de ≈0.4 m (2.73 m con el bug vs. 2.34 m
+oficial) — no cambia la conclusión acá (de cualquier forma no cavita),
+pero podría cambiar el veredicto en un caso más ajustado.
+
+### Paso a paso
+
+**1) Punto de funcionamiento.**
+
+Bombas iguales en paralelo ⇒ misma H, caudales se suman: la "bomba
+equivalente" tiene Hbeq(Qtot)=H_bomba(Qtot/2). Curva de la instalación
+(succión e impulsión únicas, con el caudal **total**):
+```
+Hm = (z1-z0) + ΔH(succión) + ΔH(impulsión) = 34 + ΔHsucc(Qtot) + ΔHimp(Qtot)
+```
+Intersección Hbeq(Qtot)=Hm(Qtot):
+```
+Qtotal = 0.200 m3/s = 721 m3/h  ;  H = 47.3 m
+Qb1 = Qb2 = 0.100 m3/s = 360.5 m3/h (cada bomba, mitad del caudal total)
+```
+
+**2) Potencia.**
+```
+η (interpolada en Qb=0.100 m3/s) = 67.9 %
+Pb1 = Pb2 = ρ·g·Qb·H/η = 68.5 kW (cada bomba)
+Ptotal = Pb1+Pb2 = 136.9 kW
+```
+
+**3) Cavitación.**
+```
+f(succión) = 0.0124 (Colebrook, Re=vs·D1/ν) ; Vsucc = 2.83 m/s
+ΔHsucc = (f·L1/D1+k1)·Vsucc²/(2g) = 3.30 m
+HA = z0 - ΔHsucc = -7.30 m               (SIN término cinético, ver nota arriba)
+NPSHdisp = HA - zA + (patm-pvap)/γ = -7.30-0.5+10.1 = 2.30 m
+NPSHreq (interpolado en Qb=0.100 m3/s) = 1.60 m
+```
+NPSHdisp=2.30 m > NPSHreq=1.60 m ⇒ **las bombas NO cavitan** (margen
+0.70 m).
+
+**4) Ecuaciones con succiones independientes.**
+
+Si cada bomba tuviera su propia tubería de succión (mismo lago fuente,
+pero sin tramo común), el sistema deja de tener una "bomba equivalente"
+única: hay que resolver simultáneamente el caudal de cada bomba con su
+propia curva de instalación de succión, más la impulsión (única) que
+sigue siendo compartida aguas abajo del acople:
+```
+Qtotal = Q1 + Q2
+H1 = HN + ΔH(impulsión, con Qtotal)        (H de la bomba 1 = carga en el nodo N + impulsión aguas abajo)
+HN = H0 + ΔH(succión 1, con Q1) + HB1      (carga en el nodo, calculada por el camino de la bomba 1)
+HN = H0 + ΔH(succión 2, con Q2) + HB2      (mismo nodo, calculado por el camino de la bomba 2 — debe dar igual)
+```
+con HB1=HB1(Q1) y HB2=HB2(Q2) las curvas de catálogo de cada bomba. Es un
+sistema de 4 ecuaciones con 4 incógnitas (Q1, Q2, HN, Qtotal) a resolver
+numéricamente (`fsolve`), en vez de la intersección directa de curvas
+que alcanza cuando la succión es única.
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| Qtotal (punto de funcionamiento) | **0.200 m³/s** (721 m³/h) |
+| H funcionamiento | **47.3 m** |
+| Caudal de cada bomba | **0.100 m³/s** (360.5 m³/h) |
+| Potencia de cada bomba | **68.5 kW** |
+| Potencia total del sistema | **136.9 kW** |
+| NPSHdisp / NPSHreq | **2.30 m / 1.60 m** — no cavitan |
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| Qtotal | 0.199 m³/s | 0.200 m³/s | ≈0 |
+| H | 47.2 m | 47.34 m | 0.14 m |
+| Qb (cada bomba) | 0.1 m³/s | 0.100 m³/s | ≈0 |
+| η cada bomba | 67.3 % | 67.9 % | 0.6 pp |
+| Potencia cada bomba | 68.75 kW | 68.47 kW | 0.3 kW |
+| Potencia total | 137.5 kW | 136.9 kW | 0.6 kW |
+| NPSHdisp | 2.34 m | 2.30 m | 0.04 m |
+| NPSHreq | 1.6 m | 1.60 m | ≈0 |
+| Conclusión cavitación | No cavitan | No cavitan | — |
+
+Coincidencia prácticamente exacta en todos los ítems (diferencias
+menores atribuibles a redondeo/lectura gráfica de la solución oficial vs.
+interpolación `pchip` numérica).
+
+---
+
+## ESTADO: COMPLETO

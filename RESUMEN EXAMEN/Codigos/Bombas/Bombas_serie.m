@@ -111,8 +111,12 @@ for i = 1:length(Q)
     Hm(i) = HB - HA;
 
     % NPSH disponible para las bombas
-    NPSHdisp1 = [NPSHdisp1 10.1 + HA - zB];       % bomba 1 curva verde oscuro
-    NPSHdisp2 = [NPSHdisp2 10.1 + HA - zB + Hb1(i)]; % bomba 2 curva celeste
+    % OJO: se resta vs^2/(2*g) porque HA (linea 87) ya es carga TOTAL
+    % (piezometrica+cinetica) y ese termino se cancela algebraicamente en
+    % la definicion de NPSH (ver nota igual en Bomba_sola.m; bug detectado
+    % y corregido resolviendo 2023 dic Ej.4 contra la solucion oficial).
+    NPSHdisp1 = [NPSHdisp1 10.1 + HA - zB - vs^2/(2*g)];       % bomba 1 curva verde oscuro
+    NPSHdisp2 = [NPSHdisp2 10.1 + HA - zB - vs^2/(2*g) + Hb1(i)]; % bomba 2 curva celeste
 
 endfor
 plot(Q, Hm, 'm-', 'LineWidth', 1.2);

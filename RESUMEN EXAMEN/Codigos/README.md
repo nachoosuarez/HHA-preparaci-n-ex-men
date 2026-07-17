@@ -66,9 +66,26 @@ cambio de pendiente. Ver el método completo en
 - Se corrigió un typo de índice en `FGV_trapezoidal/caudal_S_ini.m`
   (`m = par(1)` duplicaba el valor de `n`; debía ser `m = par(2)`, según
   el orden `par=[n,m,b,S,yl1]` usado en el resto del script y en su
-  análogo `caudal_M_ini.m`). Es el único cambio de lógica realizado; el
-  resto de los scripts se dejó tal cual (no se "arregla" lo que ya
-  funciona, sólo se documenta).
+  análogo `caudal_M_ini.m`).
+- Se corrigió un bug de NPSH disponible en `Bombas/Bomba_sola.m`,
+  `Bombas/Bombas_serie.m` y `Bombas/Bombas_paralelo.m` (detectado y
+  verificado resolviendo 2023 dic Ej.4 contra la solución oficial): las
+  tres calculaban `NPSHdisp = 10.1 + HA - zB` reutilizando la `HA` de la
+  ecuación de instalación, que ya es carga TOTAL (piezométrica+cinética,
+  con su término `vs²/(2g)`). Ese término cinético se vuelve a sumar en
+  la propia definición de NPSH (`NPSH=p/γ+v²/2g-pvap/γ`) y por Bernoulli
+  se **cancela algebraicamente** contra el que ya trae `HA` — sumarlo dos
+  veces daba un NPSHdisp ≈0.4 m más alto que el real (en 2023 dic Ej.4,
+  2.73 m calculado vs. 2.34 m oficial). Se corrigió restando
+  `vs^2/(2*g)` en la línea de `NPSHdisp`, dejando `HA` intacta (sigue
+  haciendo falta completa, con el término cinético, para `Hm=HB-HA` de
+  la curva de instalación). `Bombas/Bomba_curvaInstalacion.m` y
+  `Bombas/Bomba_manometros.m` no tenían este bug (ya usaban una carga de
+  succión sin el término cinético, o lo sumaban una sola vez a partir de
+  una lectura directa de manómetro).
+  Estos son los únicos cambios de lógica realizados; el resto de los
+  scripts se dejó tal cual (no se "arregla" lo que ya funciona, sólo se
+  documenta).
 - Se ignoraron copias basura (`Bomba_sola - copiaaaaa.m`) y archivos de
   autosave (`froude_circ.asv`).
 - Varios scripts tienen nombres de archivo engañosos por haber sido
