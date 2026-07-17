@@ -8,8 +8,11 @@ Método Racional (hipótesis + diseño de alcantarilla + urbanización); 4)
 Sistema de bombeo (número/acople de bombas, punto de funcionamiento,
 potencia, cavitación, longitud máxima de succión).
 
-Este examen trae **solución oficial manuscrita completa** (páginas 4-5,
-8-11 del PDF) que se usa para comparar cada resultado.
+Este examen trae **solución oficial manuscrita** para los Ejercicios 1, 3
+y 4 completos y para el Ejercicio 2 Parte 2 (páginas 4-5, 8-11 del PDF),
+que se usa para comparar cada resultado. La Parte 1 del Ejercicio 2
+(delimitación gráfica de la cuenca) no tiene versión oficial escaneada en
+este PDF (sólo el mapa en blanco con el punto de cierre marcado).
 
 ---
 
@@ -145,6 +148,116 @@ yc≈1.008 m en la caída libre.
 Coincidencia prácticamente exacta en todos los ítems; las diferencias
 mínimas en la parte 3 se deben a que la solución oficial redondeó yn a
 1.83 m (en vez de 1.836 m) antes de propagar el cálculo.
+
+---
+
+## Ejercicio 2 — Delimitación de cuenca + abstracciones NRCS
+
+### Enunciado (resumen)
+
+1) Delimitar la cuenca de la cañada afluente al arroyo del Tala (Durazno),
+punto de cierre X=426.5 km, Y=6348.8 km, sobre la carta topográfica SGM
+adjunta (curvas de nivel cada 10 m). 2) En diciembre (estación de
+crecimiento) se registra el evento de la tabla (P en bloques de 30 min:
+14, 26, 45, 22 mm). Asumiendo el modelo del NRCS, estimar el volumen
+infiltrado total (abstracciones totales, mm) sabiendo que el suelo es
+Grupo Hidrológico C, cobertura "hierbas poco densas y arbustos", y que la
+precipitación de los 5 días previos fue de 58 mm.
+
+### Parte 1) Delimitación de la cuenca
+
+**Concepto (RESUMEN_TEORICO.md B1).** La cuenca es el área tal que toda la
+lluvia caída sobre ella escurre hacia el punto de cierre. Se delimita
+trazando la línea de divorcio de aguas sobre la carta: perpendicular a las
+curvas de nivel, por el lado convexo (loma/naciente) al ganar altura y por
+el lado cóncavo (vaguada) al perderla, sin cruzar nunca un curso de agua
+salvo en el propio punto de cierre.
+
+**Herramienta:** delimitación gráfica manual sobre la carta topográfica
+provista (páginas 6-7 del PDF del examen, SGM 1:50000, curvas cada 10 m).
+A diferencia de otros exámenes ya resueltos (p.ej. `2024 diciembre`), el
+escaneo de este examen **no incluye una versión con la divisoria ya
+trazada por la solución oficial** (sólo el mapa en blanco con el punto de
+cierre marcado) — por lo tanto no hay un área oficial contra la cual
+comparar, y no corresponde inventar un valor. Se deja documentado el
+procedimiento (regla de perpendicularidad a las curvas de nivel,
+siguiendo las lomas que separan la cañada del arroyo del Tala del resto
+de la Cuchilla Grande del Durazno visible en el mapa) para aplicarlo a
+mano sobre la carta impresa en el examen real. Nótese que, a diferencia de
+otros exámenes, esta parte 1 es **independiente** del resto del Ejercicio
+2 (la parte 2, abstracciones NRCS, no usa el área de la cuenca).
+
+**Resultado final Parte 1: divisoria trazada siguiendo las lomas
+perpendiculares a las curvas de nivel alrededor del punto de cierre
+(X=426.5 km, Y=6348.8 km); sin solución oficial en el PDF para verificar
+un área numérica en este examen.**
+
+### Parte 2) Abstracciones totales del evento (modelo NRCS)
+
+**Teoría (RESUMEN_TEORICO.md B5/B6).**
+- Número de Curva NC(II): Fig. 3.1.20 del Teórico, fila "Hierba con baja
+  densidad y arbustos", Grupo Hidrológico C ⇒ **NC(II)=71**.
+- AMC (condición de humedad antecedente, B6): P5d=58 mm en diciembre
+  (estación de crecimiento). Umbrales de estación de crecimiento: AMC I
+  <35.56 mm, AMC II 35.56-53.34 mm, AMC III >53.34 mm. Como 58>53.34 ⇒
+  **AMC III** (suelo húmedo) ⇒ corregir NC.
+- Retención potencial S=25.4·(1000/NC−10); Pef=(P−0.2S)²/(P+0.8S) si
+  P>0.2S; volumen infiltrado = P − Pef (B5/B7).
+
+**Herramienta y por qué:** el enunciado ya da el hietograma **observado**
+(no pide construir la tormenta de diseño por bloque alterno), así que no
+corresponde usar las hojas `Cálculos (grande/chica)` de
+`Eventos extremos.xlsx` (esas arman la tormenta de diseño); el caso
+correcto es aplicar la fórmula de Pe directo, igual que la hoja `Hoja 4`
+de esa planilla — pero como `Hoja 4` **no aplica la corrección por AMC**
+(ver `COMO_USAR_EVENTOS_EXTREMOS.md` §4 y §6.11), la corrección de NC por
+AMC III se hizo a mano antes de aplicar la fórmula de Pe, en un script de
+Python (`scripts/Ejercicio2_parte2_NRCS.py`) que replica ambos pasos.
+
+**Paso a paso:**
+```
+P total del evento = 14+26+45+22 = 107 mm
+P5d = 58 mm (diciembre, estación de crecimiento) > 53.34 mm => AMC III
+
+NC(II) = 71 (Fig. 3.1.20: Hierba con baja densidad y arbustos, Grupo C)
+NC(III) = 23*NC(II)/(10+0.13*NC(II)) = 23*71/(10+9.23) = 84.92
+
+S = 25.4*(1000/84.92 - 10) = 45.11 mm
+Ia = 0.2*S = 9.02 mm
+
+P=107 mm > Ia=9.02 mm  =>  hay precipitación efectiva
+Pef = (P-0.2S)²/(P+0.8S) = (107-9.02)²/(107+36.09) = 67.09 mm
+
+Volumen infiltrado total (abstracciones) = P - Pef = 107 - 67.09 = 39.91 mm
+```
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| Delimitación de la cuenca | Procedimiento documentado (sin área oficial disponible en este examen) |
+| Condición AMC | **AMC III** (P5d=58 mm > 53.34 mm, estación de crecimiento) |
+| NC(II) / NC(III) | 71 / **84.92** |
+| Retención potencial S | 45.11 mm |
+| Precipitación total del evento | 107 mm |
+| Precipitación efectiva Pef | 67.09 mm |
+| **Volumen infiltrado total (abstracciones)** | **39.91 mm** |
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| NC(II) | 71 | 71 | — |
+| NC(III) | 84.9 | 84.92 | ≈0 |
+| S | 45.1 mm | 45.11 mm | ≈0 |
+| Ia=0.2S | 9.02 mm | 9.02 mm | ≈0 |
+| P total | 107 mm | 107 mm | — |
+| Pef | 67 mm | 67.09 mm | 0.09 mm |
+| Volumen infiltrado | 39.9 mm | 39.91 mm | ≈0 |
+
+Coincidencia prácticamente exacta con la solución manuscrita oficial
+(Parte 2). La Parte 1 (delimitación gráfica) no tiene solución oficial
+escaneada en este examen para comparar.
 
 ---
 
@@ -372,11 +485,18 @@ del margen esperable de lectura de tabla/interpolación gráfica vs. numérica.
 
 ---
 
-## Pendiente en este examen
+## Resumen general del examen
 
-- Ejercicio 2 (delimitación de cuenca cañada Arroyo del Tala + abstracciones
-  NRCS del evento observado, AMC).
+Los 4 ejercicios están resueltos. Ejercicios 1, 3 y 4 coinciden
+prácticamente de forma exacta con la solución oficial manuscrita en todos
+sus resultados numéricos. Ejercicio 2 Parte 2 (abstracciones NRCS) también
+coincide con la oficial; la Parte 1 (delimitación gráfica de la cuenca)
+queda documentada con el procedimiento teórico (perpendicularidad a curvas
+de nivel) pero sin un área numérica verificable, ya que este examen no
+trae una versión oficial de la carta con la divisoria trazada (a
+diferencia de otros exámenes del repositorio) y esa parte no condiciona el
+resto del ejercicio.
 
 ---
 
-(en progreso — continúa en la próxima corrida)
+## ESTADO: COMPLETO
