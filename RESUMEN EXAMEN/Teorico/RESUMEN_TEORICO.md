@@ -2,27 +2,28 @@
 
 Este resumen se construyó leyendo completos los exámenes ya resueltos en
 `resueltos/` (2024 diciembre, 2025 Febrero 1, 2025 Febrero 2, 2026 Febrero,
-2024 Julio y 2024 marzo) y extrayendo de ahí **todos los temas y fórmulas
-que efectivamente fueron preguntados**, fusionando los que se repiten entre
-exámenes en una sola sección enriquecida. Las fórmulas se
-verificaron/precisaron contra `Teórico HHA.pdf` y `01_Formulometro2025.pdf`
-(citados como "Formulómetro"). Objetivo: alcanzar para repasar sin releer
-todos los `RESOLUCION.md` completos.
+2024 Julio, 2024 marzo y 2024 febrero) y extrayendo de ahí **todos los
+temas y fórmulas que efectivamente fueron preguntados**, fusionando los
+que se repiten entre exámenes en una sola sección enriquecida. Las
+fórmulas se verificaron/precisaron contra `Teórico HHA.pdf` y
+`01_Formulometro2025.pdf` (citados como "Formulómetro"). Objetivo:
+alcanzar para repasar sin releer todos los `RESOLUCION.md` completos.
 
 Convención de nombres cortos de examen: **2024 dic** = 2024 diciembre;
 **2025 feb 1** = 2025_FEBRERO 1 (27/feb/2025); **2025 feb 2** = 2025_FEBRERO 2
 (5/feb/2025); **2026 feb** = 2026 Febrero (3/feb/2026); **2024 jul** = 2024
-Julio; **2024 mar** = 2024 marzo (1/mar/2024).
+Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
+(5-6/feb/2024).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
-| A2. Energía específica y tirante crítico | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar |
-| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 5 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| A1. Ecuación de FGV y clasificación de canales M/S | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| A2. Energía específica y tirante crítico | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb |
+| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 6 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
@@ -133,7 +134,9 @@ entre dos secciones (no solo resaltos): p.ej. la fuerza sobre una compuerta
 de fondo (M1=aguas arriba de la compuerta, M2=vena contraída) y, por
 separado, la fuerza sobre un escalón de fondo (M1=antes del escalón,
 M2=después) en el mismo canal — cada obstáculo es un control de volumen
-independiente entre sus dos secciones inmediatas (2024 jul, Ej.1).
+independiente entre sus dos secciones inmediatas (2024 jul, Ej.1; 2024
+feb, Ej.1 parte 3 — ahí ambas secciones están al mismo nivel de fondo, así
+que basta M(y1_new) y M(y3_new) sin ningún término de peso adicional).
 
 Cita: Teórico HHA §2.3.1–§2.3.3; Formulómetro "Cantidad de Movimiento".
 
