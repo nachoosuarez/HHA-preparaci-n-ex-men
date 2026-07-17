@@ -2,27 +2,29 @@
 
 Este resumen se construyó leyendo completos los exámenes ya resueltos en
 `resueltos/` (2024 diciembre, 2025 Febrero 1, 2025 Febrero 2, 2026 Febrero,
-2024 Julio, 2024 marzo, 2024 febrero y 2023 diciembre) y extrayendo de ahí **todos los
-temas y fórmulas que efectivamente fueron preguntados**, fusionando los
-que se repiten entre exámenes en una sola sección enriquecida. Las
-fórmulas se verificaron/precisaron contra `Teórico HHA.pdf` y
-`01_Formulometro2025.pdf` (citados como "Formulómetro"). Objetivo:
-alcanzar para repasar sin releer todos los `RESOLUCION.md` completos.
+2024 Julio, 2024 marzo, 2024 febrero, 2023 diciembre y 2023 Julio) y
+extrayendo de ahí **todos los temas y fórmulas que efectivamente fueron
+preguntados**, fusionando los que se repiten entre exámenes en una sola
+sección enriquecida. Las fórmulas se verificaron/precisaron contra
+`Teórico HHA.pdf` y `01_Formulometro2025.pdf` (citados como
+"Formulómetro"). Objetivo: alcanzar para repasar sin releer todos los
+`RESOLUCION.md` completos.
 
 Convención de nombres cortos de examen: **2024 dic** = 2024 diciembre;
 **2025 feb 1** = 2025_FEBRERO 1 (27/feb/2025); **2025 feb 2** = 2025_FEBRERO 2
 (5/feb/2025); **2026 feb** = 2026 Febrero (3/feb/2026); **2024 jul** = 2024
 Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
-(5-6/feb/2024); **2023 dic** = 2023 diciembre (11/dic/2023).
+(5-6/feb/2024); **2023 dic** = 2023 diciembre (11/dic/2023); **2023 jul** =
+2023 Julio (24/jul/2023).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
-| A2. Energía específica y tirante crítico | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic |
+| A1. Ecuación de FGV y clasificación de canales M/S | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| A2. Energía específica y tirante crítico | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 6 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic |
@@ -211,6 +213,24 @@ autoconsistente (yn1<yc con el Q hallado):
 Cita: Teórico HHA §2.5.3 (caída libre), §2.5.4 (perfiles entre dos lagos,
 casos M y S), §2.5.5 (perfil con compuerta de fondo entre dos lagos), §2.5.6
 (canal con cambio de pendiente/empalme de tramos).
+
+**Control crítico en la entrada, sección TRAPEZOIDAL (sin forma cerrada)**
+(2023 jul, Ej.1). En canal rectangular, el control crítico de un lago da Q
+en forma cerrada (yc=(2/3)hLago, Q=b·sqrt(g·yc³)). En sección trapezoidal
+yc(Q) no tiene forma cerrada (depende de `eq_yc`, fsolve), así que hay que
+**anidar** un `fzero` externo en Q alrededor del `fsolve` interno en yc:
+para cada Q de prueba se resuelve yc(Q) y se evalúa el residuo de energía;
+se itera Q hasta que yc(Q)+Q²/(2g·A(yc)²)=hLago. Mismo patrón que la
+sección "canal de dos tramos" de arriba, pero acá el `fzero` en Q aparece
+ya en la Parte 1 (canal de un solo tramo), no sólo cuando hay cambio de
+pendiente. Si además el canal tiene un tramo con cambio de pendiente
+aguas abajo que NO altera el tramo de entrada (mismo S0 en el tramo que
+sale del lago), el control crítico de la entrada y su Q **no cambian**
+respecto al caso sin relleno — la perturbación aguas abajo no viaja
+hacia el lago en flujo supercrítico — y sólo hay que recalcular yn del
+tramo modificado y, si corresponde, ubicar un resalto dentro de ese
+tramo (comparando conjugado de la rama M3/S2 entrante contra la rama M2
+de salida, igual que en el caso de dos tramos completo).
 
 ## A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo
 
