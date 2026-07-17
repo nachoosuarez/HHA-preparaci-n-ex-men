@@ -289,3 +289,167 @@ P310=86 mm, CD(1h)=0.6161, CT=1.283, Tr=44 años — **coincide exactamente**.
 | Período de retorno de esa intensidad | **≈44 años** |
 
 ---
+
+## EJERCICIO 3 — Diseño hidráulico de una alcantarilla (Río Negro)
+
+**Datos:** cuenca de flujo concentrado, cierre en X=382.5 km, Y=6408.5 km.
+Área=6.5 km², ΔH=85 m y L=5400 m (desnivel máximo y longitud del **cauce
+principal**), pendiente media de la cuenca S=3.5 %, Grupo Hidrológico B.
+Uso de suelo actual: pastizales en condición hidrológica buena. Tr=5 años.
+
+**Teoría usada:** tiempo de concentración de Ramser-Kirpich y criterio de
+selección de método según tc (Teórico §3.1.2, §3.1.5): tc<20 min ⇒ sólo
+Racional; tc>1 h ⇒ sólo NRCS; 20 min<tc<1 h ⇒ ambos y adoptar el mayor.
+Método NRCS del Número de Curva con hidrograma unitario sintético
+triangular SCS, curvas IDF de Uruguay y coeficientes CD/CT/CA (§3.1.4),
+Número de Curva ponderado por uso de suelo mixto (§3.1.5 c).
+
+**Herramienta:** Python (`scripts/ej3.py`), generalizando en una función
+`hidrograma_NRCS(Area, tc, NC, Tr, P310)` las mismas fórmulas ya usadas y
+verificadas en `resueltos/2024 diciembre/scripts/ej2_parte1.py` (curvas de
+`Scripts/01_SCRIPTS/Eventos extremos.xlsx`), para poder recalcular fácilmente
+con la cuenca urbanizada de la Parte 3 sin duplicar código.
+
+### Parte 1) Caudal máximo de diseño, Tr=5 años, y justificación del método
+
+**Concepto.** Antes de elegir el método se calcula tc con Ramser-Kirpich,
+usando la pendiente del cauce principal S=ΔH/L (no la pendiente media de la
+cuenca, S=3.5 %, que en este ejercicio no se termina usando porque no
+corresponde el método Racional):
+
+```
+S cauce principal = ΔH/L/10 = 85/5.4/10 = 1.574 %
+tc = 0.4*L^0.77/S^0.385 = 1.231 hs = 73.8 min      (L en km)
+```
+Como tc=73.8 min > 1 h ⇒ **corresponde únicamente el método NRCS** (Teórico
+§3.1.5); no hace falta calcular el método Racional.
+
+**NC** (pastizales, condición hidrológica buena, Grupo B, Fig. 3.1.20 del
+Teórico): **NC=61**.
+
+**Desarrollo NRCS** (tormenta de diseño por bloque alterno, dt=tc/7=10.5
+min, 12 bloques; P310=90 mm dato oficial; precipitación efectiva por Número
+de Curva con piso de infiltración 1.2 mm/h —Grupo B—; convolución con el
+hidrograma unitario triangular SCS):
+
+```
+Tp = dt/2 + 0.6*tc = 0.826 hs ; Tb(unitario) = 2.667*Tp = 2.204 hs
+Pe total = 5.62 mm
+Qmax = 7.01 m3/s en t = 2.42 hs (tiempo pico del hidrograma de crecida)
+Tb(hidrograma total) = 11*dt + Tb(unitario) = 4.14 hs
+```
+
+**Resultado final Parte 1: Qmax de diseño (Tr=5 años, método NRCS,
+justificado porque tc>1 h) = 7.01 m³/s.**
+
+**Comparación con la solución oficial:** el manuscrito da tc=1.23 h
+(idéntico), NC=61 (idéntico), Qmax=6.98 m³/s (vs. 7.01 calculado, dentro de
+un margen de redondeo gráfico en la lectura de las curvas IDF) y tiempo
+pico=2.37 h / tiempo base=4.13 h (vs. 2.42 h / 4.14 h calculados) —
+**coincide**.
+
+### Parte 2) Volumen de escorrentía e hidrograma del evento de diseño
+
+**Concepto.** El volumen de escorrentía es la lámina de precipitación
+efectiva total (Σ Pe, calculada con el método del Número de Curva)
+multiplicada por el área de la cuenca; el hidrograma completo es la
+convolución de los 12 pulsos de Pe con el hidrograma unitario (ya calculada
+en la Parte 1).
+
+```
+Vesc = Pe_total * Area = 5.62 mm * 6.5 km2 * 1000 = 36 527 m3
+Qmax = 7.01 m3/s en t = 2.42 h ; hidrograma se extingue en t ~ 4.14 h
+```
+
+**Resultado final Parte 2: Volumen de escorrentía ≈36 500 m³. Hidrograma de
+diseño con Qmax=7.01 m³/s en t=2.42 h (ver gráfico).**
+
+Gráfico: `scripts/ej3_hidrograma_actual.png`.
+
+**Comparación con la solución oficial:** el manuscrito da Vesc≈36 500 m³ —
+**coincide exactamente** con los 36 527 m³ calculados.
+
+### Parte 3) Recálculo con desarrollo urbano futuro (15 % del área)
+
+**Concepto.** El 15 % de la cuenca cambia de pastizal a área urbana
+(lotes<0.05 Ha, 65 % impermeable ⇒ NC más alto, Fig. 3.1.20/tabla NRCS de
+usos urbanos: **NC_urbano=85**), y la canalización de parte del cauce
+principal reduce tc un 15 %. El resto de la cuenca (85 %) sigue siendo
+pastizal (NC=61). El NC efectivo de toda la cuenca se pondera por área
+(Teórico §3.1.5 c):
+
+```
+NC_ponderado = 0.85*NC_pastizal + 0.15*NC_urbano = 0.85*61 + 0.15*85 = 64.6
+tc_urb = tc*(1-0.15) = 1.231*0.85 = 1.046 hs = 62.8 min
+```
+
+**3.1) Caudal máximo recalculado (Tr=5 años):** se repite el desarrollo
+NRCS de la Parte 1 con NC=64.6 y tc=1.046 h:
+
+```
+Tp = dt/2 + 0.6*tc_urb = 0.702 hs ; Tb(unitario) = 1.873 hs
+Pe total = 6.40 mm
+Qmax = 9.32 m3/s en t = 2.04 hs
+Tb(hidrograma total) = 11*dt + Tb(unitario) = 3.52 hs
+```
+
+**Resultado final Parte 3.1: Qmax recalculado (Tr=5 años, cuenca
+urbanizada) = 9.32 m³/s.**
+
+**3.2) Volumen de escorrentía e hidrograma recalculados:**
+```
+Vesc_urb = Pe_total * Area = 6.40 mm * 6.5 km2 * 1000 = 41 602 m3
+Qmax = 9.32 m3/s en t = 2.04 h ; hidrograma se extingue en t ~ 3.52 h
+```
+
+**Resultado final Parte 3.2: Volumen de escorrentía ≈41 600 m³. Hidrograma
+con Qmax=9.32 m³/s en t=2.04 h (ver gráfico).**
+
+Gráfico comparativo: `scripts/ej3_hidrograma_comparacion.png`.
+
+**3.3) Comparación con la Parte 2 y justificación de los cambios:**
+
+| Ítem | Cuenca actual (Parte 2) | Cuenca urbanizada 15 % (Parte 3) |
+|---|---|---|
+| tc | 1.23 h | 1.05 h (−15 %) |
+| NC | 61 | 64.6 |
+| Pe total | 5.62 mm | 6.40 mm |
+| Vesc | ≈36 500 m³ | ≈41 600 m³ |
+| Qmax | 7.01 m³/s | 9.32 m³/s |
+| tiempo pico | 2.42 h | 2.04 h |
+| tiempo base (hidrograma) | 4.14 h | 3.52 h |
+
+El desarrollo urbano y la canalización hacen que la cuenca **responda más
+rápido**: al reducirse tc, el hidrograma unitario se vuelve más picudo
+(mayor qp, menor Tp/Tb) y todo el evento se adelanta y se concentra en
+menos tiempo (el caudal máximo ocurre antes y el hidrograma se agota antes).
+Al mismo tiempo, la superficie impermeabilizada aumenta el Número de Curva
+ponderado, lo que **aumenta la precipitación efectiva** (menor infiltración)
+y por lo tanto **el volumen de escorrentía**; ese mayor volumen, concentrado
+en un tiempo más corto, se traduce en un **caudal máximo mayor**. Ambos
+efectos (menor tc y mayor NC) actúan en el mismo sentido: la alcantarilla
+diseñada para la cuenca original queda **subdimensionada** frente al
+desarrollo urbano futuro.
+
+**Resultado final Parte 3.3: la urbanización aumenta el Qmax (7.01→9.32
+m³/s) y el volumen de escorrentía (≈36 500→≈41 600 m³), y adelanta el pico
+del hidrograma (2.42 h→2.04 h), porque reduce tc (cuenca más rápida) y
+aumenta el NC ponderado (menor infiltración).**
+
+**Comparación con la solución oficial:** el manuscrito da NC_ponderado=64.6
+(idéntico), tc_urb=1.05 h (idéntico), tiempo pico=2.02 h y tiempo
+base=3.51 h (vs. 2.04 h / 3.52 h calculados) — **coincide**; el Qmax oficial
+es parcialmente ilegible en el manuscrito pero comienza con "9,2…", **coherente**
+con los 9.32 m³/s calculados. La conclusión cualitativa (mayor Qmax, mayor
+volumen, pico más rápido) coincide textualmente con la del manuscrito.
+
+### Resumen Ejercicio 3
+
+| Ítem | Cuenca actual | Cuenca urbanizada (15 %) |
+|---|---|---|
+| Método de cálculo | **NRCS** (tc=1.23 h > 1 h) | NRCS (tc=1.05 h > 1 h) |
+| Qmax (Tr=5 años) | **7.01 m³/s** | **9.32 m³/s** |
+| Volumen de escorrentía | **≈36 500 m³** | **≈41 600 m³** |
+| Tiempo pico / tiempo base | 2.42 h / 4.14 h | 2.04 h / 3.52 h |
+
+---

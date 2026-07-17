@@ -27,8 +27,8 @@ Julio.
 | B1. Delimitación de cuencas y divisoria de aguas | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
 | B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
-| B4. Método Racional (y criterio de selección según tc) | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
+| B4. Método Racional (y criterio de selección según tc) | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
 | B6. Condición de humedad antecedente (AMC) | 2 | 2025 feb 1, 2026 feb |
 | B7. Volumen de escorrentía y embalses de retención | 2 | 2024 dic, 2025 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 1 | 2025 feb 2 |
@@ -416,6 +416,25 @@ adoptando el mayor caudal). También se aplica igual, pero con el hietograma
 **observado** en su orden cronológico real (sin reordenar por bloque
 alterno), para verificar si un evento de lluvia real supera la capacidad de
 diseño de una obra.
+
+**Número de Curva ponderado (cuenca con usos de suelo mixtos).** Si la
+cuenca tiene más de un uso de suelo (p.ej. una fracción se urbaniza, o hay
+zonas de distinto uso desde el inicio), el NC efectivo de toda la cuenca es
+el promedio ponderado por área de los NC de cada uso:
+
+```
+NC_ponderado = Σ (fracción de área_i · NC_i)
+```
+
+Es el mismo criterio de ponderación por área que se usa para el Agua
+Disponible media de una cuenca con varias unidades de suelo (B9). Cuando un
+desarrollo urbano reemplaza parte de un uso de suelo (p.ej. pastizal→urbano,
+lotes chicos muy impermeables ⇒ NC más alto) y además reduce tc (por
+canalización del cauce), **ambos efectos aumentan el Qmax de diseño**: el NC
+más alto reduce la infiltración (más Pe, más volumen de escorrentía) y el tc
+más chico concentra ese mayor volumen en un hidrograma más picudo (mayor Qp,
+menor Tp/Tb) — ver ejemplo completo en `resueltos/2024 Julio/RESOLUCION.md`,
+Ejercicio 3, Parte 3.
 
 Cita: Teórico HHA §3.1.5 b)/c) y §3.1.6 "Método del NRCS (ex SCS)";
 Formulómetro "Cálculo de caudales máximos e hidrograma de crecida: Método
