@@ -34,10 +34,10 @@ Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
 | B7. Volumen de escorrentía y embalses de retención | 3 | 2024 dic, 2025 feb 2, 2024 feb |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 1 | 2025 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 1 | 2026 feb |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
-| C2. Curva de la bomba y punto de funcionamiento | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
-| C3. Potencia consumida por el sistema de bombeo | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
-| C4. Cavitación: NPSH disponible vs. requerido | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| C2. Curva de la bomba y punto de funcionamiento | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| C3. Potencia consumida por el sistema de bombeo | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| C4. Cavitación: NPSH disponible vs. requerido | 7 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
 | C5. Bombas en serie y en paralelo | 3 | 2025 feb 1, 2025 feb 2, 2024 mar |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 1 | 2024 dic |
 
@@ -644,6 +644,17 @@ prueba se calcula Hm(Q) de la instalación (iterando f con Colebrook-White,
 ya que f depende de Re que depende de Q) y se compara con la curva H-Q de la
 bomba (C2) para hallar el punto de funcionamiento.
 
+**Caso particular: manómetros en las bridas de la bomba (entrada/salida).**
+Si el enunciado da directamente las lecturas p_A (succión) y p_B
+(impulsión) de dos manómetros ubicados justo antes y después de la bomba, a
+la **misma cota** z_A, no hace falta calcular ninguna pérdida de carga de
+tubería para obtener Hm: alcanza con H_A=z_A+p_A/γ+V_succión²/2g y
+H_B=z_A+p_B/γ+V_impulsión²/2g (mismo z_A en ambas), por lo que
+Hm=H_B−H_A=(p_B−p_A)/γ+(V_impulsión²−V_succión²)/2g, función de Q sólo a
+través de las velocidades (áreas de succión/impulsión, que pueden tener
+distinto diámetro). Se interseca igual con la curva H-Q de la bomba (C2)
+para hallar (Qpf,Hpf) (2024 feb, Ej.4 parte 1).
+
 Cita: Teórico HHA §3.3.10 "Curva de la instalación" (Ec. 15, 18, 19);
 Formulómetro "Bombas — Carga hidráulica" / "Curva de la Instalación".
 
@@ -732,6 +743,15 @@ z_bomba por encima de z_tanque (en vez de una carga de succión positiva).
 tubería fijas, se despeja la cota de la bomba que hace NPSH_disp=NPSH_req
 (límite de cavitación): z_bomba,max = z_tanque + (Patm−Pvap)/γ −
 h_succión(Q) − NPSH_req(Q) (2024 jul, Ej.4).
+
+**Con manómetro de succión dado directamente.** Si se conoce p_A (lectura
+del manómetro en la brida de succión, ver C1) en vez de tener que calcular
+la carga de succión con pérdidas de tubería, NPSH_disp se obtiene
+directamente de la presión **absoluta** en ese punto:
+NPSH_disp=(Patm+p_A−Pvap)/γ+V_succión²/2g (p_A entra con su signo, típicamente
+negativo si la bomba aspira) — mismo resultado que la fórmula general de
+arriba, sólo que p_A ya incorpora todas las pérdidas de succión sin
+necesidad de calcularlas por separado (2024 feb, Ej.4 parte 2).
 
 Cita: Teórico HHA §3.3.14 "Cavitación"; Formulómetro "Bombas — Cavitación".
 

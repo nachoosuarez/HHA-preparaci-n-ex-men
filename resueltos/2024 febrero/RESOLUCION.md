@@ -443,4 +443,125 @@ exactamente**.
 
 ---
 
-## ESTADO: EN CURSO (Ejercicios 1, 2 y 3 completos; falta Ejercicio 4)
+## EJERCICIO 4 — Instalación de bombeo con recirculación (25 puntos)
+
+**Datos:** tanque abierto con superficie libre z₁=1.4 m. Succión: L₁=9 m,
+D₁=118 mm, ε₁=0.006 mm. Impulsión: D₂=84 mm, descarga libre a la
+atmósfera en z₂=5.5 m. Bomba y manómetros a cota z_A=5.5 m; lecturas
+p_A=−58.6 kPa (entrada), p_B=13.8 kPa (salida). Curva de catálogo de la
+bomba: Q(l/s)=0,3,6,9,12,15,18,21,24,27,30,33; H(m)=11.0,10.7,10.5,10.2,
+10.1,9.9,9.6,9.2,8.6,7.9,7.0,6.0; η(%)=0,56,64,74,76,77,75,73,69,64,53,45;
+NPSHr(m)=1.6,1.65,1.7,1.75,1.8,1.85,1.95,2,2.2,3.1,4.2,6.
+
+Teoría usada: ecuación de la instalación de bombeo con manómetros en las
+bridas de la bomba (§C1), punto de funcionamiento por intersección con
+la curva H-Q de catálogo (§C2), potencia consumida (§C3), NPSH
+disponible con lectura directa de manómetro de succión (§C4),
+Colebrook-White para el factor de fricción (Formulómetro).
+
+### Parte 1) Punto de funcionamiento y potencia consumida
+
+**Concepto.** Los dos manómetros están a la **misma cota** que la bomba
+(z_A), justo en sus bridas de entrada y salida: no hace falta calcular
+ninguna pérdida de carga de tubería para obtener la carga que entrega la
+bomba, Hm=H_B−H_A=(p_B−p_A)/γ+(V_impulsión²−V_succión²)/2g, función de Q
+sólo a través de las velocidades (áreas de succión D₁ e impulsión D₂,
+distintas). Se interseca esa curva con la curva H-Q de catálogo
+(interpolada) para hallar el punto de funcionamiento (Qpf,Hpf), y con la
+eficiencia interpolada en Qpf se obtiene la potencia consumida.
+
+**Herramienta:** Octave, malla fina de Q, interpolación `pchip` de la
+curva de catálogo, e intersección numérica con Hm(Q). Se usa este camino
+—en vez de armar la curva de instalación completa tanque-a-tanque— porque
+acá los manómetros ya dan directamente la presión en las bridas de la
+bomba, ahorrando el cálculo de pérdidas de succión/impulsión para esta
+parte.
+
+**Script:** `scripts/ej4_parte1.m`.
+
+**Resultado:**
+```
+Asuc = 0.01094 m2 ; Aimp = 0.00554 m2
+
+Qpf = 25.76 l/s
+Hpf = 8.207 m
+eta_pf = 66.4 %
+
+Potencia consumida Pb = gamma*Q*H/eta = 3121 W = 3.12 kW
+```
+
+Gráfico: `scripts/ej4_HQ_parte1.png`.
+
+**Resultado final Parte 1: Qpf ≈ 25.8 l/s, Hpf ≈ 8.21 m, potencia
+consumida ≈ 3.12 kW.**
+
+**Comparación con solución oficial:** el manuscrito da Qpf=25.7 l/s,
+Hpf=8.2 m, ηpf=66.2%, Pb=3.12 kW — **coincide** (diferencias ≤0.3% por
+redondeo de interpolación).
+
+### Parte 2) Evaluación de cavitación (NPSH)
+
+**Concepto.** El NPSH disponible depende sólo del tramo de succión; con
+la presión de succión p_A ya medida directamente, se obtiene de la
+presión **absoluta** en la brida: NPSH_disp=(Patm+p_A−Pvap)/γ+V_succión²/2g
+(§C4, caso con manómetro de succión dado). Se compara contra el NPSH
+requerido de catálogo, interpolado en Qpf.
+
+**Herramienta:** cálculo directo en Octave (`Patm=101300 Pa,
+Pvap=2340 Pa` a 20°C), interpolación `pchip` de NPSHr en Qpf.
+
+**Script:** `scripts/ej4_parte2.m`.
+
+**Resultado:**
+```
+Vsuc(Qpf) = 2.356 m/s
+NPSHdisp = (Patm+pA-Pvap)/gamma + Vsuc^2/2g = 4.401 m
+NPSHreq (interpolado en Qpf) = 2.658 m
+
+NPSHdisp > NPSHreq => la bomba NO cavita (margen = 1.744 m)
+```
+
+Gráfico NPSH-Q: `scripts/ej4_NPSH_parte2.png`.
+
+**Resultado final Parte 2: NPSH disponible (4.40 m) > NPSH requerido
+(2.66 m) ⇒ la bomba NO cavita, con un margen de ≈1.74 m.**
+
+**Comparación con solución oficial:** el manuscrito da NPSHdisp=4.4 m,
+NPSHreq=2.71 m ⇒ no cavita — **coincide** (diferencia <2% en NPSHreq por
+redondeo de interpolación).
+
+### Parte 3) Coeficiente global de pérdidas localizadas de la succión
+
+**Concepto.** Entre el tanque (1, superficie libre, V≈0, p=0) y la
+brida de succión de la bomba (A, ya conocida de la Parte 1) se aplica la
+ecuación de energía con pérdidas: H₁=H_A+ΔH_succión, con
+ΔH_succión=(f·L₁/D₁+k_s)·V_succión²/2g (§C1). Con f de Colebrook-White
+(Re y rugosidad relativa del tramo de succión) se despeja k_s.
+
+**Herramienta:** `colebrook.m` para f (Re=V_succión·D₁/ν,
+ε₁/D₁=0.006mm/118mm), y despeje algebraico directo de k_s.
+
+**Script:** `scripts/ej4_parte3.m`.
+
+**Resultado:**
+```
+Vsuc(Qpf) = 2.356 m/s
+H1 = z1 = 1.400 m
+HA = zA + pA/gamma + Vsuc^2/2g = -0.197 m
+dHsucc = H1 - HA = 1.597 m
+
+Re = 277950 ; eps1/D1 = 0.0000508 ; f (Colebrook) = 0.01517
+
+ks = dHsucc/(Vsuc^2/2g) - f*L1/D1 = 4.483
+```
+
+**Resultado final Parte 3: k_s ≈ 4.48** (coeficiente global de pérdidas
+localizadas de la tubería de succión).
+
+**Comparación con solución oficial:** el manuscrito da f=0.0152 y
+**ks=4.5** — **coincide** con el resultado obtenido (4.48), diferencia
+<1%.
+
+---
+
+## ESTADO: COMPLETO
