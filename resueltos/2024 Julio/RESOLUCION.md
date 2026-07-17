@@ -453,3 +453,131 @@ volumen, pico más rápido) coincide textualmente con la del manuscrito.
 | Tiempo pico / tiempo base | 2.42 h / 4.14 h | 2.04 h / 3.52 h |
 
 ---
+
+## EJERCICIO 4 — Sistema de bombeo entre dos tanques A y B
+
+**Datos:** tanque A (succión) a z_A=10 m, tanque B (impulsión, descarga
+ahogada dentro del tanque) a z_B=50 m. Bomba a cota z_bomba=13 m
+(**succión en aspiración**, ya que z_bomba>z_A). Tubería única de succión
+(L_s=30 m) e impulsión (L_i=300 m), mismo diámetro D=0.30 m y rugosidad
+absoluta ε=0.001 mm en todo el recorrido; pérdidas localizadas
+despreciables. Curvas de la bomba dadas en tabla (Q, H, NPSH_req, η).
+
+**Teoría usada:** curva característica de la bomba (Teórico HHA §3.3.8),
+curva de la instalación (pérdidas de Darcy-Weisbach con factor de fricción
+de Colebrook-White) y punto de funcionamiento como intersección de ambas
+(§3.3.10–§3.3.11), potencia consumida (§3.3.9), cavitación y NPSH
+disponible vs. requerido (§3.3.14).
+
+**Herramienta:** Octave (`scripts/ej4_completo.m`), mismo esquema que
+`resueltos/2024 diciembre/scripts/ej4_parte1a3.m` (`colebrook.m` para el
+factor de fricción, iteración sobre H_instalación(Q)=H_bomba(Q)), adaptado
+a que aquí ambos tramos (succión e impulsión) tienen el mismo diámetro, por
+lo que se puede sumar directamente L_s+L_i=330 m en un único término de
+pérdida de carga distribuida.
+
+### Parte 1) Punto de funcionamiento y potencia consumida
+
+**a) Ecuación de la instalación.** El tanque B recibe la descarga **ahogada**
+(dentro del tanque, no hay chorro libre), por lo que no hay velocidad de
+salida que sumar; toda la tubería tiene el mismo diámetro, así que la
+pérdida distribuida se calcula con la longitud total:
+
+```
+Hb(Q) = (zB - zA) + f(Q)*(Ls+Li)/D * V^2/(2g)     ,   V = Q/A , A = pi*D^2/4
+```
+con f(Q) el factor de fricción de Darcy-Weisbach (ecuación de
+Colebrook-White, `colebrook.m`), función del número de Reynolds Re=V·D/ν y
+de la rugosidad relativa ε/D (aquí ε/D≈3.3×10⁻⁶, tubería muy lisa).
+
+**Herramienta:** se recorre una malla fina de caudales, se calcula H de la
+instalación (con `colebrook.m` en cada iteración) y H de la bomba
+(interpolando la tabla), y el punto de funcionamiento es donde ambas curvas
+se cruzan.
+
+**b) Resultado:**
+```
+Q_PF = 0.2686 m3/s = 268.6 L/s
+H_PF = 49.29 m
+f = 0.0115  (Re=1.14e6, tuberia muy lisa: eps/D=3.3e-6)
+eta(Q_PF) = 81.6 %
+```
+
+**c) Potencia consumida:** P = γ·Q·H/η = 9800·0.2686·49.29/0.816 ≈
+**158.9 kW**.
+
+**Gráfico:** `scripts/ej4_HQ.png` (curva de la instalación, curva de la
+bomba y punto de funcionamiento).
+
+**Resultado final Parte 1: Q=268.6 L/s, H=49.29 m, f=0.0115. Potencia
+consumida ≈158.9 kW (η=81.6 %).**
+
+**Comparación con la solución oficial:** el manuscrito da Q=0.2686 m³/s,
+H=49.3 m, η=81.6 %, f=0.0115, potencia≈159.03 kW — **coincide
+prácticamente exacto** (la diferencia de ≈0.1 kW es redondeo).
+
+### Parte 2) Verificación de cavitación (NPSH)
+
+**a) Ecuación de NPSH disponible** (Teórico §3.3.14), aplicando Bernoulli
+entre la superficie libre del tanque A y la brida de succión de la bomba.
+Como z_bomba(13 m) > z_A(10 m), la bomba está en **aspiración** (debe
+"levantar" el agua 3 m antes de vencer además la pérdida de carga en la
+succión):
+
+```
+NPSHd = (Patm-Pvap)/gamma - (zbomba - zA) - hs(Q)
+hs(Q) = f(Q)*(Ls/D)*V^2/(2g)                    (perdida solo en la succion, Ls=30 m)
+(Patm-Pvap)/gamma ~ 10.33 - 0.24 = 10.09 m       (agua a temperatura ambiente, valor usual del curso)
+```
+
+**b) Resultado en el punto de funcionamiento:**
+```
+hs(Q_PF) = 0.845 m
+NPSHd = 10.09 - (13-10) - 0.845 = 6.25 m
+NPSHreq(Q_PF) = 2.27 m   (interpolado de la tabla)
+```
+Como NPSHd(6.25 m) > NPSHreq(2.27 m) ⇒ **la bomba NO cavita** (margen=3.97 m).
+
+**Gráfico:** `scripts/ej4_NPSH.png` (NPSH disponible y requerido vs. Q, con
+la condición de operación marcada).
+
+**Resultado final Parte 2: NPSH disponible = 6.25 m > NPSH requerido =
+2.27 m ⇒ no cavita (margen 3.97 m).**
+
+**Comparación con la solución oficial:** el manuscrito da
+NPSHd=10-0.0115·(30/0.3)·V²/(2g)-13+10.33-0.24=6.24 m > NPSHreq — **coincide
+exactamente** (misma ecuación, mismo resultado).
+
+### Parte 3) Cota máxima de la bomba sin cavitar
+
+**Concepto.** Se busca la cota z_bomba que hace que el NPSH disponible sea
+exactamente igual al NPSH requerido (límite de cavitación), manteniendo el
+mismo caudal de funcionamiento y las mismas longitudes de succión e
+impulsión (según el enunciado):
+
+```
+NPSHreq(Q_PF) = (Patm-Pvap)/gamma - (zbomba_max - zA) - hs(Q_PF)
+=> zbomba_max = zA + (Patm-Pvap)/gamma - hs(Q_PF) - NPSHreq(Q_PF)
+zbomba_max = 10 + 10.09 - 0.845 - 2.27 = 16.97 m
+```
+
+**Resultado final Parte 3: la bomba puede colocarse hasta la cota
+z≈16.97 m sin que cavite** (0.97 m más arriba de los z=13 m originales,
+manteniendo el mismo Q).
+
+**Comparación con la solución oficial:** el manuscrito da z_max≈16.7 m —
+**coincide** dentro de un margen de redondeo en la lectura gráfica de
+NPSHreq y en las cifras intermedias de la ecuación.
+
+### Resumen Ejercicio 4
+
+| Ítem | Resultado |
+|---|---|
+| Q / H de funcionamiento | **268.6 L/s / 49.29 m** (f=0.0115) |
+| Potencia consumida | **≈158.9 kW** (η=81.6 %) |
+| NPSH disponible / requerido | **6.25 m / 2.27 m** (no cavita, margen 3.97 m) |
+| Cota máxima de la bomba sin cavitar | **≈16.97 m** |
+
+---
+
+## ESTADO: COMPLETO

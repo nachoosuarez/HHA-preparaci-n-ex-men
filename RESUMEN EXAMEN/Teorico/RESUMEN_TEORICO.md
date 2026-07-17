@@ -33,10 +33,10 @@ Julio.
 | B7. Volumen de escorrentía y embalses de retención | 2 | 2024 dic, 2025 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 1 | 2025 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 1 | 2026 feb |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
-| C2. Curva de la bomba y punto de funcionamiento | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
-| C3. Potencia consumida por el sistema de bombeo | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
-| C4. Cavitación: NPSH disponible vs. requerido | 4 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
+| C2. Curva de la bomba y punto de funcionamiento | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
+| C3. Potencia consumida por el sistema de bombeo | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
+| C4. Cavitación: NPSH disponible vs. requerido | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
 | C5. Bombas en serie y en paralelo | 2 | 2025 feb 1, 2025 feb 2 |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 1 | 2024 dic |
 
@@ -674,6 +674,18 @@ del agua, pvapor/γ sube y NPSH_disp baja ⇒ mayor riesgo de cavitación (la
 condición más exigente es siempre la de mayor temperatura, aunque el punto
 de funcionamiento no cambie con la temperatura, ya que se desprecian los
 cambios de viscosidad/densidad).
+
+**Bomba en aspiración (succión negativa).** Si la bomba está instalada por
+encima del nivel del tanque de succión (z_bomba>z_tanque), ese desnivel
+**resta** al NPSH disponible (hay que "levantar" el agua además de vencer
+la pérdida de carga): NPSH_disp = (Patm−Pvap)/γ − (z_bomba−z_tanque) −
+h_succión(Q). Es el mismo caso límite que cuando el enunciado da directamente
+z_bomba por encima de z_tanque (en vez de una carga de succión positiva).
+
+**Cota máxima de la bomba sin cavitar.** Para un Q y unas longitudes de
+tubería fijas, se despeja la cota de la bomba que hace NPSH_disp=NPSH_req
+(límite de cavitación): z_bomba,max = z_tanque + (Patm−Pvap)/γ −
+h_succión(Q) − NPSH_req(Q) (2024 jul, Ej.4).
 
 Cita: Teórico HHA §3.3.14 "Cavitación"; Formulómetro "Bombas — Cavitación".
 
