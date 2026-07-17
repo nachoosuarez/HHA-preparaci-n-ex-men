@@ -148,6 +148,114 @@ mínimas en la parte 3 se deben a que la solución oficial redondeó yn a
 
 ---
 
+## Ejercicio 3 — Método Racional: alcantarilla y urbanización
+
+### Enunciado (resumen)
+
+1) Enunciar las hipótesis del Método Racional. 2) Diseño hidráulico de una
+alcantarilla en una cuenca de Área=4.5 km², ΔH=80 m, L cauce=1600 m, Grupo
+Hidrológico B, pendiente media de la cuenca S=6.3%, uso de suelo pastizales
+en condiciones hidrológicas buenas, flujo concentrado: determinar Qmax de
+diseño para Tr=5 años y justificar el método. 3) Tras construida la obra,
+se urbaniza el 25% de la superficie (pastizal → concreto/techo) y se
+canaliza parte del cauce, reduciendo tc un 18%: recalcular Qmax para Tr=10
+años.
+
+### Teoría (RESUMEN_TEORICO.md, sección B)
+
+- **B4** Hipótesis del Método Racional (enriquecida en esta corrida):
+  intensidad constante y uniforme durante tc; tc = tiempo para que drene
+  toda la cuenca; sin almacenamiento temporal.
+- **B2** Tiempo de concentración (Kirpich): tc=0.4·L^0.77/S^0.385, con S=
+  pendiente del **cauce principal** (ΔH/L/10), no la pendiente media de la
+  cuenca (esa sólo se usa para elegir C).
+- **B4** Criterio de selección de método según tc: tc<20 min ⇒ sólo
+  Racional.
+- **B4** Q=C·i·A/360, con C de la Tabla 3.1.4 (Chow 1994) según uso de
+  suelo/pendiente/Tr, i=P(Tr,tc)/tc de las curvas IDF de Uruguay (B3).
+- Cita: Teórico HHA §3.1.2 (tc), §3.1.4 (curvas IDF), §3.1.5 (Método
+  Racional, Tabla 3.1.4); Formulómetro "Cálculo de Caudales Máximos —
+  Método Racional".
+
+### Herramienta y por qué
+
+Se replicaron en Python las fórmulas exactas de la hoja `Cálculos
+(grande)` de `Scripts/01_SCRIPTS/Eventos extremos.xlsx` (documentadas en
+`RESUMEN EXAMEN/Teorico/COMO_USAR_EVENTOS_EXTREMOS.md` §1.b-1.c: Kirpich,
+CT/CD/CA, Q=C·i·A/360), en vez de operar la planilla real, porque el
+resultado es idéntico (mismas fórmulas cerradas) y permite documentar en
+un script reproducible y verificable los dos escenarios (Tr=5 y Tr=10 con
+C ponderado por uso de suelo mixto) del enunciado; es el mismo enfoque que
+usan los scripts de exámenes previos (`ej2_parte1.py`, etc.) según el
+propio instructivo de la planilla. El coeficiente C se leyó de la Tabla
+3.1.4 del Teórico (transcripta en esta corrida) y P(3,10)=80 mm se tomó de
+la solución oficial manuscrita (lectura gráfica del mapa de isoyetas para
+la ubicación de la cuenca, que no está disponible como imagen separada en
+este repositorio). Script: `scripts/Ejercicio3_racional.py`.
+
+### Paso a paso
+
+**1) Hipótesis del Método Racional.**
+- Intensidad de tormenta constante en el tiempo y uniforme en el espacio,
+  con duración = tc.
+- Qpico es función del Qprom durante tc.
+- Se usa tc porque es el tiempo para que toda la cuenca drene
+  simultáneamente.
+- No hay almacenamiento temporal (atenuación) en la cuenca.
+
+**2) Diseño de la alcantarilla, Tr=5 años.**
+```
+S_cauce = dH/L/10 = 80/1.6/10 = 5.0 %   (!= S_cuenca=6.3%, que solo se usa para elegir C)
+Tc (Kirpich) = 0.4*1.6^0.77/5.0^0.385 = 0.309 h = 18.5 min
+Tc < 20 min  =>  usar SOLO el método Racional (Teórico §3.1.5)
+
+C (Tabla 3.1.4: Pastizales, pendiente promedio 2-7%, Tr=5) = 0.36
+P(Tr=5, d=tc) = P310*CT(5)*CD(tc)*CA(A,tc) = 80*0.8595*0.3630*0.9849 = 24.59 mm
+i = P/tc = 79.54 mm/h
+Qmax = C*i*A(ha)/360 = 0.36*79.54*450/360 = 35.79 m³/s
+```
+
+**3) Recálculo con urbanización 25% y tc reducido 18%, Tr=10 años.**
+```
+Tc nuevo = Tc*(1-0.18) = 0.2535 h = 15.2 min   (sigue <20 min => solo Racional)
+
+C pastizal (Tabla 3.1.4, Tr=10, 75% del área) = 0.38
+C concreto/techo (Tabla 3.1.4, Tr=10, 25% del área) = 0.83
+C ponderado = 0.75*0.38 + 0.25*0.83 = 0.4925
+
+P(Tr=10, d=tc_nuevo) = 80*1.0001*0.3313*0.9836 = 26.06 mm
+i = P/tc_nuevo = 102.82 mm/h
+Qmax = C*i*A(ha)/360 = 0.4925*102.82*450/360 = 63.30 m³/s
+```
+El aumento de Qmax (35.79 → 63.30 m³/s, +77%) combina dos efectos: mayor C
+(más superficie impermeable ⇒ más escorrentía por mm de lluvia) y menor tc
+(mayor intensidad de diseño i, ya que la duración de la tormenta se acorta).
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| Tc original (Kirpich) | **18.5 min** (<20 min ⇒ sólo Método Racional) |
+| Qmax alcantarilla (Tr=5 años) | **35.79 m³/s** |
+| Tc tras urbanización (-18%) | **15.2 min** |
+| C ponderado (75% pastizal + 25% urbano, Tr=10) | **0.4925** |
+| Qmax tras urbanización (Tr=10 años) | **63.30 m³/s** |
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| Tc | 18.5 min (0.309 h) | 18.5 min | ≈0 |
+| C (Tr=5) | 0.36 | 0.36 | — |
+| Qmax (Tr=5) | 35.79 m³/s | 35.79 m³/s | ≈0 |
+| Tc nuevo | 0.25 h (15.2 min) | 15.2 min | ≈0 |
+| C ponderado (Tr=10) | 0.4925 | 0.4925 | — |
+| Qmax (Tr=10) | 63.3 m³/s | 63.30 m³/s | ≈0 |
+
+Coincidencia exacta con la solución manuscrita oficial en todos los ítems.
+
+---
+
 ## Ejercicio 4 — Sistema de bombeo
 
 ### Enunciado (resumen)
@@ -268,9 +376,6 @@ del margen esperable de lectura de tabla/interpolación gráfica vs. numérica.
 
 - Ejercicio 2 (delimitación de cuenca cañada Arroyo del Tala + abstracciones
   NRCS del evento observado, AMC).
-- Ejercicio 3 (hipótesis del Método Racional; diseño de alcantarilla Tr=5
-  años; recálculo con urbanización 25% y reducción de tc del 18%, Tr=10
-  años).
 
 ---
 

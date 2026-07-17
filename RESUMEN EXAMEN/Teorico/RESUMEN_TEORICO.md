@@ -25,9 +25,9 @@ Julio; **2024 mar** = 2024 marzo (1/mar/2024).
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 5 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
-| B4. Método Racional (y criterio de selección según tc) | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
+| B4. Método Racional (y criterio de selección según tc) | 6 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar |
 | B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 5 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul |
 | B6. Condición de humedad antecedente (AMC) | 2 | 2025 feb 1, 2026 feb |
 | B7. Volumen de escorrentía y embalses de retención | 2 | 2024 dic, 2025 feb 2 |
@@ -385,6 +385,16 @@ Intensidad Duración Frecuencia".
 cuenca aporta simultáneamente**, lo cual ocurre cuando la duración de la
 tormenta iguala tc, bajo la hipótesis de una tormenta de **intensidad
 constante en el tiempo y uniforme en toda el área** de la cuenca.
+
+**Hipótesis del método (si se piden enunciar, 2024 mar Ej.3):**
+- Intensidad de la tormenta **constante en el tiempo y uniforme en el
+  espacio** (en toda la cuenca), con duración de la tormenta = tc.
+- El caudal pico es función del caudal promedio durante tc (Qpico=f(Qprom)).
+- Se usa tc porque es el tiempo necesario para que **toda la cuenca
+  drene** simultáneamente hacia el punto de cierre.
+- **No hay almacenamiento temporal** de agua en la cuenca (no hay
+  atenuación, toda la lluvia efectiva llega al punto de cierre sin
+  laminar).
 
 ```
 Q = C · i · A / 360
