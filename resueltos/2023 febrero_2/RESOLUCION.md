@@ -1,0 +1,166 @@
+# Examen HHA — 24 de febrero de 2023 (2023 febrero_2 / 2023 feb 2)
+
+Resolución paso a paso. El PDF del examen (`EXAMENES/2023 febrero_2.pdf`,
+10 páginas) incluye la letra completa (páginas 1-3: Ejercicios 1-4), la
+carta topográfica del Ejercicio 2 (página 4) y la solución oficial
+manuscrita completa (páginas 5-10, con la cuenca ya delimitada en la
+página 7), que se usa para comparar cada resultado.
+
+No confundir con "2023 Febrero" (`EXAMENES/2023 Febrero.pdf`, 9/feb/2023),
+la primera llamada de febrero de 2023, un examen distinto aún sin resolver
+en este repo.
+
+Herramientas: Octave (funciones canónicas de
+`RESUMEN EXAMEN/Codigos/FGV_rectangular/`, copiadas sin modificar a
+`scripts/` de este examen) para el Ejercicio 1.
+
+---
+
+## EJERCICIO 1 — Canal rectangular con compuerta de fondo, descarga a un lago cercano (25 puntos)
+
+**Datos:** sección rectangular b=5 m, S₀=0.001, n=0.017 (Manning). El
+canal desemboca en un lago cuyo nivel está a hL=0.8 m sobre el fondo del
+canal. A Lgc=60 m antes del lago hay una compuerta de fondo ideal.
+
+Teoría usada: ecuación de FGV y clasificación M/S (Resumen Teórico §A1),
+energía específica y tirante alterno (§A2), cantidad de movimiento,
+tirante conjugado, resalto hidráulico y fuerza sobre un obstáculo de fondo
+(§A3), control por un lago a distancia finita (§A4/§A5, nuance agregada
+en esta resolución) y compuerta de fondo ideal con chequeo libre/ahogada
+(§A5).
+
+### Parte 1) Apertura a=0.50 m descarga libre, v=4 m/s en la compuerta: Q, clasificación M/S y perfil completo
+
+**Concepto.** El caudal se obtiene de la velocidad y el área mojada bajo
+la compuerta (dato: descarga libre con v=4 m/s en a=0.50 m). Con Q se
+calculan yc (crítico) e yn (normal, Manning) y se clasifica el canal.
+Aguas arriba de la compuerta el tirante es el **alterno** de a (misma
+energía específica, sin pérdidas). Aguas abajo de la compuerta arranca
+una curva **M3** (supercrítica, creciente hacia yc). El lago, a 60 m,
+tiene hL=0.8 m > yc: es subcrítico, así que allí también rige una curva
+**M2**. Como el lago está a distancia **finita** (no "muy lejos" ni yn),
+el tirante de referencia para ubicar el resalto no es yn: hay que integrar
+la curva M2 **hacia atrás** desde el lago (control conocido) hasta la
+compuerta, y por separado integrar la curva M3 **hacia adelante** desde la
+compuerta; el resalto está donde el conjugado de M3 cruza el valor de M2
+en el mismo x (mismo criterio de A3, aplicado con dos ramas que dependen
+de x en vez de una referencia constante).
+
+**Herramienta:** `froude_rect.m`/`manning_rect.m` (yc, yn), `Eesp_rect.m`
+(alterno de a), `rect.m` integrado con `ode23` en ambos sentidos (M2 desde
+el lago hacia la compuerta, M3 desde la compuerta hacia el lago) y
+`Mom_rect.m` (conjugado de la rama M3) para hallar el resalto por
+intersección.
+
+**Script:** `scripts/ej1.m` (sección "PARTE 1"). Entradas: `b=5, S0=0.001,
+n=0.017, hL=0.8, Lgc=60, a1=0.50, v1=4`.
+
+**Resultado:**
+```
+Q = v*(b*a) = 10.0000 m3/s
+yc = 0.7418 m ; yn = 1.2251 m  =>  yn > yc  =>  CANAL TIPO M
+y aguas arriba de la compuerta (alterno de a=0.50) = 1.1663 m  (< yn => curva M2)
+y = a = 0.50 m < yc  =>  aguas abajo arranca la curva M3
+hL = 0.80 m > yc  =>  en el lago el flujo es subcritico (curva M2)
+
+RESALTO a x = 7.2 m aguas abajo de la compuerta: y = 0.5462 m -> y = 0.9795 m
+y(M2) justo en la compuerta (x=0) = 0.9907 m
+```
+
+**Perfil de la superficie libre** (x medido desde la compuerta, 0 a 60 m
+hasta el lago):
+- x=0⁻ (aguas arriba de la compuerta): y=1.1663 m (curva M2, aproximándose
+  a yn=1.2251 m lejos de la compuerta).
+- x=0⁺ (aguas abajo de la compuerta): y=a=0.50 m (arranque de la curva M3).
+- x=7.2 m: **resalto hidráulico** (y sube de 0.5462 m a 0.9795 m).
+- x=7.2 a 60 m: curva M2, tirante decreciendo suavemente de 0.98 m a
+  hL=0.80 m en el lago.
+
+**Resultado final Parte 1: Q = 10 m³/s, canal tipo M (yn=1.23 m > yc=0.74
+m), descarga libre por la compuerta, con un resalto hidráulico a ≈7 m
+aguas abajo de la compuerta que conecta la curva M3 con la M2 controlada
+por el lago.**
+
+**Comparación con solución oficial:** el manuscrito da Q=10 m³/s, yc=0.74
+m, yn=1.22 m (coincide). Tirante aguas arriba de la compuerta y1=1.16 m
+(coincide con 1.1663 m). Resalto ubicado en x≈8 m aguas abajo de la
+compuerta con y≈0.55 m → y≈0.97-0.98 m (coincide con x=7.2 m, y: 0.5462
+→ 0.9795 m — la pequeña diferencia en x es por precisión de lectura de
+los valores intermedios manuscritos). y(M2) en la compuerta ≈0.99 m,
+usado en la Parte 2 — **coincide exactamente**.
+
+### Parte 2) Apertura a=0.65 m, mismo Q: ¿descarga libre o ahogada?
+
+**Concepto.** Se compara el conjugado de la nueva apertura a* contra el
+tirante que trae la curva M2 (desde el lago) evaluada en la sección de la
+compuerta — **no yn**, porque el lago está a distancia finita (Parte 1).
+Si a* > y(M2 en la compuerta) la descarga es libre; si a* < y(M2 en la
+compuerta), es **ahogada** (flujo dividido inmediatamente aguas abajo de
+la compuerta).
+
+**Herramienta:** `Mom_rect.m` (conjugado de a=0.65 m) comparado contra
+`y(M2, x=0)=0.9907 m` ya calculado en la Parte 1; si es ahogada, momentum
+entre la vena contraída (2) y la sección aguas abajo controlada por el
+lago (3, y3=y(M2,x=0)) para hallar y2, y energía entre (1) y (2) para
+hallar y1 (fórmulas de §A5, "Compuerta con descarga AHOGADA").
+
+**Script:** `scripts/ej1.m` (sección "PARTE 2").
+
+**Resultado:**
+```
+a = 0.65 m ; a* (conjugado) = 0.8418 m
+y(M2 en la compuerta, de la Parte 1) = 0.9907 m
+a* = 0.8418 m < 0.9907 m  =>  DESCARGA AHOGADA (flujo dividido)
+
+y3 = y(M2 en la compuerta) = 0.9907 m
+y2 (vena contraida, aguas abajo de la compuerta) = 0.7413 m
+E2 = 1.2244 m
+y1 (aguas arriba de la compuerta) = 1.0332 m
+```
+
+**Resultado final Parte 2: la compuerta con a=0.65 m descarga AHOGADA
+(a*=0.84 m < 0.99 m); y1≈1.03 m aguas arriba, y2≈0.74 m en la vena
+contraída.**
+
+**Comparación con solución oficial:** el manuscrito obtiene a*=0.8418 m
+(coincide exactamente), y(aguas abajo de la compuerta, llamado yn2 en el
+manuscrito)=0.99 m (coincide con 0.9907 m), a*<0.99 ⇒ ahogada (coincide),
+y2=0.7414 m (coincide con 0.7413 m), E2=1.2244 m (coincide exactamente),
+y1=1.03 m (coincide con 1.0332 m, diferencia de redondeo).
+
+### Parte 3) Fuerza sobre la compuerta, en las condiciones de la Parte 2
+
+**Concepto.** F=γ·(M1−M2) entre la sección (1) aguas arriba de la
+compuerta (sección completa, área b·y1) y la sección (2) en la vena
+contraída. **Trampa:** en (2) el flujo está dividido — la presión es
+hidrostática hasta la superficie libre y2 (área completa b·y2) pero la
+velocidad real corresponde al área contraída b·a: el M2 a usar es el
+momento **híbrido** yG(y2)·A(y2) + Q²/(g·A(a)), que coincide (por
+construcción, ver Parte 2) con M(y3). Usar `Mom_rect(y2,...)` con área
+completa en el término de velocidad da un resultado incorrecto.
+
+**Herramienta:** `Mom_rect.m` para M(y1) con sección completa; fórmula
+híbrida manual para M2 (ya computada al resolver y2 en la Parte 2).
+
+**Script:** `scripts/ej1.m` (sección "PARTE 3").
+
+**Resultado:**
+```
+M(y1=1.0332 m, seccion completa) = 4.6440 m3
+M2 hibrido (y2=0.7413 m, presion seccion completa + velocidad area a=0.65m) = 4.5137 m3
+F = gamma*(M1 - M2_hib) = 1277.0 N   (gamma = 1000*9.8 N/m3)
+```
+
+**Resultado final Parte 3: F ≈ 1277 N (agua sobre la compuerta, sentido
+del flujo).**
+
+**Comparación con solución oficial:** el manuscrito da M(y1=1.03
+m)=4.6336 m³, M2 híbrido=4.514 m³ (coincide con nuestro 4.5137), F=γ·[4.6336
+− 4.514]=1172 N. La metodología es idéntica; la diferencia final (1172 N
+vs. 1277 N) se debe a que F es una **resta de dos números muy cercanos**
+(4.63 vs. 4.51): redondear y1 a 1.03 m (en vez de 1.0332 m, el valor
+exacto de la Parte 2) desplaza M(y1) lo suficiente como para cambiar la
+resta casi un 10%. Con más decimales en y1 el resultado correcto es
+F≈1277 N (ver nota agregada en Resumen Teórico §A5).
+
+---

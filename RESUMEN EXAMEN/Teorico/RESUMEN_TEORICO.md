@@ -2,30 +2,32 @@
 
 Este resumen se construyó leyendo completos los exámenes ya resueltos en
 `resueltos/` (2024 diciembre, 2025 Febrero 1, 2025 Febrero 2, 2026 Febrero,
-2024 Julio, 2024 marzo, 2024 febrero, 2023 diciembre y 2023 Julio) y
-extrayendo de ahí **todos los temas y fórmulas que efectivamente fueron
-preguntados**, fusionando los que se repiten entre exámenes en una sola
-sección enriquecida. Las fórmulas se verificaron/precisaron contra
-`Teórico HHA.pdf` y `01_Formulometro2025.pdf` (citados como
-"Formulómetro"). Objetivo: alcanzar para repasar sin releer todos los
-`RESOLUCION.md` completos.
+2024 Julio, 2024 marzo, 2024 febrero, 2023 diciembre, 2023 Julio y 2023
+febrero_2) y extrayendo de ahí **todos los temas y fórmulas que
+efectivamente fueron preguntados**, fusionando los que se repiten entre
+exámenes en una sola sección enriquecida. Las fórmulas se
+verificaron/precisaron contra `Teórico HHA.pdf` y
+`01_Formulometro2025.pdf` (citados como "Formulómetro"). Objetivo:
+alcanzar para repasar sin releer todos los `RESOLUCION.md` completos.
 
 Convención de nombres cortos de examen: **2024 dic** = 2024 diciembre;
 **2025 feb 1** = 2025_FEBRERO 1 (27/feb/2025); **2025 feb 2** = 2025_FEBRERO 2
 (5/feb/2025); **2026 feb** = 2026 Febrero (3/feb/2026); **2024 jul** = 2024
 Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
 (5-6/feb/2024); **2023 dic** = 2023 diciembre (11/dic/2023); **2023 jul** =
-2023 Julio (24/jul/2023).
+2023 Julio (24/jul/2023); **2023 feb 2** = 2023 febrero_2 (24/feb/2023,
+segunda llamada de febrero — no confundir con "2023 Febrero", primera
+llamada del 9/feb/2023, aún sin resolver en este repo).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| A2. Energía específica y tirante crítico | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 8 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 6 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb |
+| A1. Ecuación de FGV y clasificación de canales M/S | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| A2. Energía específica y tirante crítico | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 7 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2 |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
@@ -297,6 +299,31 @@ compuerta (a>conjugado del tirante de aguas abajo) y, en ese caso, hallar
 el tirante aguas arriba y1 sin necesidad de ubicar la posición del resalto
 (que en descarga libre sí se busca integrando la rama supercrítica y
 cruzando su conjugado con la rama subcrítica, como en A3).
+
+**Control aguas abajo = lago a distancia FINITA (no yn ni caída libre)**
+(2023 feb 2, Ej.1): si el canal descarga en un lago a una distancia L de la
+compuerta (no "muy lejos"), el tirante de referencia para el chequeo
+libre/ahogada **no es yn** — hay que integrar la curva M2 **hacia atrás**
+desde el lago (control conocido, y=hLago en x=L) hasta la sección de la
+compuerta (x=0) con la misma EDO de FGV, y usar ese valor y(M2, x=0) (que
+en general es distinto de yn si L no es muy grande) como referencia para
+comparar contra a* y contra el conjugado de la rama M3. La búsqueda del
+resalto (si la descarga es libre) es la misma de A3: M3 hacia adelante
+desde la compuerta, M2 hacia atrás desde el lago, cruce de conjugado(M3)
+con M2 en la malla común de x.
+
+**Trampa en la fuerza sobre una compuerta AHOGADA:** en el paso 3) de A3
+(F=γ·(M1−M2)), si la compuerta descarga ahogada el "M2" a usar **no** es
+`Mom_rect(y2,...)` con sección completa — es el momento **híbrido** de la
+vena contraída, `yG(y2)·A(y2) + Q²/(g·A(a))` (presión con superficie y2,
+velocidad con área contraída b·a), que por construcción coincide con
+M(y3) (el valor usado para hallar y2 en el paso 1 de A3). Usar por error
+`Mom_rect(y2,...)` con área completa subestima la fuerza. Además, F es una
+**resta de dos números cercanos** (M1≈M2 en valor): redondear y1/y2 a 2
+decimales antes de restar amplifica mucho el error relativo del resultado
+final (en 2023 feb 2 la solución oficial, con y1 redondeado a 1.03 m, da
+F=1172 N; con más decimales en y1 el resultado correcto es F≈1277 N) —
+conviene **no redondear** hasta el final en este tipo de cuentas.
 
 Cita: Teórico HHA §2.2 (transiciones de energía), §2.3.2–2.3.3
 (conjugados/resalto), §2.3.4 "Descarga ahogada de una compuerta" (Fig.
