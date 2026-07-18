@@ -1,32 +1,34 @@
 # Resumen Teórico HHA — depurado a partir de los exámenes resueltos
 
 Este resumen se construyó leyendo completos los exámenes ya resueltos en
-`resueltos/` (2024 diciembre, 2025 Febrero 1, 2025 Febrero 2, 2026 Febrero,
-2024 Julio, 2024 marzo, 2024 febrero, 2023 diciembre, 2023 Julio, 2023
-febrero_2 y 2023 Febrero) y extrayendo de ahí **todos los temas y
-fórmulas que efectivamente fueron preguntados**, fusionando los que se
-repiten entre exámenes en una sola sección enriquecida. Las fórmulas se
-verificaron/precisaron contra `Teórico HHA.pdf` y
-`01_Formulometro2025.pdf` (citados como "Formulómetro"). Objetivo:
-alcanzar para repasar sin releer todos los `RESOLUCION.md` completos.
+`resueltos/` (2022 diciembre, 2024 diciembre, 2025 Febrero 1, 2025
+Febrero 2, 2026 Febrero, 2024 Julio, 2024 marzo, 2024 febrero, 2023
+diciembre, 2023 Julio, 2023 febrero_2 y 2023 Febrero) y extrayendo de ahí
+**todos los temas y fórmulas que efectivamente fueron preguntados**,
+fusionando los que se repiten entre exámenes en una sola sección
+enriquecida. Las fórmulas se verificaron/precisaron contra `Teórico
+HHA.pdf` y `01_Formulometro2025.pdf` (citados como "Formulómetro").
+Objetivo: alcanzar para repasar sin releer todos los `RESOLUCION.md`
+completos.
 
-Convención de nombres cortos de examen: **2024 dic** = 2024 diciembre;
-**2025 feb 1** = 2025_FEBRERO 1 (27/feb/2025); **2025 feb 2** = 2025_FEBRERO 2
-(5/feb/2025); **2026 feb** = 2026 Febrero (3/feb/2026); **2024 jul** = 2024
-Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
-(5-6/feb/2024); **2023 dic** = 2023 diciembre (11/dic/2023); **2023 jul** =
-2023 Julio (24/jul/2023); **2023 feb 2** = 2023 febrero_2 (24/feb/2023,
-segunda llamada de febrero); **2023 feb** = 2023 Febrero (9/feb/2023,
-primera llamada de febrero — no confundir con 2023 feb 2).
+Convención de nombres cortos de examen: **2022 dic** = 2022 diciembre
+(15/dic/2022); **2024 dic** = 2024 diciembre; **2025 feb 1** = 2025_FEBRERO 1
+(27/feb/2025); **2025 feb 2** = 2025_FEBRERO 2 (5/feb/2025); **2026 feb** =
+2026 Febrero (3/feb/2026); **2024 jul** = 2024 Julio; **2024 mar** = 2024
+marzo (1/mar/2024); **2024 feb** = 2024 febrero (5-6/feb/2024); **2023 dic**
+= 2023 diciembre (11/dic/2023); **2023 jul** = 2023 Julio (24/jul/2023);
+**2023 feb 2** = 2023 febrero_2 (24/feb/2023, segunda llamada de
+febrero); **2023 feb** = 2023 Febrero (9/feb/2023, primera llamada de
+febrero — no confundir con 2023 feb 2).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A2. Energía específica y tirante crítico | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A1. Ecuación de FGV y clasificación de canales M/S | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A2. Energía específica y tirante crítico | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 11 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 8 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
@@ -215,6 +217,33 @@ autoconsistente (yn1<yc con el Q hallado):
 Cita: Teórico HHA §2.5.3 (caída libre), §2.5.4 (perfiles entre dos lagos,
 casos M y S), §2.5.5 (perfil con compuerta de fondo entre dos lagos), §2.5.6
 (canal con cambio de pendiente/empalme de tramos).
+
+**Transición lago-canal ASIMÉTRICA: entrada (contracción) vs. salida
+(expansión)** (2022 dic, Ej.1). En un canal entre dos lagos, la
+transición de energía en cada extremo es de naturaleza distinta:
+
+- **Entrada** (lago → canal): es una **contracción**, que no disipa
+  energía — se conserva E: E(y en x=0) = h_lago_entrada.
+- **Salida** (canal → lago): es una **expansión brusca** hacia el
+  volumen grande del lago, que sí disipa toda la energía cinética
+  (pérdida tipo Borda) — el nivel del lago iguala **directamente** el
+  tirante en la última sección del canal, y(x=L)=h_lago_salida, **sin**
+  sumar el término V²/2g.
+
+Esta asimetría es la que permite, en un canal tipo S con lagos en ambos
+extremos, hallar en forma cerrada el **rango de niveles del lago de
+salida** para el cual existe un resalto dentro del canal: hL2min es
+directamente el conjugado (Mom_rect/momento) del tirante libre de salida
+sin resalto (resalto justo en x=L), y hL2max es directamente el tirante
+en x=L de la rama subcrítica que arranca en yc en la entrada (resalto
+justo en x=0, empujado hasta la propia entrada) — en ambos casos sin
+sumar V²/2g, porque el nivel del lago de salida se compara contra el
+tirante, no contra la energía específica. Por debajo de hL2min el
+resalto queda fuera del canal (descarga libre); por encima de hL2max el
+lago de salida ahoga la entrada y el propio Q disminuye (se itera con
+`fzero`, igual que el caso "cambio de pendiente" de más arriba, pero acá
+el control que se pierde es el crítico de la entrada por remanso del
+lago de salida, no un cambio de geometría interno).
 
 **Control crítico en la entrada, sección TRAPEZOIDAL (sin forma cerrada)**
 (2023 jul, Ej.1). En canal rectangular, el control crítico de un lago da Q
