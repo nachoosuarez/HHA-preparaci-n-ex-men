@@ -2,10 +2,10 @@
 
 Este resumen se construyó leyendo completos los exámenes ya resueltos en
 `resueltos/` (2024 diciembre, 2025 Febrero 1, 2025 Febrero 2, 2026 Febrero,
-2024 Julio, 2024 marzo, 2024 febrero, 2023 diciembre, 2023 Julio y 2023
-febrero_2) y extrayendo de ahí **todos los temas y fórmulas que
-efectivamente fueron preguntados**, fusionando los que se repiten entre
-exámenes en una sola sección enriquecida. Las fórmulas se
+2024 Julio, 2024 marzo, 2024 febrero, 2023 diciembre, 2023 Julio, 2023
+febrero_2 y 2023 Febrero) y extrayendo de ahí **todos los temas y
+fórmulas que efectivamente fueron preguntados**, fusionando los que se
+repiten entre exámenes en una sola sección enriquecida. Las fórmulas se
 verificaron/precisaron contra `Teórico HHA.pdf` y
 `01_Formulometro2025.pdf` (citados como "Formulómetro"). Objetivo:
 alcanzar para repasar sin releer todos los `RESOLUCION.md` completos.
@@ -16,33 +16,33 @@ Convención de nombres cortos de examen: **2024 dic** = 2024 diciembre;
 Julio; **2024 mar** = 2024 marzo (1/mar/2024); **2024 feb** = 2024 febrero
 (5-6/feb/2024); **2023 dic** = 2023 diciembre (11/dic/2023); **2023 jul** =
 2023 Julio (24/jul/2023); **2023 feb 2** = 2023 febrero_2 (24/feb/2023,
-segunda llamada de febrero — no confundir con "2023 Febrero", primera
-llamada del 9/feb/2023, aún sin resolver en este repo).
+segunda llamada de febrero); **2023 feb** = 2023 Febrero (9/feb/2023,
+primera llamada de febrero — no confundir con 2023 feb 2).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| A2. Energía específica y tirante crítico | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 7 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2 |
+| A1. Ecuación de FGV y clasificación de canales M/S | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A2. Energía específica y tirante crítico | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 8 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
-| B1. Delimitación de cuencas y divisoria de aguas | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| B4. Método Racional (y criterio de selección según tc) | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| B1. Delimitación de cuencas y divisoria de aguas | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B4. Método Racional (y criterio de selección según tc) | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
 | B6. Condición de humedad antecedente (AMC) | 6 | 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B7. Volumen de escorrentía y embalses de retención | 4 | 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
-| B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 1 | 2026 feb |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| C2. Curva de la bomba y punto de funcionamiento | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| C3. Potencia consumida por el sistema de bombeo | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| C4. Cavitación: NPSH disponible vs. requerido | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| C5. Bombas en serie y en paralelo | 4 | 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic |
+| B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C2. Curva de la bomba y punto de funcionamiento | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C3. Potencia consumida por el sistema de bombeo | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
+| C4. Cavitación: NPSH disponible vs. requerido | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C5. Bombas en serie y en paralelo | 5 | 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 2 | 2024 dic, 2023 feb 2 |
 
 ---
