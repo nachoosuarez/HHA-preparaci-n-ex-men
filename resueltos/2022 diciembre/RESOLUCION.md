@@ -295,3 +295,123 @@ discrepancia sin perseguirla más, dado que es irrelevante para el
 resultado final.
 
 ---
+
+## Ejercicio 3 — Delimitación de cuenca (Durazno) + coeficiente de escorrentía
+
+### Enunciado (resumen)
+
+1) Delimitar la cuenca de la cañada afluente al arroyo del Tala, en el
+departamento de Durazno, punto de cierre X=426.5 km, Y=6348.8 km, sobre
+la carta topográfica SGM adjunta (curvas de nivel cada 10 m).
+2) Se registra un evento de precipitación de intensidad **constante**
+130 mm/h y 30 min de duración. La infiltración total durante el evento
+fue de 15 mm y la intercepción de 5 mm. Calcular el coeficiente de
+escorrentía del evento.
+
+### Teoría (RESUMEN_TEORICO.md)
+
+- **B1** Delimitación de cuencas y divisoria de aguas (perpendicular a
+  curvas de nivel; convexo=cresta/nacientes, cóncavo=vaguada; nunca cruza
+  el cauce salvo en el punto de cierre).
+- **B10** (nuevo) Coeficiente de escorrentía por balance directo de
+  abstracciones dadas (sin NC ni Horton): Esc=Prec−Abstracciones,
+  C=Esc/Prec.
+
+Cita: Teórico HHA §1.2.1 (morfología de cuencas); §3.1.1 (precipitación
+efectiva/abstracciones); Formulómetro "Morfología de Cuencas" /
+"Precipitación Efectiva".
+
+### Herramienta y por qué
+
+**Parte 1:** delimitación gráfica manual sobre la carta (sin fórmula
+cerrada, Teórico §1.2.1) — se extrajeron a imagen las dos copias de la
+carta topográfica de `EXAMENES/2022 diciembre.pdf` (páginas 4 y 7, esta
+última en fotocopia/escala de grises), ambas **sin ninguna delimitación
+dibujada** (a diferencia de otros exámenes, acá la solución oficial no
+trae el polígono de la cuenca resuelto, sólo el cálculo numérico de la
+Parte 2): `scripts/ej3_carta_pag4.png`, `scripts/ej3_carta_pag7.png`.
+
+**Parte 2:** cálculo directo a mano (B10), sin necesidad de Octave ni de
+la planilla de eventos extremos: las abstracciones (infiltración total e
+intercepción) ya vienen dadas explícitamente en el enunciado, no hay
+Número de Curva que estimar ni modelo de Horton que integrar — el
+ejercicio se reduce a una resta y un cociente.
+
+### Paso a paso
+
+**Parte 1) Delimitación de la cuenca.**
+
+El punto de cierre (marcador rojo en la carta, ver imágenes) se ubica al
+este del corredor de la ruta sobre la "Cuchilla Grande del..." (que corre
+de norte a sur por el borde occidental del mapa), en una zona de cotas
+moderadas (curvas de nivel entre 90 y 110 m alrededor del punto,
+subiendo hacia 120-125 m hacia el norte/noreste). El punto está
+inmediatamente aguas abajo de la confluencia de varios cursos de agua
+menores (visibles como líneas azules convergiendo justo al oeste/
+noroeste del marcador) que forman la cañada afluente al arroyo del Tala
+(el propio "Tala" aparece rotulado más al sur/sureste del punto, entre
+las cotas "100" y "121").
+
+A partir de esa red de drenaje, la divisoria se traza perpendicular a
+las curvas de nivel: ganando altura hacia las lomas que separan esta
+pequeña subcuenca de las cuencas vecinas (lado convexo de las curvas,
+hacia el norte y el este, donde las cotas suben por encima de 100-110 m)
+y bajando por el lado cóncavo hacia el propio cauce en el punto de
+cierre. El polígono resultante es una subcuenca chica, apoyada en las
+lomas circundantes visibles en la carta (curvas cerradas/cúspides al
+norte y al este del punto) y cerrando al suroeste en el punto de cierre,
+donde la cañada se une al arroyo del Tala.
+
+**Nota de precisión (misma limitación señalada en `resueltos/2023
+diciembre/RESOLUCION.md`, Ej.3, y en `resueltos/2024 febrero/RESOLUCION.md`,
+Ej.3):** este examen no trae una solución oficial con el polígono de la
+divisoria ya dibujado (las dos copias de la carta disponibles están en
+blanco) — la descripción de arriba es una lectura manual de la carta
+siguiendo el procedimiento del Teórico §1.2.1, con la misma precisión
+con la que se traza a mano en el examen real, pero sin verificación
+numérica cruzada de área/perímetro contra un polígono oficial.
+
+**Parte 2) Coeficiente de escorrentía del evento.**
+
+Intensidad constante ⇒ precipitación total del evento:
+```
+Prec = i · d = 130 mm/h · 0.5 h = 65 mm
+```
+Abstracciones totales (dato directo del enunciado, sin NC ni Horton):
+```
+Abstracciones = Infiltración total + Intercepción = 15 mm + 5 mm = 20 mm
+```
+Escorrentía y coeficiente de escorrentía:
+```
+Esc = Prec − Abstracciones = 65 − 20 = 45 mm
+C = Esc / Prec = 45 / 65 = 0.6923
+```
+
+**Resultado Parte 2: C ≈ 0.692** (coeficiente de escorrentía del evento).
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| Parte 1: cuenca delimitada | Subcuenca chica que engloba la confluencia de cursos de agua inmediatamente aguas arriba del punto de cierre (X=426.5, Y=6348.8), cerrando al suroeste en la unión con el arroyo del Tala (ver `scripts/ej3_carta_pag4.png`) |
+| Prec (evento) | 65 mm |
+| Abstracciones (infiltración + intercepción) | 20 mm |
+| Esc (evento) | 45 mm |
+| **Parte 2: coeficiente de escorrentía** | **0.692** |
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| Prec | 65 mm | 65 mm | 0 |
+| Abstracciones | 20 mm | 20 mm | 0 |
+| Esc | 45 mm | 45 mm | 0 |
+| C | 0.692 | 0.6923 | ≈0 |
+
+Coincidencia exacta en la Parte 2 (cálculo directo, sin margen de
+interpretación). La Parte 1 (delimitación gráfica) no tiene forma de
+verificarse numéricamente por las razones explicadas arriba (nota de
+precisión) — este examen no trae, a diferencia de otros, un polígono
+oficial dibujado para comparar.
+
+---

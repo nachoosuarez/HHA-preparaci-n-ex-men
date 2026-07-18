@@ -31,7 +31,7 @@ febrero — no confundir con 2023 feb 2).
 | A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 11 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 8 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
-| B1. Delimitación de cuencas y divisoria de aguas | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B1. Delimitación de cuencas y divisoria de aguas | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 11 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
 | B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | B4. Método Racional (y criterio de selección según tc) | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
@@ -40,6 +40,7 @@ febrero — no confundir con 2023 feb 2).
 | B7. Volumen de escorrentía y embalses de retención | 5 | 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
+| B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
 | C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | C2. Curva de la bomba y punto de funcionamiento | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | C3. Potencia consumida por el sistema de bombeo | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
@@ -781,6 +782,37 @@ Cita: Teórico HHA §1.4 "Agua en el suelo" (Tabla 1.4.2, Agua Disponible,
 Molfino y Califra 2001), §1.3 "Precipitación/Evapotranspiración" (Tabla
 1.3.3, coeficiente Kc); Formulómetro "Agua en la Atmósfera" (ETc=Kc·ET0) y
 tabla "Agua Disponible (mm) y Grupo hidrológico según Unidad Cartográfica".
+
+## B10. Coeficiente de escorrentía por balance directo de abstracciones
+
+**Concepto.** Cuando el enunciado da **directamente** las abstracciones
+del evento (infiltración total y/o intercepción, en mm) en vez de pedir
+que se calculen con un modelo (NC, Horton), el coeficiente de
+escorrentía del evento sale de un balance de lámina simple, sin ningún
+modelo de infiltración: la precipitación total se reparte entre lo que
+se pierde (abstracciones) y lo que escurre.
+
+```
+Prec = i · d                              (si la intensidad es constante; i en mm/h, d en h)
+Abstracciones = Infiltración total + Intercepción + ... (todo lo que da el enunciado, mm)
+Esc = Prec − Abstracciones
+C = Esc / Prec
+```
+
+**Cuándo se usa.** Sólo cuando el propio enunciado da las abstracciones
+ya calculadas o medidas (no hay que estimarlas con NC/Horton) — es el
+caso más simple de "coeficiente de escorrentía de un evento": alcanza
+con restar y dividir, sin resolver ninguna ecuación. Distinto de B5 (NC,
+donde Pe sale de la fórmula NRCS a partir del Número de Curso) y de B8
+(Horton, donde la infiltración se integra de un modelo exponencial en el
+tiempo) — acá la infiltración y la intercepción son datos directos del
+enunciado. Ejemplo (2022 dic, Ej.3 parte 2): intensidad constante
+i=130 mm/h, duración d=30 min ⇒ Prec=65 mm; infiltración total=15 mm,
+intercepción=5 mm ⇒ Abstracciones=20 mm ⇒ Esc=45 mm ⇒ C=45/65=0.69.
+
+Cita: Teórico HHA §3.1.1 "Precipitación efectiva/abstracciones"
+(concepto general P=Pe+abstracciones); Formulómetro "Precipitación
+Efectiva".
 
 ---
 
