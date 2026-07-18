@@ -102,6 +102,15 @@ for i = 1:length(Qmalla)
     % veces (bug detectado y corregido resolviendo 2023 dic Ej.4, cruzando
     % contra la solucion oficial: con el termino duplicado daba NPSHdisp
     % 0.4 m mas alto que el valor oficial).
+    % OJO 2: esta resta de vs^2/(2g) vale SOLO si z1 es una superficie
+    % libre grande (v~0 real, pero HA le suma igual vs^2/2g "de mas" por
+    % comodidad). Si en cambio z1 es un MANOMETRO dentro de la propia
+    % caneria de succion (velocidad real Vs alli, no una superficie
+    % libre), HA=z1+p1/(rho g)+vs^2/2g-deltaS ya cuenta la energia una
+    % sola vez correctamente y NO hay que restar vs^2/(2g) de nuevo (ver
+    % RESUMEN_TEORICO.md, C4, "distinguir la trampa de arriba de un
+    % manometro dentro de la propia caneria" -- 2022 dic, Ej.4: restando
+    % de mas da NPSHdisp=9.05m, sin restar da 9.80m, que es el oficial).
     NPSHdisp(i) = 10.1 + HA - zB - vs^2/(2*g);
 
 endfor

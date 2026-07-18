@@ -41,10 +41,10 @@ febrero — no confundir con 2023 feb 2).
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C2. Curva de la bomba y punto de funcionamiento | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C3. Potencia consumida por el sistema de bombeo | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
-| C4. Cavitación: NPSH disponible vs. requerido | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C2. Curva de la bomba y punto de funcionamiento | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C3. Potencia consumida por el sistema de bombeo | 11 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
+| C4. Cavitación: NPSH disponible vs. requerido | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | C5. Bombas en serie y en paralelo | 5 | 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 2 | 2024 dic, 2023 feb 2 |
 
@@ -978,6 +978,23 @@ término duplicado el NPSH_disp daba ≈0.4 m más alto que el oficial). Ojo:
 esa HA "sin velocidad" es sólo para NPSH — la HA que sí necesita el
 término cinético (`z0+p0/γ+v²/2g-ΔH`) es la que entra en la ecuación de
 la **instalación** Hm=HB-HA (C1), que es un cálculo distinto.
+
+**Distinguir la "trampa" de arriba de un manómetro dentro de la propia
+cañería (no la cancelar de más).** La cancelación del término cinético de
+arriba aplica sólo cuando el punto de referencia z0/H1 es una superficie
+libre grande (v≈0 real, pero la fórmula de HA le agrega igual v²/2g "de
+más" por comodidad de notación). Si en cambio el enunciado da un
+**manómetro ubicado dentro de la propia tubería de succión** (con una
+velocidad real Vs≠0 en ese punto, no una superficie libre), entonces
+`H1=z1+p1/(ρg)+Vs²/2g` representa la energía en ese punto **una sola
+vez, correctamente** — no hay nada que cancelar, y NPSH_disp=HA−zA+(patm
+−pvap)/γ se calcula directo, **sin** restar Vs²/2g de nuevo. Aplicar por
+inercia la resta de la "trampa" en este caso da un NPSH_disp **más bajo**
+que el real (2022 dic, Ej.4: con la resta de más da 9.05 m; sin
+restarla, 9.80 m, que es el que coincide con la solución oficial). Antes
+de aplicar la corrección, preguntarse: **¿el punto de referencia es una
+superficie libre (v≈0, hay que cancelar) o un punto real de la tubería
+con velocidad de flujo (no hay que cancelar)?**
 
 **Bomba en aspiración (succión negativa).** Si la bomba está instalada por
 encima del nivel del tanque de succión (z_bomba>z_tanque), ese desnivel

@@ -415,3 +415,153 @@ precisión) — este examen no trae, a diferencia de otros, un polígono
 oficial dibujado para comparar.
 
 ---
+
+## Ejercicio 4 — Sistema de bombeo para combate de incendios
+
+### Enunciado (resumen)
+
+Sistema de bombeo alimentado desde una red de distribución. Succión: a
+cota z1=0 m hay un manómetro que marca p1=1×10⁵ Pa (presión de trabajo);
+entre el manómetro y la bomba, L1=20 m. Impulsión: L2=80 m, descarga a
+la atmósfera por una tobera de diámetro DT=30 mm. Succión e impulsión
+tienen el mismo diámetro D=45 mm y rugosidad absoluta ε=0.01 mm;
+k1=6 (succión), k2=5 (impulsión, referido a la velocidad en la
+tubería). Bomba a cota zA=+1 m; curva característica dada (Q, H, η,
+NPSHreq de catálogo).
+1) Con la tobera a cota z2=15 m: punto de funcionamiento, factores de
+   fricción y velocidades.
+2) Potencia consumida por el sistema en ese punto.
+3) Verificar que la bomba no cavita (NPSH disponible vs. requerido).
+4) Cota máxima z2 para asegurar un caudal mínimo de bombeo Qmin=4.5 L/s
+   (misma L2 y k2).
+
+### Teoría (RESUMEN_TEORICO.md, sección C — Bombas)
+
+- **C1** Ecuación de la instalación (Darcy-Weisbach + Colebrook-White):
+  acá con la particularidad de que la succión arranca en un **manómetro
+  dentro de la propia cañería** (no en una superficie libre) y la
+  impulsión termina en una **tobera** que reduce el diámetro (deben
+  distinguirse la velocidad en la tubería Vs=Vi, para las pérdidas de
+  carga y para k2, de la velocidad de salida VT por la tobera, para el
+  término cinético de descarga).
+- **C2** Punto de funcionamiento: intersección de la curva de
+  instalación con la curva H-Q de catálogo (interpolación pchip).
+- **C3** Potencia consumida = γ·Q·H/η.
+- **C4** Cavitación (NPSH). **Matiz nuevo importante:** la "trampa" de no
+  duplicar el término cinético al calcular NPSH_disp aplica cuando el
+  punto de referencia es una **superficie libre** (v≈0); acá el punto de
+  referencia es un **manómetro real dentro de la tubería** (velocidad
+  Vs≠0 genuina), así que NO hay que restar Vs²/2g de nuevo — ver nota
+  detallada en RESUMEN_TEORICO.md C4 y en el propio
+  `RESUMEN EXAMEN/Codigos/Bombas/Bomba_sola.m`.
+
+Cita: Teórico HHA §3.3.10 (curva de la instalación), §3.3.11-§3.3.13
+(potencia, NPSH); Formulómetro "Bombas".
+
+### Herramienta y por qué
+
+Se usó Octave, adaptando el patrón de `RESUMEN EXAMEN/Codigos/Bombas/Bomba_sola.m`
+(instalación con succión+impulsión, Colebrook-White, intersección con la
+curva de catálogo por `interp1`/`pchip`) porque es un sistema de bombeo
+de una sola bomba con succión+impulsión clásico, agregando sólo el
+término de la tobera (área de descarga distinta a la de la tubería) en
+la ecuación de energía del extremo de impulsión. Script:
+`resueltos/2022 diciembre/scripts/Ejercicio4_bomba_incendio.m` (+
+`colebrook.m` como dependencia).
+
+### Paso a paso
+
+**Parte 1) Punto de funcionamiento (z2=15 m).**
+
+Ecuación de la instalación (energía entre el manómetro (1) y la tobera
+(2), con la bomba en el medio):
+```
+H1 = z1 + p1/γ + Vs²/2g          (energía en el manómetro; Vs = Q/A, A=π(0.045)²/4)
+H2 = z2 + VT²/2g                 (descarga a la atmósfera; VT = Q/AT, AT=π(0.030)²/4)
+Hinst(Q) = H2 - H1 + ΔH(succión) + ΔH(impulsión)
+ΔH(succión)  = (k1 + f·L1/D)·Vs²/2g
+ΔH(impulsión)= (k2 + f·L2/D)·Vs²/2g     (misma velocidad Vs, mismo D en succión e impulsión)
+```
+con f de Colebrook-White (mismo f en ambos tramos, mismo D y ε). Se
+interpola la curva de catálogo (Q,H) con `pchip` y se cruza con
+Hinst(Q):
+```
+Qpf = 6.063 L/s ; Hpf = 44.95 m
+Vsucción = Vimpulsión = 3.81 m/s ; VT (tobera) = 8.58 m/s
+f (Colebrook, Re≈1.7×10⁵, ε/D=2.2×10⁻⁴) = 0.0176
+```
+
+**Resultado Parte 1: Qpf ≈ 6.06 L/s ; Hpf ≈ 44.95 m.**
+
+**Parte 2) Potencia consumida.**
+
+```
+η(Qpf) = 85.3 % (interpolado)
+Pot = γ·Qpf·Hpf/η = 1000·9.8·0.006063·44.95/0.853 = 3130 W
+```
+
+**Resultado Parte 2: Potencia consumida ≈ 3.13 kW.**
+
+**Parte 3) Verificación de cavitación (NPSH).**
+
+Carga en la brida de succión de la bomba (con las pérdidas del tramo
+L1, entre el manómetro y la bomba):
+```
+HA = H1 - ΔH(succión) = 0.695 m
+NPSH_disp = HA - zA + (patm-pvap)/γ = 0.695 - 1 + 10.1 = 9.80 m
+```
+(sin restar Vs²/2g de nuevo: el manómetro está dentro de la propia
+tubería con velocidad real, no en una superficie libre — ver nota de
+teoría arriba).
+```
+NPSH_req(Qpf) = 5.35 m (interpolado de la tabla de catálogo)
+```
+
+**Resultado Parte 3: NPSH_disp=9.80 m > NPSH_req=5.35 m ⇒ la bomba NO cavita.**
+
+**Parte 4) Cota máxima z2 para Qmin=4.5 L/s.**
+
+Con L2 y k2 sin cambios, se evalúa toda la ecuación de instalación en
+Qmin=4.5 L/s (fijo) salvo el término z2 (que se despeja):
+```
+Hinst(Qmin) = z2 + [resto de la ecuación, evaluado en Qmin] = Hb(Qmin)   (catálogo)
+Hb(Qmin=4.5 L/s) = 46.94 m
+resto de la ecuación (con z2=0) = 12.64 m
+z2max = 46.94 - 12.64 = 34.30 m
+```
+
+**Resultado Parte 4: z2max ≈ 34.30 m** (por encima de esa cota, el
+caudal de funcionamiento caería por debajo de 4.5 L/s).
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| Qpf | 6.06 L/s | 6.063 L/s | ≈0 |
+| Hpf | 45 m | 44.95 m | 0.05 m |
+| Vsucción=Vimpulsión | 3.81 m/s | 3.812 m/s | ≈0 |
+| VT (tobera) | 8.57 m/s | 8.578 m/s | ≈0 |
+| f (succión=impulsión) | difícil de leer en la manuscrita (¿0.0176 u "0.0576"?) | 0.0176 | ver nota |
+| Potencia | 3.13 kW | 3.131 kW | ≈0 |
+| NPSHdisp | 9.8 m | 9.80 m | ≈0 |
+| NPSHreq | 5.3 m | 5.35 m | ≈0 |
+| z2max | 34.3 m | 34.30 m | ≈0 |
+
+Coincidencia prácticamente exacta en todos los ítems. Sobre **f**: el
+valor de Colebrook-White para Re≈1.7×10⁵ y ε/D≈2.2×10⁻⁴ da 0.0176,
+verificado también de forma independiente por iteración manual de la
+ecuación de Colebrook — el 0.0176 calculado es físicamente consistente.
+La cifra manuscrita podría leerse como "0.0576", pero dado que **todos**
+los demás resultados que dependen de f (Qpf, Hpf, Vs, potencia, NPSH,
+z2max) coinciden casi exactamente con el valor calculado usando f=0.0176,
+es más probable una confusión de lectura del escaneo (1↔5) que un valor
+realmente distinto — no afecta ninguna respuesta final. El caso NPSH
+(Parte 3) fue el más sensible a un detalle conceptual: con la fórmula
+"resta Vs²/2g de nuevo" (válida sólo cuando el punto de referencia es una
+superficie libre) el resultado da 9.05 m, que NO cierra con la oficial;
+sin esa resta (correcto acá, porque el manómetro está en un punto real de
+la tubería con velocidad de flujo) da 9.80 m, que sí coincide.
+
+---
+
+## ESTADO: COMPLETO
