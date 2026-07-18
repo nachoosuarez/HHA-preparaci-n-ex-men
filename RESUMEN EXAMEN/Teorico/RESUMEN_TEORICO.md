@@ -38,12 +38,12 @@ llamada del 9/feb/2023, aún sin resolver en este repo).
 | B7. Volumen de escorrentía y embalses de retención | 4 | 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 1 | 2026 feb |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| C2. Curva de la bomba y punto de funcionamiento | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| C2. Curva de la bomba y punto de funcionamiento | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
 | C3. Potencia consumida por el sistema de bombeo | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| C4. Cavitación: NPSH disponible vs. requerido | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| C4. Cavitación: NPSH disponible vs. requerido | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
 | C5. Bombas en serie y en paralelo | 4 | 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic |
-| C6. Regulación de caudal por válvula (pérdida localizada variable) | 1 | 2024 dic |
+| C6. Regulación de caudal por válvula (pérdida localizada variable) | 2 | 2024 dic, 2023 feb 2 |
 
 ---
 
@@ -1024,6 +1024,27 @@ generalmente **disminuye** al cerrar la válvula.
 
 Cita: Teórico HHA §3.3.10 (pérdidas localizadas variables); Formulómetro
 "Coeficiente de pérdida de carga en válvulas".
+
+**Caso inverso: hallar kv dado un Q objetivo** (2023 feb 2, Ej.4 parte
+1). Si el enunciado da directamente el caudal que debe circular (en vez
+de pedir el punto de funcionamiento), el problema es **directo, no
+iterativo**: con Q conocido se calculan v1, v2, Re, f1, f2 sin
+iteración, se lee Hb de la curva de catálogo en ese Q, y se **despeja
+kv** de la ecuación de la instalación (Hb=(H2−H1)+ΔH_succ+ΔH_imp(kv),
+con ΔH_imp=(f2·L2/D2+kv+k2)·v2²/2g) — un único paso algebraico, sin
+`fsolve` ni barrido de curvas. Distinto del caso "usual" de este mismo
+tema (kv dado, hallar Q) que sí requiere iterar/interpolar la
+intersección de curvas (C2).
+
+**Instalación que recircula en un ÚNICO tanque, con descarga libre**
+(2023 feb 2, Ej.4). La succión y la impulsión salen/vuelven al MISMO
+tanque abierto (no hay "tanque 1" y "tanque 2" distintos): la succión
+parte del nivel del agua (H1=z1, superficie libre, v≈0) y la impulsión
+descarga de vuelta al tanque desde una cota más alta, en el aire, antes
+de caer al agua — una **descarga libre** (C1): H2=z2+v2²/2g, sin
+recuperar la cinética. La ecuación de la instalación es la misma de
+siempre (Hb=(H2−H1)+ΔH_succ+ΔH_imp), sólo que z1 y z2 son dos alturas
+del mismo tanque en vez de dos tanques separados.
 
 ---
 

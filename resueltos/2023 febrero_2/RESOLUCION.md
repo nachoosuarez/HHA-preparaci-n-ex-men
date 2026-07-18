@@ -393,3 +393,112 @@ la cuenca).
 "hasta 3.45 km²" (coincide con 3.457 km²) — **coincide**.
 
 ---
+
+## EJERCICIO 4 — Instalación de bombeo que recircula agua en un tanque abierto (25 puntos)
+
+**Datos:** succión desde el nivel del tanque z1=1.5 m (L1=3 m, D1=25 mm,
+ε1=0.007 mm, k1=0.8); impulsión que descarga **libremente** (no
+recuperable la energía cinética) a z2=3 m (L2=35 m, D2=32 mm, ε2=0.007
+mm, k2=1.5 sin la válvula), con una **válvula de globo** (coeficiente kv)
+en la impulsión. Manómetros pA (succión) y pB (impulsión) a cota zA=0.3
+m, justo antes/después de la bomba. Curva de catálogo de la bomba dada
+en tabla (Q, H, η, NPSHreq).
+
+Teoría usada: ecuación de la instalación de bombeo (Resumen Teórico §C1,
+caso particular "manómetros en las bridas de la bomba"), curva de la
+bomba y punto de funcionamiento (§C2), potencia consumida (§C3) y
+cavitación NPSH disponible/requerido (§C4).
+
+### Parte 1) Q=1 l/s: hallar kv y las presiones pA, pB
+
+**Concepto.** Con Q dado, se calculan directamente v1, v2, Re1, Re2 y los
+factores de fricción f1, f2 (Colebrook-White). La ecuación de la
+instalación (balance de energía en todo el lazo, de la superficie libre
+del tanque de vuelta a la descarga, pasando por la bomba) es
+Hb=(H2−H1)+ΔH_succ+ΔH_imp(kv), con H1=z1 (superficie libre) y
+H2=z2+v2²/2g (descarga libre, no se recupera la cinética). Con Hb leído
+de la tabla de catálogo en Q=1 l/s (exactamente Hb=8.5 m, sin
+interpolar) se despeja kv de ΔH_imp. Luego H_A=H1−ΔH_succ y H_B=H_A+Hb
+dan las presiones manométricas en las bridas (H=zA+p/γ+v²/2g).
+
+**Herramienta:** `colebrook.m` (factor de fricción) + álgebra directa —
+no requiere iterar, es un problema "directo" (Q dado, se despeja kv).
+
+**Script:** `scripts/ej4.m` (sección "PARTE 1"). Entradas: geometría de
+la figura, `Q=1 l/s`, `Hb(Q=1l/s)=8.5 m` (tabla).
+
+**Resultado:**
+```
+v1=2.037 m/s ; Re1=5.09e4 ; eps/D1=2.80e-4 ; f1=0.0218
+v2=1.243 m/s ; Re2=3.98e4 ; eps/D2=2.19e-4 ; f2=0.0227
+H1=1.500 m ; H2=3.079 m ; dHsucc=0.723 m ; Hb=8.500 m
+
+kv = 52.28
+
+H_A = 0.777 m ; H_B = 9.277 m
+p_A = 2600 Pa (2.60 kPa) ; p_B = 87203 Pa (87.20 kPa)
+```
+
+**Resultado final Parte 1: kv ≈ 52.3, p_A ≈ 2.60 kPa, p_B ≈ 87.2 kPa.**
+
+**Comparación con solución oficial:** el manuscrito da f1=0.0218,
+f2=0.0227, H2=3.08 m, kv≈52, H_A=0.777 m, H_B=9.277 m, p_A=2.6 kPa,
+p_B=87.2 kPa — **coincide en todos los valores**.
+
+### Parte 2) Válvula totalmente abierta (kv=5): punto de funcionamiento
+
+**Concepto.** Con kv=5 fijo, se recalcula Hm(Q) de la instalación para
+un barrido de Q (iterando f1(Q), f2(Q) con Colebrook) y se busca la
+intersección con la curva de catálogo de la bomba (interpolación
+`pchip`) — el punto de funcionamiento (C2).
+
+**Herramienta:** `colebrook.m` + barrido numérico e intersección de
+curvas (mismo patrón que `Bomba_sola.m`/`Bomba_manometros.m` de
+`RESUMEN EXAMEN/Codigos/Bombas/`, adaptado a la descarga libre y a la
+válvula en la impulsión).
+
+**Script:** `scripts/ej4.m` (sección "PARTE 2"). Gráfico:
+`scripts/ej4_parte2.png`.
+
+**Resultado:**
+```
+Qpf = 1.455 l/s ; Hpf = 8.049 m
+v1=2.964 m/s, f1=0.0204 (succion)
+v2=1.809 m/s, f2=0.0211 (impulsion)
+eta(Qpf) = 89.0 %
+```
+
+**Resultado final Parte 2: Qpf ≈ 1.46 l/s, Hpf ≈ 8.05 m.**
+
+**Comparación con solución oficial:** el manuscrito da Qpf=1.46 l/s,
+Hpf=8.09 m, v1=2.96 m/s (f1=0.0204), v2=1.81 m/s (f2=0.0211) —
+**coincide** (v1, f1, v2, f2 exactos; Qpf/Hpf con diferencia de
+redondeo <1%, típica de la resolución gráfica manual vs. la numérica).
+
+### Parte 3) Cavitación (NPSH disponible vs. requerido)
+
+**Concepto.** NPSH_disp depende sólo del tramo de succión: se calcula
+H_A en el punto de funcionamiento de la Parte 2 (misma fórmula que la
+Parte 1, con el nuevo Q) y NPSH_disp=(H_A−zA)+patm/γ−pvap/γ. NPSH_req se
+interpola de la tabla de catálogo en Qpf.
+
+**Herramienta:** álgebra directa + interpolación `pchip` de NPSHreq.
+
+**Script:** `scripts/ej4.m` (sección "PARTE 3").
+
+**Resultado:**
+```
+H_A(Qpf) = 0.047 m
+NPSHdisp = 9.837 m ; NPSHreq = 4.944 m  =>  NO CAVITA (margen 4.89 m)
+```
+
+**Resultado final Parte 3: NPSHdisp ≈ 9.84 m > NPSHreq ≈ 4.94 m ⇒ la
+bomba NO cavita**, con un margen amplio (≈4.9 m).
+
+**Comparación con solución oficial:** el manuscrito da NPSHdisp=9.85 m,
+NPSHreq=4.91 m, no cavita — **coincide** (diferencia mínima en NPSHreq
+por el método de interpolación entre los puntos de tabla).
+
+---
+
+## ESTADO: COMPLETO
