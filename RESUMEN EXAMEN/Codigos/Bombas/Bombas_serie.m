@@ -8,6 +8,10 @@
 % vs NPSHr) para cada bomba, y potencias/eficiencias en el PF.
 % Usar cuando: dos bombas trabajan en serie (se suman las alturas a
 % igual caudal). Requiere colebrook.m.
+% NOTA: eta1/eta2 traían solo 10 valores para 12 puntos de Q (faltaban
+% el pico 90.5 en Q=8 y el 89.3 repetido en Q=9), lo que rompía pchip
+% con "length of X and Y must match" — corregido resolviendo 2023
+% Febrero Ej.4 contra la tabla oficial del enunciado.
 clc; clear; close all;
 figure(1); clf; hold on; grid on;
 
@@ -40,13 +44,13 @@ p2 = 120000; %SI ES TANQUE O CAIDA LIBRE ES 0
 % para pasar Q de l/s a m3/s divido entre 1000 el vector (/1000 al final)
 Q1 = [0.25 1 2 3 4 5 6 7 8 9 10 11]/1000; %en m3/s
 H1 = [17.4 17.2 17 16.6 16.3 15.9 15.4 15 14.6 13.9 12.9 11.7]; % en m
-eta1 = [23.2 52.2 66.1 74.2 78.9 82.4 85.8 89.3 87 83.5]; % en %
+eta1 = [23.2 52.2 66.1 74.2 78.9 82.4 85.8 89.3 90.5 89.3 87 83.5]; % en %
 NPSHr1 = [3 3.6 3.8 4.2 4.6 5.2 5.9 6.7 7.4 8.2 8.9 9.5]; %en m
 
 % Bomba 2
 Q2 = [0.25 1 2 3 4 5 6 7 8 9 10 11]/1000;
 H2 = [17.4 17.2 17 16.6 16.3 15.9 15.4 15 14.6 13.9 12.9 11.7];
-eta2 = [23.2 52.2 66.1 74.2 78.9 82.4 85.8 89.3 87 83.5];
+eta2 = [23.2 52.2 66.1 74.2 78.9 82.4 85.8 89.3 90.5 89.3 87 83.5];
 NPSHr2 = [3 3.6 3.8 4.2 4.6 5.2 5.9 6.7 7.4 8.2 8.9 9.5];
 
 % Rango total posible del caudal según las curvas reales
