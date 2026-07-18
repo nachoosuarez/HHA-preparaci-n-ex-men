@@ -29,14 +29,14 @@ llamada del 9/feb/2023, aún sin resolver en este repo).
 | A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 7 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2 |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
-| B1. Delimitación de cuencas y divisoria de aguas | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| B1. Delimitación de cuencas y divisoria de aguas | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
 | B4. Método Racional (y criterio de selección según tc) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B6. Condición de humedad antecedente (AMC) | 6 | 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B7. Volumen de escorrentía y embalses de retención | 3 | 2024 dic, 2025 feb 2, 2024 feb |
-| B8. Infiltración de Horton y tiempo de encharcamiento | 1 | 2025 feb 2 |
+| B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 1 | 2026 feb |
 | C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | C2. Curva de la bomba y punto de funcionamiento | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
@@ -455,7 +455,14 @@ directamente sobre la lámina/intensidad en vez de sobre el caudal (ejemplo
 completo: 2024 feb, Ej.3 parte 2 — intensidad máxima de un evento registrado
 en pluviógrafo, P=26mm en d=10min, P(3,10)=79mm ⇒ Tr≈30 años; otro ejemplo,
 2023 jul Ej.2 parte 3 — P=15.3mm en d=7min, P(3,10)=80mm, CA=1 (dato
-puntual, sin corrección por área) ⇒ CT=0.837 ⇒ Tr≈4.5 años).
+puntual, sin corrección por área) ⇒ CT=0.837 ⇒ Tr≈4.5 años; otro ejemplo,
+2023 feb 2 Ej.2 parte 2.1 — Imax=98mm/h en d=0.3h (bloque más intenso del
+hietograma), P(3,10)=81mm, CA=1 ⇒ CT≈1.01 ⇒ Tr≈10 años. **Nota:** cuando
+CT objetivo sale muy cerca de 1 (=CT(10) por definición), la inversión es
+muy sensible a redondeos de CD/CT — conviene reportar el **Tr tabulado**
+más próximo (2, 5, 10, 25, 50, 100 años) en vez del valor "exacto" con
+decimales, que puede variar varias décimas de año según la precisión
+usada en los pasos intermedios).
 
 Cita: Teórico HHA §3.1.4; Formulómetro "Eventos extremos — Relaciones
 Intensidad Duración Frecuencia".
@@ -686,6 +693,14 @@ f(t) al inicio de cada bloque; (2) se separan los bloques en
 analíticamente) y "lluvia-limitados" (infiltran el 100%, antes del
 encharcamiento o cuando i vuelve a caer por debajo de fc); (3) se suma el
 volumen infiltrado total y, por balance, el volumen de escorrentía.
+
+Ejemplo (2023 feb 2, Ej.2 parte 2.2): f₀=112 mm/h, fc=0.18 mm/h, K=2.5
+1/h, hietograma en bloques de 0.3h. El bloque 0.2-0.5h (I=68 mm/h) da
+f(0.2h)=68.0 mm/h — prácticamente igual a la intensidad: es el punto de
+encharcamiento (t_enc=0.2h), aunque calculado con más precisión f(0.2h)
+sale 68.02 mm/h (una diferencia de 0.03%, producto del redondeo con que
+se armó el enunciado) — no vale la pena perseguir esa diferencia de
+milésimas, el bloque marcado es el de encharcamiento.
 
 Cita: Teórico HHA §3.1.3 (infiltración, modelo de Horton); Formulómetro
 "Agua en el Suelo — Curva de infiltración de Horton".

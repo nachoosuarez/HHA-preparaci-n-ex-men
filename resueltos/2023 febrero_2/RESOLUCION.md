@@ -164,3 +164,110 @@ resta casi un 10%. Con más decimales en y1 el resultado correcto es
 F≈1277 N (ver nota agregada en Resumen Teórico §A5).
 
 ---
+
+## EJERCICIO 2 — Cuenca en Canelones: delimitación, Tr de un evento e infiltración de Horton (25 puntos)
+
+**Datos:** cuenca de la cañada "Sin Nombre" en Canelones, punto de cierre
+en la carta topográfica (SGM, curvas de nivel cada 5 m) en X=460 km,
+Y=6195 km (página 4 del PDF del examen). Hietograma de precipitación
+observado en un pluviógrafo (tabla de 10 intervalos, de 0 a 2.9 h).
+
+Teoría usada: delimitación de cuencas y divisoria de aguas (Resumen
+Teórico §B1), curvas IDF de Uruguay e inversión de CT(Tr) para un evento
+observado (§B3) e infiltración de Horton (§B8).
+
+### Parte 1) Delimitar la cuenca
+
+**Concepto.** La divisoria de aguas se traza sobre la carta topográfica
+siguiendo la línea que corta perpendicularmente las curvas de nivel: por
+las lomas/crestas (lado convexo de la curva, ganando altura hacia las
+nacientes) y por las vaguadas de las cuencas vecinas (lado cóncavo,
+perdiendo altura), sin cruzar nunca un curso de agua salvo en el punto de
+cierre (X=460, Y=6195).
+
+**Herramienta:** lectura directa de la carta topográfica adjunta al
+examen (`EXAMENES/2023 febrero_2.pdf`, página 4) — es un trazado gráfico,
+sin fórmula ni script de cálculo.
+
+**Resultado:** no reproducible en texto (requiere trazar sobre el mapa).
+La solución oficial manuscrita (página 7 del PDF) muestra la cuenca ya
+delimitada sobre la misma carta: la divisoria sale del punto de cierre,
+sube por las lomas a ambos lados del curso principal siguiendo las curvas
+de nivel de forma perpendicular, y cierra el contorno aguas arriba,
+delimitando el área que efectivamente drena hacia (X=460, Y=6195). Para
+repasar el procedimiento gráfico paso a paso ver Resumen Teórico §B1.
+
+### Parte 2.1) Período de retorno de la intensidad máxima registrada
+
+**Concepto.** El bloque de mayor intensidad del hietograma es el
+intervalo 0.5-0.8 h, con I=98 mm/h (duración d=0.3 h). Es un dato **ya
+registrado** en un punto (el pluviógrafo), no una tormenta de diseño
+sobre un área ⇒ se usa CA=1 (sin corrección por área) y se **invierte
+numéricamente** la relación IDF de Uruguay para hallar el CT(Tr) que
+reproduce ese evento, y de ahí el Tr (mismo procedimiento que 2023 jul,
+Ej.2 parte 3, ya resuelto en este repositorio).
+
+**Herramienta:** script Python con bisección (`brentq` casero, sin
+depender de la planilla de Eventos Extremos — el `CT(Tr)` no tiene forma
+cerrada) — igual que `resueltos/2023 Julio/scripts/Ejercicio2_parte3_Tr_pluviografo.py`,
+adaptado a estos datos.
+
+**Script:** `scripts/ej2.py` (sección "2.1"). Entradas: `P310=81 mm`
+(leído del mapa de isoyetas para Canelones, dato de la solución oficial),
+`Imax=98 mm/h`, `d=0.3 h`, `CA=1`.
+
+**Resultado:**
+```
+CD(d=0.3h) = 0.3581
+CT objetivo = Imax*d/(P310*CD*CA) = 1.0136
+Tr (inversion numerica de CT(Tr)) = 10.71 anios  ->  se adopta el Tr TABULADO mas cercano: 10 anios
+```
+
+**Resultado final Parte 2.1: Tr ≈ 10 años** (CT objetivo ≈ 1.01, muy
+cercano a CT(10)=1 por definición de la curva IDF de Uruguay).
+
+**Comparación con solución oficial:** el manuscrito usa CD(d)≈0.36
+(redondeado) y obtiene CT=0.3×98/(81×0.36)=1.0082 ⇒ Tr≈10 años, acotado
+"9≤Tr≤10 años". Con CD sin redondear (0.3581) el CT objetivo resulta
+1.0136 y el Tr exacto (inversión de CT(Tr), sin restringir a valores
+tabulados) da 10.71 años — la conclusión práctica es la misma (**Tr=10
+años**, el valor tabulado estándar más cercano): la inversión de CT(Tr)
+es muy sensible cerca de CT≈1 (ver Resumen Teórico §B3), por lo que
+pequeñas diferencias de redondeo en CD desplazan el Tr "exacto" varias
+décimas de año sin cambiar la conclusión de qué Tr tabulado adoptar.
+
+### Parte 2.2) Tiempo de encharcamiento (modelo de Horton)
+
+**Concepto.** Con f₀=112 mm/h, fc=0.18 mm/h y K=2.5 1/h, la capacidad de
+infiltración decae según f(t)=fc+(f₀-fc)·e^(-Kt). El tiempo de
+encharcamiento es el instante en que la intensidad del hietograma supera
+esa capacidad: se evalúa f(t) al inicio de cada bloque y se compara con
+la intensidad de ese bloque.
+
+**Herramienta:** fórmula de Horton evaluada bloque a bloque (Resumen
+Teórico §B8) — no requiere la planilla de Eventos Extremos (la hoja
+`Horton` de esa planilla está vacía, ver `COMO_USAR_EVENTOS_EXTREMOS.md`
+§0).
+
+**Script:** `scripts/ej2.py` (sección "2.2").
+
+**Resultado:**
+```
+f(t) = 0.18 + 111.82*exp(-2.5*t)
+t=0.0h: I=15 mm/h  vs f=112.00 mm/h  -> no encharca
+t=0.2h: I=68 mm/h  vs f= 68.02 mm/h  -> encharca (practicamente igual)
+t=0.5h: I=98 mm/h  vs f= 32.22 mm/h  -> encharca
+...(I>f en todos los bloques siguientes)
+
+Tiempo de encharcamiento = 0.20 hs
+```
+
+**Resultado final Parte 2.2: tiempo de encharcamiento ≈ 0.20 h** (12
+minutos) — justo cuando arranca el bloque más intenso del hietograma
+(0.2-0.5 h, I=68 mm/h), cuya intensidad iguala la capacidad de
+infiltración remanente en ese instante.
+
+**Comparación con solución oficial:** coincide exactamente (t_enc=0.2 h,
+f(0.2)≈68 mm/h ≈ I=68 mm/h).
+
+---
