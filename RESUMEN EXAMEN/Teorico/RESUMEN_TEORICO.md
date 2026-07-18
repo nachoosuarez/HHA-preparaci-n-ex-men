@@ -32,10 +32,10 @@ llamada del 9/feb/2023, aún sin resolver en este repo).
 | B1. Delimitación de cuencas y divisoria de aguas | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| B4. Método Racional (y criterio de selección según tc) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| B4. Método Racional (y criterio de selección según tc) | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
 | B6. Condición de humedad antecedente (AMC) | 6 | 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| B7. Volumen de escorrentía y embalses de retención | 3 | 2024 dic, 2025 feb 2, 2024 feb |
+| B7. Volumen de escorrentía y embalses de retención | 4 | 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 1 | 2026 feb |
 | C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 9 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
@@ -594,6 +594,18 @@ más alto reduce la infiltración (más Pe, más volumen de escorrentía) y el t
 más chico concentra ese mayor volumen en un hidrograma más picudo (mayor Qp,
 menor Tp/Tb) — ver ejemplo completo en `resueltos/2024 Julio/RESOLUCION.md`,
 Ejercicio 3, Parte 3.
+
+**Caso más simple: urbanización SIN cambio de tc** (2023 feb 2, Ej.3 parte
+c). Si el enunciado aclara que el desarrollo urbano **no** altera el tiempo
+de concentración (p.ej. no canaliza el cauce principal), el único efecto es
+el aumento del NC ponderado — se puede **invertir** directamente: dado un
+Qmax objetivo (p.ej. +15% del Qmax original), se itera el NC ponderado
+(bisección, manteniendo tc fijo) hasta que el hidrograma NRCS dé ese Qmax,
+y de ahí se despeja la fracción de área urbanizada x en
+NC_ponderado=x·NC_urbano+(1-x)·NC_original (y el área urbanizable máxima
+Área_urb=x·Área_total). Es la misma lógica de "hallar el Tr de un caudal
+límite" (B4) pero iterando sobre NC en vez de sobre Tr, y con una relación
+NC→Qmax monótona pero sin forma cerrada (no alcanza con una regla de tres).
 
 Cita: Teórico HHA §3.1.5 b)/c) y §3.1.6 "Método del NRCS (ex SCS)";
 Formulómetro "Cálculo de caudales máximos e hidrograma de crecida: Método

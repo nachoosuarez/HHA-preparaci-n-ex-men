@@ -271,3 +271,125 @@ infiltración remanente en ese instante.
 f(0.2)≈68 mm/h ≈ I=68 mm/h).
 
 ---
+
+## EJERCICIO 3 — Cuenca en Cerro Largo: caudal de diseño, volumen de escorrentía y área urbanizable máxima (25 puntos)
+
+**Datos:** cuenca con punto de cierre en Cerro Largo (X=650 km, Y=6400
+km), Área=5.10 km², ΔH=120 m, L=3600 m (cauce principal), S=3.8%
+(pendiente **media de la cuenca**, dato directo del enunciado). Uso de
+suelo pastizales naturales en condición hidrológica **mala**, unidad de
+suelos **Risso**, flujo concentrado.
+
+Teoría usada: tiempo de concentración de Ramser-Kirpich (Resumen Teórico
+§B2), curvas IDF de Uruguay (§B3), método Racional (§B4), método NRCS
+—Número de Curva + hidrograma unitario triangular SCS— (§B5), volumen de
+escorrentía (§B7).
+
+**Grupo Hidrológico e insumos de tabla:** la unidad de suelos **Risso**
+corresponde a Grupo Hidrológico **D** (verificado extrayendo el texto de
+`Teórico HHA.pdf` con `pdftotext`: tabla "Unidad de suelo — Grupo
+hidrológico", fila "Risso ... D"). Con pastizales/condición mala/Grupo D,
+la Fig. 3.1.20 del Teórico da **NC=89** (coincide con la solución
+oficial). El coeficiente de escorrentía del método Racional, para
+pastizales en condición mala y S=3.8%, es **C=0.36** (Tabla 3.1.4, dato de
+la solución oficial).
+
+### Parte a) Caudal máximo de diseño (Tr=5 años)
+
+**Concepto.** Se calcula tc por Ramser-Kirpich con la pendiente del
+**cauce principal** (ΔH/L/10=3.33%, distinta de la pendiente media de la
+cuenca S=3.8% dada, que solo se usa para elegir C). Con 20 min<tc<1 h
+corresponde calcular **ambos métodos** (Racional y NRCS) y adoptar el
+caudal mayor.
+
+**Herramienta:** réplica en Python de las fórmulas de
+`EVENTOS EXTREMOS 2025.xlsx` (hoja "Cálculos (grande)": IDF Uruguay,
+método Racional, tormenta de diseño por bloque alterno, NC, hidrograma
+unitario triangular SCS) — mismo patrón que
+`resueltos/2024 diciembre/scripts/ej2_parte1.py`, adaptado a estos datos.
+Se elige replicar en Python (en vez de abrir la planilla real) porque
+además se necesita, en la Parte c), **iterar sobre el NC** dentro del
+mismo cálculo del hidrograma — más simple de automatizar en código que
+editando celdas de Excel a mano repetidamente.
+
+**Script:** `scripts/ej3.py`. Entradas: `Area=5.10, dH=120, L=3600,
+Tr=5, P310=80, NC=89, C_racional=0.36`.
+
+**Resultado:**
+```
+S cauce principal (Kirpich) = 3.3333 %
+tc = 0.6747 hs = 40.48 min   =>  20 min < tc < 1 h  =>  AMBOS metodos
+
+--- METODO RACIONAL ---
+d=tc=0.6747 hs, CD=0.5170, CA=0.9878
+Qmax racional = 26.54 m3/s
+
+--- METODO NRCS ---
+S=31.393 mm ; SUMA Pe = 21.178 mm
+Qmax NRCS = 36.93 m3/s en t_pico=1.13 hs, t_base~2.34 hs
+
+=> Qmax de diseno (Tr=5) = 36.93 m3/s (NRCS, MAYOR que el Racional)
+```
+
+**Resultado final Parte a): Qmax = 36.93 m³/s** (método NRCS, con tiempo
+pico ≈1.13 h y tiempo base ≈2.34 h del hidrograma de crecida triangular).
+
+**Comparación con solución oficial:** el manuscrito da tc=0.6738 h (40.43
+min) — coincide (diferencia de redondeo en la pendiente del cauce).
+Qmax Racional=26.56 m³/s (coincide con 26.54). Qmax NRCS=36.75 m³/s
+(coincide con 36.93, diferencia <0.5%, por redondeos intermedios en la
+tormenta de diseño). Tiempo pico=1.16 h, tiempo base=2.31 h (coinciden
+con 1.13 h / 2.34 h). Se adopta NRCS por ser el mayor — **coincide**.
+
+### Parte b) Volumen de escorrentía
+
+**Concepto.** Vesc=ΣPe(mm)·Área(km²)·1000, con la ΣPe ya calculada para
+la tormenta de diseño de la Parte a) (Tr=5, NC=89).
+
+**Script:** `scripts/ej3.py` (parte b, reutiliza `Pe_corr_a` de la parte
+a).
+
+**Resultado:**
+```
+Vesc = 5.10 * 1000 * 21.178 = 108010 m3
+```
+
+**Resultado final Parte b): Vesc ≈ 108 010 m³** (≈108 000 m³).
+
+**Comparación con solución oficial:** el manuscrito da ΣPe=21.2 mm (redondeado,
+coincide con 21.178) y Vesc=108 120 m³ — **coincide** (diferencia de
+redondeo de 0.1% por el ΣPe con más decimales).
+
+### Parte c) Área máxima transformable a urbana (lotes de 0.03 ha) sin superar +15% del Qmax de diseño
+
+**Concepto.** Los nuevos lotes urbanos (0.03 ha < 0.05 ha) caen en la
+categoría "Residencial, <0.05 Ha, 65% impermeable" de la Fig. 3.1.20, que
+para Grupo Hidrológico D da **NC=92**. El enunciado aclara que la
+urbanización **no cambia tc** (a diferencia del caso más general de §B5,
+donde también se canaliza el cauce): el único efecto es que el NC
+ponderado de la cuenca (mezcla pastizal/urbano) sube, lo que aumenta Pe y
+por lo tanto Qmax. Se itera el NC ponderado (con tc fijo en 0.6747 h)
+hasta que el hidrograma NRCS dé exactamente 1.15×Qmax(a), y de ahí se
+despeja la fracción de área urbanizada x.
+
+**Herramienta:** bisección en NC ponderado sobre la misma función
+`NRCS_hidrograma` de la Parte a) (no tiene forma cerrada NC→Qmax).
+
+**Script:** `scripts/ej3.py` (parte c).
+
+**Resultado:**
+```
+Qmax objetivo = 1.15*36.93 = 42.47 m3/s
+NC ponderado necesario = 91.033
+NC* = x*92(urbano) + (1-x)*89(pastizal) = 91.033  =>  x = 0.6778
+Area urbanizable maxima = x*Area = 0.6778*5.10 = 3.457 km2
+```
+
+**Resultado final Parte c): Área urbanizable máxima ≈ 3.46 km²** (≈68% de
+la cuenca).
+
+**Comparación con solución oficial:** el manuscrito da NC*=91.03
+(coincide exactamente), x=0.6766 (coincide con 0.6778) y área máxima
+"hasta 3.45 km²" (coincide con 3.457 km²) — **coincide**.
+
+---
