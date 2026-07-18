@@ -32,12 +32,12 @@ febrero — no confundir con 2023 feb 2).
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 8 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B4. Método Racional (y criterio de selección según tc) | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 10 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| B6. Condición de humedad antecedente (AMC) | 6 | 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| B7. Volumen de escorrentía y embalses de retención | 4 | 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 11 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B4. Método Racional (y criterio de selección según tc) | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 11 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| B6. Condición de humedad antecedente (AMC) | 7 | 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| B7. Volumen de escorrentía y embalses de retención | 5 | 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 11 | 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
@@ -486,7 +486,9 @@ en pluviógrafo, P=26mm en d=10min, P(3,10)=79mm ⇒ Tr≈30 años; otro ejemplo
 2023 jul Ej.2 parte 3 — P=15.3mm en d=7min, P(3,10)=80mm, CA=1 (dato
 puntual, sin corrección por área) ⇒ CT=0.837 ⇒ Tr≈4.5 años; otro ejemplo,
 2023 feb 2 Ej.2 parte 2.1 — Imax=98mm/h en d=0.3h (bloque más intenso del
-hietograma), P(3,10)=81mm, CA=1 ⇒ CT≈1.01 ⇒ Tr≈10 años. **Nota:** cuando
+hietograma), P(3,10)=81mm, CA=1 ⇒ CT≈1.01 ⇒ Tr≈10 años; otro ejemplo,
+2022 dic Ej.2 parte 2.2 — P=16.5mm en d=5min, P(3,10)=76mm, CA=1 (dato
+puntual) ⇒ CT≈1.126 ⇒ Tr≈19 años. **Nota:** cuando
 CT objetivo sale muy cerca de 1 (=CT(10) por definición), la inversión es
 muy sensible a redondeos de CD/CT — conviene reportar el **Tr tabulado**
 más próximo (2, 5, 10, 25, 50, 100 años) en vez del valor "exacto" con

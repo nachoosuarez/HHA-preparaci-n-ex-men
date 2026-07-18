@@ -367,6 +367,25 @@ P310=90 mm, NC=80 (suelo D), c=0.28; tc=48.1 min ⇒ 20 min<tc<1h ⇒ calcular
 Racional y NRCS y quedarse con el mayor: Qmax NRCS=35.3 m³/s > Qmax
 racional=30.9 m³/s).
 
+**Ejemplo con hietograma OBSERVADO (reemplaza la tormenta de bloque
+alterno, manteniendo el piso de infiltración de la hoja grande) +
+inversión de Tr**, Ejercicio 2 de `resueltos/2022 diciembre/RESOLUCION.md`
+(Maldonado: Área=7.6 km², ΔH=130 m, L=3265 m, Grupo D, pastizales
+condición mala, tc=35.1 min, P310=76 mm, NC=89, C=0.38). Parte 1: igual
+que el flujo estándar de la sección 1 (tormenta de diseño por bloque
+alterno, Tr=10) ⇒ Qmax NRCS=66.76 m³/s > Racional=49.60 m³/s ⇒ se adopta
+NRCS; Vesc=169 501 m³. Parte 2.1: con P5d=25 mm en julio (estación
+inactiva), AMC cae en el rango II (12.7–27.94 mm) ⇒ NC se mantiene sin
+corregir; se **sustituye la columna de la tormenta (N/"J" de la hoja
+grande) por el hietograma realmente registrado, en su orden
+cronológico** (sin reordenar por bloque alterno), pero conservando el
+resto de la lógica (Pe por NC, piso de infiltración, mismo hidrograma
+unitario triangular ya calculado con el mismo tc) ⇒ Qmax evento=86.81
+m³/s. Parte 2.2: se invierte CT(Tr) con el bloque más intenso del
+hietograma (P=16.5 mm en d=5 min, CA=1 por ser dato puntual) ⇒ Tr≈19
+años (mismo procedimiento que la sección de "Errores comunes" ítem 9,
+aplicado sobre un dato de pluviógrafo en vez de sobre un caudal límite).
+
 ---
 
 ## 6) Errores comunes y cosas a no olvidar

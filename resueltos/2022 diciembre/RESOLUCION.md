@@ -160,3 +160,138 @@ conjugado (0.6896 m) coincide exactamente con el oficial, así que el
 propio cálculo del conjugado (Mom_rect, forma cerrada) es exacto.
 
 ---
+
+## Ejercicio 2 — Hidrología de una cuenca en Maldonado
+
+### Enunciado (resumen)
+
+Cuenca en Maldonado (punto de cierre X=552 km, Y=6150 km; Área=7.6 km²,
+ΔH=130 m, L=3265 m, Grupo Hidrológico D, S media=5.9%, pastizales en
+condición hidrológica MALA, flujo concentrado).
+1) Caudal máximo de diseño para Tr=10 años y volumen de escorrentía del
+   evento de diseño.
+2) Se registra un evento con hietograma dado (12 bloques de 5 min, total
+   54.3 mm). 2.1) Asumiendo P5d=25 mm en los 5 días previos (julio,
+   estación inactiva), calcular el caudal máximo generado por ESE evento.
+   2.2) Determinar el período de retorno asociado a la intensidad máxima
+   registrada en el pluviógrafo.
+
+### Teoría (RESUMEN_TEORICO.md, sección B — Hidrología)
+
+- **B2** Tiempo de concentración (Ramser-Kirpich), con la pendiente del
+  **cauce principal** (ΔH/L/10), no la pendiente media de la cuenca (esa
+  se usa sólo para elegir C en la Tabla 3.1.4).
+- **B4** Criterio de selección de método según tc: 20 min<tc<1h ⇒
+  calcular Racional y NRCS, adoptar el mayor.
+- **B5** Método NRCS completo: tormenta de diseño por bloque alterno +
+  precipitación efectiva (Número de Curva) + hidrograma unitario
+  triangular SCS, para la Parte 1; y el mismo método pero con el
+  hietograma **observado en su orden cronológico real** (sin reordenar
+  por bloque alterno) para la Parte 2.1.
+- **B6** Condición de humedad antecedente (AMC): con P5d dado y la
+  estación del año, se decide si corregir el NC antes de calcular Pe del
+  evento observado.
+- **B3** Inversión de CT(Tr) para hallar el Tr de una intensidad puntual
+  ya registrada (Parte 2.2).
+- **B7** Volumen de escorrentía = ΣPe·Área·1000.
+
+### Herramienta y por qué
+
+Se usó **Python** (numpy, sin la planilla Excel manual) replicando
+exactamente la lógica de `Eventos extremos.xlsx` / hoja `Cálculos
+(grande)` (ver `RESUMEN EXAMEN/Teorico/COMO_USAR_EVENTOS_EXTREMOS.md`),
+porque el ejercicio necesita además dos variantes que la planilla no
+resuelve de forma directa: (a) sustituir el hietograma de diseño por
+bloque alterno por un hietograma **observado en orden cronológico** sin
+reordenar (Parte 2.1); y (b) invertir numéricamente CT(Tr) para una
+intensidad puntual dada (Parte 2.2, igual patrón que el ya usado en 2024
+feb/2023 jul/2023 feb 2, ver B3). Los valores base P(3,10)=76 mm
+(isoyeta), C=0.38 (Tabla 3.1.4) y NC=89 (Fig. 3.1.20, pastizales+condición
+mala+Grupo D) se toman de la solución oficial manuscrita. Scripts:
+`resueltos/2022 diciembre/scripts/ej2_parte1.py` (tormenta de diseño,
+Racional+NRCS, volumen) y `ej2_parte2.py` (AMC, evento real, Tr inverso).
+
+### Paso a paso
+
+**Parte 1) Qmax (Tr=10) y volumen de escorrentía.**
+
+```
+S cauce principal = ΔH/L/10 = 130/3.265/10 = 3.98 %
+tc (Ramser-Kirpich) = 0.4·L^0.77/S^0.385 = 0.5844 hs = 35.1 min
+```
+Como 20 min < tc=35.1 min < 1 h, corresponde calcular **ambos** métodos y
+adoptar el mayor (B4):
+
+```
+MÉTODO RACIONAL:  d=tc, CD=0.4848, CA=0.9808, CT(10)=1
+  P(d,10,A) = 36.14 mm  =>  i = 61.83 mm/h
+  Qmax racional = C·i·A/360 = 0.38·61.83·760/360 = 49.60 m³/s
+
+MÉTODO NRCS: dt=tc/7=5.01 min, 12 bloques (bloque alterno)
+  S = 25.4·(1000/89-10) = 31.39 mm ; Ia=0.2S=6.28 mm
+  Σ Pe (tormenta de diseño) = 22.30 mm
+  Hidrograma unitario SCS: Tp=0.392 hs, Tb=1.047 hs, qp=4.03 m³/s/mm
+  Qmax NRCS (convolución) = 66.76 m³/s
+```
+NRCS (66.76 m³/s) > Racional (49.60 m³/s) ⇒ se adopta **NRCS**.
+
+**Resultado Parte 1: Qmax (Tr=10 años) = 66.76 m³/s** (método NRCS);
+**Volumen de escorrentía = ΣPe·Área·1000 = 22.30 mm × 7.6 km² × 1000 ≈
+169 500 m³**.
+
+**Parte 2.1) Caudal generado por el evento REGISTRADO (P5d=25 mm, julio).**
+
+Condición de humedad antecedente: estación inactiva (julio), umbrales
+AMC (B6): AMC I <12.7 mm, AMC II 12.7–27.94 mm, AMC III >27.94 mm.
+P5d=25 mm cae en el rango de **AMC II ⇒ NC se mantiene en 89** (sin
+corregir).
+
+Se sustituye la tormenta de diseño por el hietograma **observado**, en
+su orden cronológico real (sin reordenar por bloque alterno):
+```
+P observado (12 x 5 min) = [2.1, 2.3, 2.7, 3.2, 4.2, 7.0, 16.5, 5.1, 3.6, 2.9, 2.5, 2.2] mm
+Total = 54.30 mm ; Σ Pe (NRCS, mismo NC=89, mismo piso de infiltración) = 29.04 mm
+Mismo hidrograma unitario de la Parte 1 (mismo tc ⇒ mismo Tp, Tb, qp)
+Qmax (convolución con Pe del evento real) = 86.81 m³/s
+```
+
+**Resultado Parte 2.1: Qmax generado por el evento registrado = 86.81 m³/s.**
+
+**Parte 2.2) Período de retorno de la intensidad máxima registrada.**
+
+El bloque más intenso del hietograma es P=16.5 mm en d=5 min (bloque
+30-35 min). Es una intensidad **puntual** (lectura de pluviógrafo, no una
+lámina de diseño sobre el área) ⇒ se omite CA (B3):
+```
+CD(d=5min=0.0833h) = 0.1928
+CT objetivo = P/(P310·CD) = 16.5/(76·0.1928) = 1.1262
+Inversión numérica de CT(Tr) (bisección): Tr ≈ 19.1 años
+```
+
+**Resultado Parte 2.2: Tr ≈ 19 años** (de la intensidad máxima del evento
+registrado).
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| Parte 1: tc | 35 min (0.5836h) | 35.1 min (0.5844h) | ≈0 |
+| Parte 1: Qmax NRCS | 66.44 m³/s | 66.76 m³/s | 0.32 m³/s |
+| Parte 1: Vesc | ≈169 480-169 980 m³ | 169 501 m³ | pequeña |
+| Parte 1: Qmax Racional | 59.64 m³/s (según lectura de la manuscrita) | 49.60 m³/s | ver nota |
+| Parte 2.1: Qmax evento | 86.44 m³/s | 86.81 m³/s | 0.37 m³/s |
+| Parte 2.2: Tr | ≈19-20 años (19.285 en la manuscrita) | 19.1 años | ≈0 |
+
+Coincidencia muy buena en todos los ítems que determinan las respuestas
+finales (NRCS de diseño, volumen, caudal del evento real, Tr). La única
+diferencia notoria es el caudal del **método Racional** de la Parte 1
+(49.60 calculado vs. 59.64 leído de la manuscrita), pero **no afecta la
+respuesta final** porque en ambos casos el NRCS resulta mayor y es el que
+se adopta (B4): con C=0.38 e i=61.83 mm/h (que sí coincide con el i=61.878
+oficial), Q=C·i·A/360 da 49.60 m³/s de forma consistente — la cifra
+oficial de 59.64 no cierra con su propio i y A salvo que haya usado un C
+distinto no completamente legible en la manuscrita; se documenta la
+discrepancia sin perseguirla más, dado que es irrelevante para el
+resultado final.
+
+---
