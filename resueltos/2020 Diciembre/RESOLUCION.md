@@ -362,4 +362,140 @@ Pe total (evento) = 81.08 mm
 
 ---
 
-## ESTADO: EN CURSO (falta Ejercicio 3 — bombeo)
+## Ejercicio 3 (30 puntos) — Sistema de bombeo (succión + impulsión + válvula)
+
+### Enunciado (resumen, Variante A)
+
+Bomba que eleva agua desde un tanque inferior (zT1=-1 m) a uno superior
+(zT2=70 m), cota del eje de la bomba zB=1 m. Succión e impulsión del
+mismo diámetro D=300 mm, rugosidad ε=0.02 mm. Succión: Ls=2 m, ks=1.
+Impulsión: Li=500 m, ki=5 (codos/piezas de unión) + una **válvula a
+medio cerrar con kv=20**. Curva de catálogo dada en tabla (Q, H, η,
+NPSHr).
+
+1. Punto de funcionamiento (Q, H, factor de fricción f).
+2. Potencia consumida.
+3. Verificar que no cavita (NPSHdisp vs. NPSHreq).
+4. Regular la válvula para bajar el caudal a Q=150 L/s: nuevo kv, Q, H, f.
+5. ¿Puede cavitar en la nueva configuración?
+
+### Teoría
+
+- **Ecuación de la instalación** (RESUMEN_TEORICO.md §C1): Hm=(z2−z1)+
+  pérdidas distribuidas (Darcy-Weisbach+Colebrook-White) + localizadas
+  (ks, ki, kv) en succión e impulsión.
+- **Punto de funcionamiento** (§C2): intersección de la curva de la
+  instalación con la curva H-Q de catálogo (interpolación pchip).
+- **Potencia consumida** (§C3): P=ρgQH/η, con η en el punto de
+  funcionamiento.
+- **Cavitación** (§C4): NPSHdisp=10.1+HA−zB−vs²/2g (HA=carga en la
+  brida de succión; la resta de vs²/2g corresponde al caso "z1 es una
+  superficie libre grande", que es el de este ejercicio — ver la nota
+  "OJO" de `Bomba_sola.m`) comparado contra NPSHreq de catálogo.
+- **Regulación de caudal por válvula, caso "Q objetivo dado, hallar kv"**
+  (§C6, ya documentado a partir de 2023 feb 2 Ej.4): con Q conocido de
+  antemano el problema es **directo** (no iterativo) — se calculan
+  v,Re,f sin iterar, se lee Hb(Q) de la curva de catálogo, y se despeja
+  kv algebraicamente de Hb=HB−HA.
+
+### Herramienta y por qué
+
+Se usó **Octave** con el toolkit canónico `RESUMEN EXAMEN/Codigos/Bombas/`
+(`Bomba_sola.m` adaptado + `colebrook.m`) porque es exactamente el caso
+de uso de ese script: una bomba única entre dos tanques, con succión e
+impulsión de distintas pérdidas y una válvula variable — la búsqueda del
+punto de funcionamiento (intersección de curvas) y el barrido de
+NPSHdisp(Q) en malla fina son impracticables a mano con precisión. Para
+la Parte 4 se agregó una búsqueda por **bisección** de kv (Q(kv) es
+monótona decreciente) en vez de un barrido lineal (mucho más rápido), y
+se **verificó** el resultado con el método algebraico directo de §C6
+(dado Q, despejar kv sin iterar) — ambos coinciden. Script adaptado a
+este examen: `resueltos/2020 Diciembre/scripts/Ejercicio3_Bomba_sola.m`
+(+ `colebrook.m` como dependencia).
+
+### Parte 1 — Punto de funcionamiento (kv=20)
+
+```
+ki_total = ki_piezas + kv = 5 + 20 = 25
+```
+
+| Variable | Valor |
+|---|---|
+| **Q** | **0.1836 m³/s** |
+| **H** | **87.54 m** |
+| f succión = f impulsión (mismo D) | **0.0133** |
+
+### Parte 2 — Potencia consumida
+
+```
+η(Q=0.1836) = 73.83 %
+P = ρgQH/η = 1000·9.81·0.1836·87.54/0.7383 = 213.5 kW
+```
+
+**Potencia consumida ≈ 213.5 kW**
+
+### Parte 3 — Verificación de cavitación
+
+```
+NPSHdisp = 10.1 + HA - zB - vs²/2g = 7.726 m
+NPSHreq (catálogo, interpolado en Q=0.1836) = 4.603 m
+```
+
+NPSHdisp > NPSHreq ⇒ **NO cavita** (margen ≈3.12 m).
+
+### Parte 4 — Nuevo punto de funcionamiento (Q=150 L/s)
+
+Bisección sobre kv: **kv≈67.0** da Q=0.1507 m³/s≈0.15 m³/s. Verificado
+con el método algebraico directo de §C6 (Q conocido ⇒ despejar kv sin
+iterar): kv≈67.6 — coincide.
+
+| Variable | Valor |
+|---|---|
+| **kv necesario** | **≈67–68** |
+| **Q** | **0.1507 m³/s** |
+| **H** | **93.01 m** |
+| f succión = f impulsión | **0.0136** |
+
+### Parte 5 — ¿Cavita con la válvula más cerrada?
+
+```
+NPSHdisp = 7.847 m   (no cambia casi nada: la válvula está en la
+                       impulsión, NPSHdisp depende sólo de la succión)
+NPSHreq (interpolado en Q=0.1507) = 3.871 m
+```
+
+NPSHdisp > NPSHreq ⇒ **NO cavita** (margen ≈3.98 m, incluso mayor que en
+la Parte 3: al bajar Q, NPSHreq baja más de lo que varía NPSHdisp).
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| Q, H, f (kv=20) | **0.184 m³/s, 87.5 m, f=0.0133** |
+| Potencia | **≈213.5 kW** |
+| NPSHdisp / NPSHreq (kv=20) | **7.73 m / 4.60 m** — no cavita |
+| kv para Q=150 L/s | **≈68** |
+| Q, H, f (Q=150 L/s) | **0.151 m³/s, 93.0 m, f=0.0136** |
+| NPSHdisp / NPSHreq (Q=150 L/s) | **7.85 m / 3.87 m** — no cavita |
+
+### Comparación con la solución oficial
+
+| Magnitud | Oficial | Calculado | Diferencia |
+|---|---|---|---|
+| Q (kv=20) | 0.183 m³/s | 0.1836 m³/s | ≈0 |
+| f (kv=20) | 0.0133 | 0.0133 | 0 |
+| Potencia | 214.4 kW | 213.5 kW | <1% |
+| NPSHdisp (kv=20) | 7.73 m | 7.726 m | ≈0 |
+| NPSHreq (kv=20) | 4.60 m | 4.603 m | ≈0 |
+| kv (Q=0.15) | 68 | ≈67–68 | ≈0 |
+| Q (Q=150L/s) | 0.15 m³/s | 0.1507 m³/s | ≈0 |
+| H (Q=150L/s) | 93.2 m | 93.01 m | <0.2% |
+| f (Q=150L/s) | 0.0136 | 0.0136 | 0 |
+| NPSHdisp (Q=150L/s) | 7.85 m | 7.847 m | ≈0 |
+| NPSHreq (Q=150L/s) | 3.86 m | 3.871 m | ≈0 |
+
+Coincidencia prácticamente exacta en todos los ítems.
+
+---
+
+## ESTADO: COMPLETO

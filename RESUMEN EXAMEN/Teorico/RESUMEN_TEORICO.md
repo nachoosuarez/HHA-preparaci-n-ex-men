@@ -42,12 +42,12 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C2. Curva de la bomba y punto de funcionamiento | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C3. Potencia consumida por el sistema de bombeo | 12 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
-| C4. Cavitación: NPSH disponible vs. requerido | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 14 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C2. Curva de la bomba y punto de funcionamiento | 14 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C3. Potencia consumida por el sistema de bombeo | 13 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
+| C4. Cavitación: NPSH disponible vs. requerido | 14 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | C5. Bombas en serie y en paralelo | 6 | 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb |
-| C6. Regulación de caudal por válvula (pérdida localizada variable) | 2 | 2024 dic, 2023 feb 2 |
+| C6. Regulación de caudal por válvula (pérdida localizada variable) | 3 | 2020 dic, 2024 dic, 2023 feb 2 |
 
 ---
 
