@@ -424,3 +424,155 @@ Todos los resultados numéricos coinciden con la solución oficial
 manuscrita.
 
 ---
+
+## EJERCICIO 3 (35 puntos) — Tres bombas idénticas en paralelo, succión e impulsión comunes
+
+**Datos:** tanque inferior de succión con superficie libre z_T1=−3 m; tres
+bombas idénticas en paralelo, cota de las bombas z_B=1 m; tubería de
+succión común (D_s=100 mm, L_s=7 m, ε_s=0.02 mm, k_s=2); tubería de
+impulsión común (D_i=100 mm, L_i=20 m, ε_i=0.02 mm, k_i=5); descarga
+sumergida en tanque elevado con superficie libre z_T2=14 m. Pérdidas en
+las conexiones bomba↔tubería despreciables. Curva de catálogo (por
+bomba, tabla del enunciado): Q(L/s)=[0, 1.5, 3.0, 4.5, 6.0, 7.5, 9.0,
+10.5], H(m)=[26.0, 25.7, 25.0, 23.3, 21.5, 19.0, 16.0, 11.0],
+rend(%)=[0, 30, 53, 64, 67, 65, 58, 43], NPSHr(m)=[1.3, 1.6, 2.1, 2.8,
+3.6, 4.5, 5.5, 6.6].
+
+Teoría usada: ecuación de la instalación de bombeo (Darcy-Weisbach +
+Colebrook-White, Teórico §3.3.10), curva de la bomba y punto de
+funcionamiento (§3.3.8, §3.3.11), potencia consumida (§3.3.12), NPSH
+disponible/requerido y cavitación (§3.3.14), acoplamiento de bombas en
+paralelo (§3.3.13). Ver también `RESUMEN_TEORICO.md` §C1–§C5 (la sección
+"N bombas idénticas en paralelo" y "Nivel mínimo del tanque de succión...
+autoconsistente" se añadieron a partir de este examen).
+
+**Ecuación de la instalación:** como z_T1 (tanque, v≈0) y z_T2 (descarga
+**sumergida** en un tanque, v≈0 también del lado de la entrega) son ambas
+superficies libres de grandes depósitos, los términos cinéticos se anulan
+en la ecuación de instalación (Teórico, ver `RESUMEN_TEORICO.md` §C1):
+```
+Hm = (zT2 - zT1) + DeltaH(succion,Qtotal) + DeltaH(impulsion,Qtotal)
+DeltaH(succion)  = (ks + fs*Ls/Ds)*vs^2/(2g)
+DeltaH(impulsion)= (ki + fi*Li/Di)*vi^2/(2g)
+```
+con Q_total pasando por AMBOS tramos (succión e impulsión son comunes a
+las 3 bombas). Como las 3 bombas son idénticas, la curva equivalente es
+la curva de catálogo de una sola bomba con el eje de caudal escalado por
+3 (H_eq(3·Q₁)=H₁(Q₁)), y en el punto de funcionamiento cada bomba entrega
+exactamente Q_total/3.
+
+**Herramienta:** se adaptó `Bombas_paralelo.m` (carpeta `bombas Pedro` /
+`RESUMEN EXAMEN/Codigos/Bombas/`) al caso de 3 bombas idénticas con
+succión/impulsión comunes, usando `colebrook.m` tal cual y `fzero` para
+la intersección curva-instalación y para la búsqueda del nivel mínimo del
+tanque (parte 4). Se usa esta herramienta porque es la que el curso provee
+específicamente para bombas en paralelo con pérdida de carga dependiente
+de f (que a su vez depende de Q), evitando iterar Colebrook a mano para
+cada caudal de prueba.
+
+**Script:** `scripts/ej3_bombas.m` (+ `scripts/colebrook.m`).
+
+### Parte 1) Caudal de funcionamiento de cada bomba y caudal total
+
+**Resultado (`ej3_bombas.m`):**
+```
+Qtotal = 0.01965 m3/s = 19.65 L/s
+Q por bomba = 0.00655 m3/s = 6.55 L/s
+H = 20.66 m
+f succion = f impulsion = 0.01661   (mismo D, epsilon y Q en ambos tramos)
+v succion = v impulsion = 2.50 m/s
+```
+Gráfico H-Q (curva de 1 bomba, curva equivalente de 3 en paralelo, curva
+de instalación y punto de funcionamiento): `scripts/ej3_HQ.png`.
+
+**Resultado final Parte 1: Q_total ≈ 19.65 L/s (6.55 L/s por bomba),
+H ≈ 20.66 m, f ≈ 0.0166.**
+
+**Comparación con solución oficial:** el manuscrito da Q_total≈19.6 L/s
+(≈6.53 L/s por bomba), H=20.63 m, rendimiento 66.3% — **coincide muy
+bien** (diferencias <0.5%, coherentes con la lectura gráfica manual de la
+curva de la bomba).
+
+### Parte 2) Potencia consumida por el sistema y por cada bomba
+
+**Desarrollo:** con Q_por_bomba=6.55 L/s se interpola el rendimiento de
+catálogo: **η=66.7%**. Potencia por bomba: P=ρ·g·Q·H/η.
+```
+Potencia por bomba = 1.992 kW
+Potencia del sistema (3 bombas) = 5.975 kW
+```
+
+**Resultado final Parte 2: P_bomba ≈ 1.99 kW, P_sistema ≈ 5.98 kW.**
+
+**Comparación con solución oficial:** el manuscrito da rendimiento≈66.3%
+y una potencia por bomba del orden de 1.9 kW (lectura difícil en el
+escaneo, pero del mismo orden) — **consistente** con el resultado
+calculado; la pequeña diferencia (<5%) es coherente con la lectura
+gráfica manual de la curva de eficiencia.
+
+### Parte 3) Verificación de cavitación
+
+**Concepto:** el NPSH disponible depende sólo del tramo de succión
+(común a las 3 bombas) y se calcula con el caudal **total**; el NPSH
+requerido se interpola con el caudal **individual** de cada bomba
+(Teórico §3.3.14, `RESUMEN_TEORICO.md` §C4). Bomba en aspiración
+(z_B=1 m > z_T1=−3 m):
+```
+NPSH_disp = (patm-pvap)/gamma - (zB-zT1) - DeltaH(succion,Qtotal)
+          = 10.09 - 4 - 5.01 = 5.08 m
+NPSH_req (a Q=6.55 L/s por bomba, interpolado de la tabla) = 3.92 m
+```
+**NPSH_disp (5.08 m) > NPSH_req (3.92 m) ⇒ las bombas NO cavitan.**
+Gráfico NPSH-Q: `scripts/ej3_NPSH.png`.
+
+**Comparación con solución oficial:** el manuscrito da NPSH_disp≈5.1 m
+— **coincide casi exactamente**; el valor de NPSH_req es difícil de leer
+con certeza en el escaneo (≈3.6 m), pero en cualquier caso confirma la
+misma conclusión (no cavita) con margen similar.
+
+### Parte 4) Nivel mínimo del tanque inferior sin que las bombas caviten
+
+**Concepto:** al bajar el nivel z_T1 del tanque de succión, la curva de
+instalación sube (mayor desnivel estático), el punto de funcionamiento se
+corre a **menor Q**, y con ese nuevo Q cambian simultáneamente el NPSH
+disponible (baja, por mayor desnivel de succión, aunque mejora algo por
+menor pérdida a menor Q) y el NPSH requerido (baja, por menor Q). No hay
+forma cerrada: se itera un `fzero` en z_T1 que, en cada paso, resuelve el
+punto de funcionamiento completo y compara NPSH_disp con NPSH_req (ver
+`RESUMEN_TEORICO.md` §C4, "Nivel mínimo del tanque... autoconsistente").
+
+**Resultado (`ej3_bombas.m`):**
+```
+zT1_min (exacto)                = -4.7652 m
+zT1_min (redondeado 0.05 m, lado seguro) = -4.75 m
+En ese limite: Qtotal=17.55 L/s, H=21.70 m, f=0.01685
+```
+
+**Resultado final Parte 4: el nivel del tanque inferior puede descender
+hasta z_T1 ≈ −4.75 m (con una precisión de 0.05 m, redondeando hacia el
+lado seguro) sin que las bombas caviten.**
+
+**Comparación con solución oficial:** el manuscrito resuelve por tanteo
+con una tabla (probando z1=−3, −4, −4.7, −4.8, −4.85 m con su f y
+condición de cavitación en cada caso), acotando la solución entre
+z1≈−4.7 m y z1≈−4.85 m — **coincide** con el resultado exacto obtenido
+acá (−4.77 m, que redondea a −4.75 m).
+
+### Resumen Ejercicio 3
+
+| Ítem | Resultado |
+|---|---|
+| Caudal total / por bomba | **19.65 L/s / 6.55 L/s** |
+| H de funcionamiento | **20.66 m** |
+| Factor de fricción (succión=impulsión) | **0.0166** |
+| Rendimiento de cada bomba en el PF | **66.7%** |
+| Potencia por bomba / del sistema | **1.99 kW / 5.98 kW** |
+| NPSH disponible / requerido en el PF | **5.08 m / 3.92 m (no cavita)** |
+| Nivel mínimo del tanque de succión sin cavitar | **z_T1 ≈ −4.75 m** |
+
+Todos los resultados numéricos coinciden con la solución oficial
+manuscrita dentro del margen esperable de lectura gráfica/tanteo manual.
+
+---
+
+ESTADO: COMPLETO

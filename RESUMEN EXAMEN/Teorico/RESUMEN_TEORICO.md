@@ -44,11 +44,11 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 14 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C2. Curva de la bomba y punto de funcionamiento | 14 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C3. Potencia consumida por el sistema de bombeo | 13 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
-| C4. Cavitación: NPSH disponible vs. requerido | 14 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C5. Bombas en serie y en paralelo | 6 | 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C2. Curva de la bomba y punto de funcionamiento | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C3. Potencia consumida por el sistema de bombeo | 14 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
+| C4. Cavitación: NPSH disponible vs. requerido | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C5. Bombas en serie y en paralelo | 7 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 3 | 2020 dic, 2024 dic, 2023 feb 2 |
 
 ---
@@ -1141,6 +1141,27 @@ negativo si la bomba aspira) — mismo resultado que la fórmula general de
 arriba, sólo que p_A ya incorpora todas las pérdidas de succión sin
 necesidad de calcularlas por separado (2024 feb, Ej.4 parte 2).
 
+**Nivel mínimo del tanque de succión sin cavitar, CON punto de
+funcionamiento autoconsistente** (2020 jul, Ej.3 parte 4). Distinto del
+caso "cota máxima de la bomba" de arriba (ahí Q quedaba fijo y sólo se
+despejaba una cota en forma cerrada): si lo que baja es el **nivel del
+tanque de succión** (z_tanque), el punto de funcionamiento **también se
+mueve**, porque la ecuación de la instalación Hm=(z2−z1)+ΔH(succión)+
+ΔH(impulsión) depende de z1 — al bajar z1 aumenta el desnivel estático a
+vencer, sube toda la curva de instalación, y el PF se corre a **menor Q**
+(sobre la curva de la bomba, decreciente). Ese menor Q a su vez baja
+ΔH(succión) (mejora NPSH_disp) pero también baja NPSH_req (la curva del
+catálogo también decrece con Q) — ambos efectos van en sentidos
+opuestos y no hay forma cerrada. Se resuelve con un `fzero` **anidado**:
+para cada z_tanque de prueba, (a) se resuelve el PF completo (intersección
+curva bomba vs. instalación, como en C2), (b) con el Q de ese PF se
+calculan NPSH_disp(z_tanque,Q) y NPSH_req(Q), y (c) se itera z_tanque
+hasta que NPSH_disp=NPSH_req. El resultado final se redondea **hacia el
+lado seguro** (hacia 0, no hacia más profundidad) a la precisión pedida
+por el enunciado. Con succión compartida por varias bombas en paralelo,
+NPSH_disp usa el Q **total** (C4) mientras que NPSH_req usa el Q
+**individual** (=Q_total/n_bombas si son idénticas) en cada iteración.
+
 Cita: Teórico HHA §3.3.14 "Cavitación"; Formulómetro "Bombas — Cavitación".
 
 ## C5. Bombas en serie y en paralelo
@@ -1167,6 +1188,16 @@ Con bombas en paralelo compartiendo succión/impulsión, esos tramos ahora
 transportan el caudal **total**, lo que aumenta sus pérdidas y reduce el
 NPSH disponible común (C4), aunque cada bomba individualmente trabaje a
 menor Q que si operara sola.
+
+**N bombas IDÉNTICAS en paralelo (N>2)** (2020 jul, Ej.3: 3 bombas
+idénticas, succión e impulsión comunes). Se generaliza igual que el caso
+de 2 bombas: todas ven el mismo H, los caudales se suman, así que la
+curva equivalente es simplemente la curva de catálogo de UNA bomba con el
+eje de caudal escalado por N (H_eq(N·Q₁)=H₁(Q₁)). En el punto de
+funcionamiento, cada bomba entrega exactamente Q_total/N (por simetría,
+todas ven el mismo H y tienen la misma curva). La potencia total del
+sistema es N veces la potencia de una bomba individual (todas trabajan en
+el mismo punto de su propia curva, misma eficiencia).
 
 **Criterio rápido para elegir serie vs. paralelo (número mínimo de bombas).**
 En **paralelo**, el H entregado nunca supera el H máximo de la curva de UNA
