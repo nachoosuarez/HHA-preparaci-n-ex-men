@@ -250,6 +250,16 @@ tiene mezcla de usos de suelo (p.ej. % cultivo + % pastizal):
 Si tu cuenca es de un solo uso de suelo, cargá el NC directo en `J7` (como
 en la hoja grande) y no toques este bloque.
 
+**Ojo:** el NC ponderado no aparece sólo por mezcla de **usos de suelo**
+(cultivo/pastizal). También aparece cuando la cuenca tiene un único uso de
+suelo pero está repartida entre **dos Unidades Cartográficas de suelo con
+distinto Grupo Hidrológico** (p.ej. "Río Branco 85% Grupo D + Andresito
+15% Grupo B", ambas en pastizales condición mala — 2020 dic, Ej.2). El
+bloque `M2:M5` sirve igual: `M3`/`M4` pasan a ser el NC de cada unidad de
+suelo (mismo uso, distinto GH, leído dos veces de la Fig 3.1.20 con el GH
+de cada unidad) en vez de el NC de dos usos distintos; la fórmula
+`M5=M4*N2+M2*M3` es la misma.
+
 ### 2.c) Volumen de escorrentía (bloque L19:O47)
 
 A diferencia de la hoja grande, acá **sí** está armada la suma:
@@ -385,6 +395,25 @@ m³/s. Parte 2.2: se invierte CT(Tr) con el bloque más intenso del
 hietograma (P=16.5 mm en d=5 min, CA=1 por ser dato puntual) ⇒ Tr≈19
 años (mismo procedimiento que la sección de "Errores comunes" ítem 9,
 aplicado sobre un dato de pluviógrafo en vez de sobre un caudal límite).
+
+**Ejemplo con NC ponderado por Unidades Cartográficas de suelo (mismo uso,
+distinto Grupo Hidrológico) + inversión de Tr por caudal límite tras un
+cambio de tc + hietograma OBSERVADO con el tc nuevo**, Ejercicio 2 de
+`resueltos/2020 Diciembre/RESOLUCION.md` (Rocha: Área=8.3 km², ΔH=130 m,
+L=9850 m, suelo Río Branco 85% GH D + Andresito 15% GH B, pastizales
+condición mala ⇒ NC=0.85×89+0.15×79=87.5, tc=2.09 hs). Parte 1: flujo
+estándar (tc>1h ⇒ sólo NRCS, sin calcular Racional) ⇒ Qmax NRCS(Tr=10)=
+43.43 m³/s, Vesc=391 874 m³. Parte 2: una obra de regularización del
+cauce aumenta tc un 40% (tc_new=2.929 hs); se itera Tr (mismo método del
+ítem 9, con el caudal objetivo=Qmax de la Parte 1 en vez de un caudal
+límite dado) hasta encontrar el Tr para el cual, con el tc_new, se vuelve
+a alcanzar ese mismo Qmax ⇒ Tr≈18.1 años (con precisión de 1 año: recién
+en Tr=19 el caudal de diseño queda superado, ya que en Tr=18 todavía da
+43.40<43.43). Parte 3: con el tc_new ya fijo, ocurre un evento REGISTRADO
+(hietograma real de 12 bloques de 25 min, que coincide con el ancho de
+bloque tc_new/7 de la Parte 2 — no es coincidencia, así se arma la
+tormenta de diseño) ⇒ Qmax evento=53.82 m³/s, que supera el caudal de
+diseño de la Parte 1 durante 1.88 hs.
 
 ---
 
