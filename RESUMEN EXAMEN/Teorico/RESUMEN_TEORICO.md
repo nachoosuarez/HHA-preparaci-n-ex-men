@@ -35,10 +35,10 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 10 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 13 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 14 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B4. Método Racional (y criterio de selección según tc) | 14 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 13 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 14 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B4. Método Racional (y criterio de selección según tc) | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 14 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
 | B6. Condición de humedad antecedente (AMC) | 8 | 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
@@ -615,7 +615,9 @@ correspondiente) hasta encontrar el escalón donde Q cruza el valor límite,
 y adoptar ese Tr tabulado como respuesta (no interpolar entre columnas).
 
 **Coeficiente de escorrentía ponderado y área urbanizable máxima**
-(2023 dic, Ej.2 parte c; ver también B5 para el NC ponderado análogo del
+(2023 dic, Ej.2 parte c; 2020 jul, Ej.2 parte 2 — mismo cálculo con
+Aₜ=7.3 km², C1=0.36 pastizal, C2=0.80 concreto/techo, x=15% ⇒
+A2=0.896 km² ≈12.3% del área; ver también B5 para el NC ponderado análogo del
 método NRCS). Si una fracción A₂ de la cuenca (área total Aₜ) se urbaniza
 (desarrollo en concreto/techo, C₂≈0.8-0.95) y el resto (A₁=Aₜ-A₂) conserva
 su C₁ original, el coeficiente de escorrentía efectivo de toda la cuenca es
@@ -635,6 +637,21 @@ admisible de caudal (p.ej. "que Qmax no supere en x% el caudal original"):
 Q_admisible = (1+x)·Q_original  =>  C_target = (1+x)·C_original   (por proporcionalidad directa)
 A2 = AT · (C_target − C1) / (C2 − C1)
 ```
+
+**Verificar si un evento REAL sostenido (d>tc, intensidad constante dada)
+supera la capacidad de diseño** (2020 jul, Ej.2 parte 3.1). El método
+Racional para hallar el caudal de DISEÑO exige d=tc exactamente (Teórico
+§3.1.5: con d<tc no aporta toda la cuenca; con d>tc la intensidad de
+diseño, que decrece con la duración según la IDF, ya es menor que la de
+tc). Pero para VERIFICAR si un evento ya ocurrido (con su propia
+intensidad, no necesariamente la de diseño) superó una obra, si ese
+evento tiene d≥tc la fórmula Q=C·i·A/360 sigue siendo válida usando la
+intensidad REAL del evento (no hace falta reducirla por duración vía la
+IDF): una vez transcurrido tc desde el inicio de la lluvia, toda la
+cuenca aporta simultáneamente y el caudal alcanza (y sostiene, mientras
+dure el exceso de lluvia por encima de tc) el valor C·i·A/360 con esa i.
+Sirve para comparar contra la capacidad de diseño sin tener que armar el
+hidrograma completo por NRCS.
 
 Cita: Teórico HHA §3.1.5 "Metodologías para determinación del caudal de
 diseño"; Formulómetro "Cálculo de Caudales Máximos — Método Racional".

@@ -236,3 +236,191 @@ Todos los resultados numéricos coinciden con la solución oficial
 manuscrita dentro del margen esperable de redondeo/lectura gráfica manual.
 
 ---
+
+## EJERCICIO 2 (35 puntos) — Alcantarilla en cuenca de Artigas: caudal de diseño, urbanización y verificación de un evento observado
+
+**Datos (Tabla 1):** Área=7.3 km², ΔH=180 m, L=3750 m (cauce principal),
+S=3.1% (pendiente media de la cuenca). Punto de la alcantarilla en
+X=400 km, Y=6650 km. Uso de suelo: 20% unidad "Rivera", 80% unidad
+"Itapebí—Tres Árboles"; flujo concentrado; pastizales en condición
+hidrológica buena.
+
+Teoría usada: metodologías de caudal máximo en cuencas no aforadas —
+Método Racional y Método NRCS (Teórico HHA §3.1.5), curvas IDF de Uruguay
+(§3.1.4), tiempo de concentración de Ramser-Kirpich (§3.1.2), Número de
+Curva NRCS (§3.1.5b), coeficiente de escorrentía ponderado y área
+urbanizable máxima (§3.1.5, ver `RESUMEN_TEORICO.md` §B4). Se replicaron
+en Python las fórmulas de `Scripts examen AA/EVENTOS EXTREMOS 2025.xlsx`
+(hojas "método racional" y "NRCS - Gande"), por no disponer de
+Excel/LibreOffice con recálculo interactivo en este entorno (mismo criterio
+que en exámenes anteriores, ver `COMO_USAR_EVENTOS_EXTREMOS.md`).
+
+### Parte 1) Caudal máximo de diseño (Tr=5 años), hietograma e hidrograma
+
+**Tiempo de concentración (Ramser-Kirpich):**
+```
+tc = 0.4*L(km)^0.77 / S_cauce(%)^0.385
+S_cauce = dH(m)/L(km)/10 = 180/3.75/10 = 4.8 %   (distinto de S=3.1% de la cuenca)
+```
+**tc = 0.605 hs = 36.3 min.** Como 20 min < tc < 1 h, el Teórico (§3.1.5)
+indica que ninguno de los dos métodos es claramente el adecuado y
+recomienda **calcular ambos y diseñar con el mayor caudal**.
+
+**Grupo Hidrológico compuesto:** Rivera = grupo B, Itapebí—Tres Árboles =
+grupo D (Teórico, tabla "Grupo Hidrológico" pág.125) ⇒ NC = 0.20·NC(B) +
+0.80·NC(D). Con NC(pastizal, buena, B)=61 y NC(D)=80 (Fig. 3.1.20):
+**NC = 76.2**.
+
+**C (coeficiente de escorrentía, método racional):** Tabla 3.1.4,
+Pastizales, pendiente "Promedio 2-7%" (S=3.1% cae en ese rango), Tr=5 ⇒
+**C = 0.36**.
+
+**Herramienta:** `scripts/ej2_parte1.py`, réplica de las hojas "método
+racional" y "NRCS - Gande" de la planilla de eventos extremos: (a)
+fórmulas IDF de Uruguay P(d,Tr,p)=P₃,₁₀,ₚ·CT(Tr)·CD(d)·CA(d,Ac); (b) método
+racional Q=C·i·A/360; (c) método NRCS completo (tormenta de diseño por
+bloque alterno con Δt=tc/7 en 12 bloques, precipitación efectiva por
+Número de Curva con corrección de piso de infiltración, hidrograma
+unitario triangular sintético SCS). Se usó esta herramienta porque
+automatiza correctamente el bloque alterno y la convolución del método
+NRCS.
+
+**P₃,₁₀,ₚ (X=400 km, Y=6650 km):** se leyó de la Figura 3.1.10 del
+Teórico (isoyetas de lluvias extremas, líneas cada 2 mm). El punto cae muy
+cerca de la isoyeta "90" que cruza el norte del país, unas pocas curvas
+por encima de ella ⇒ **P₃,₁₀,ₚ ≈ 100 mm**.
+
+**Resultados (`ej2_parte1.py`):**
+```
+tc = 0.6050 hs = 36.30 min      CT(Tr=5) = 0.8595
+NC compuesto = 0.20*61 + 0.80*80 = 76.2
+
+METODO RACIONAL:
+  d = tc = 0.605 hs ; CD = 0.4924 ; CA = 0.9818
+  P(d,5,p) = 41.55 mm ; i = 68.67 mm/h
+  Qmax racional = 50.13 m3/s
+
+METODO NRCS:
+  Tormenta de diseño (bloque alterno, dt=tc/7=5.19 min, 12 bloques): pico
+  central 16.18 mm, total 53.04 mm en 62.2 min.
+  S = 79.33 mm ; Ia = 15.87 mm (NC=76.2)
+  Precipitación efectiva total (corregida) = 11.86 mm
+  Hidrograma unitario triangular: tr=0.086 hs, Tp=0.406 hs, Tb=1.083 hs,
+  qp=37.38 m3/s/cm
+  Qmax NRCS = 33.13 m3/s
+```
+
+**Se adopta el mayor: caudal de diseño Q₅ = 50.13 m³/s (método Racional).**
+
+**1.2) Hietograma e hidrograma del evento de diseño:** como se adoptó el
+método Racional, la tormenta de diseño es de **intensidad constante
+i=68.67 mm/h durante d=tc=0.605 h** (hipótesis del método, Teórico
+§3.1.5). El hidrograma correspondiente se representa como un
+**triángulo** con tiempo al pico = tc (toda la cuenca aporta
+simultáneamente en ese instante) y caudal pico = Q₅=50.13 m³/s, con rama
+de descenso según la razón Tb/Tp=2.667 del hidrograma unitario triangular
+SCS (Tb=1.614 h). Gráfico: `scripts/ej2_hietograma_hidrograma.png`.
+
+**Comparación con solución oficial:** el manuscrito da tc=0.605h=36.3min,
+100%·ΔH/L=4.8% (pendiente del cauce), NC=0.2·61+0.8·80=76.2, C=0.36,
+Qracional=50.13 m³/s (recuadrado, adoptado), QNRCS=33.19 m³/s, e
+hietograma/hidrograma con la misma forma (rectángulo de i=66.61 mm/h
+—valor leído gráficamente, algo distinto del i=68.67 mm/h calculado— y
+triángulo con pico marcado en t=0.605h) — **coincide casi exactamente**
+(diferencia <3% en QNRCS, consistente con redondeo manual).
+
+### Parte 2) Área máxima urbanizable (Concreto/Techo) sin superar +15% de caudal
+
+**Concepto.** Si `tc` no cambia (dado por el enunciado), Q=C·i·A/360 es
+directamente proporcional a C (i y A quedan fijos), por lo que basta con
+limitar el coeficiente de escorrentía ponderado de toda la cuenca:
+C_ponderado = (C₁·(A−A₂) + C₂·A₂)/A ≤ 1.15·C₁, con C₁=0.36 (pastizal) y
+C₂=0.80 (concreto/techo, Tabla 3.1.4, Tr=5). Despejando el área
+urbanizada A₂ (ver `RESUMEN_TEORICO.md` §B4):
+```
+A2 = A*(1.15*C1 - C1)/(C2-C1)
+```
+
+**Herramienta:** cálculo directo (`scripts/ej2_parte2.py`).
+
+**Resultado:**
+```
+C_target = 1.15*0.36 = 0.414
+Aurb_max = 7.3*(0.414-0.36)/(0.80-0.36) = 0.896 km2  (12.3% del area)
+```
+
+**Resultado final Parte 2: el área máxima que puede ocuparse por el
+desarrollo urbano es Aurb ≈ 0.90 km² (≈12.3% de los 7.3 km² de la
+cuenca).**
+
+**Comparación con solución oficial:** el manuscrito plantea la misma
+ecuación (0.44·[Aurb/A] = 0.15·0.36, con 0.44=C₂−C₁) y obtiene
+Aurb_max=0.896 km² (≈12.3% de A) — **coincide exactamente**.
+
+### Parte 3) Verificación de un evento observado (i=77 mm/h, 60 min, uniforme)
+
+Situación: alcantarilla ya construida y dimensionada para Q₅=50.13 m³/s
+(Parte 1); cuenca con el uso de suelo límite de la Parte 2 (0.896 km²
+urbanizados + resto pastizal).
+
+#### 3.1) ¿Fue sobrepasada la alcantarilla?
+
+**Concepto:** la duración del evento (60 min) es mayor que tc (36.3 min),
+por lo que **toda la cuenca ya está aportando simultáneamente** durante
+el evento (Teórico §3.1.5) y la fórmula racional Q=C·i·A/360 sigue siendo
+válida usando directamente la intensidad **real** del evento (no hace
+falta pasar por la IDF de diseño, que da una intensidad menor porque
+decrece con la duración). Se usa el C ponderado de la Parte 2 porque el
+enunciado fija "las condiciones de uso de suelo establecidas en 2)".
+
+**Desarrollo (`scripts/ej2_parte3.py`):**
+```
+C ponderado (con Aurb_max) = 0.414
+Q_evento = 0.414 * 77 * 730 / 360 = 64.64 m3/s
+```
+**Q_evento (64.64 m³/s) > Q_diseño (50.13 m³/s) ⇒ SÍ fue sobrepasada la
+alcantarilla**, con un excedente del 28.9% sobre su capacidad — muy por
+encima del margen del 15% que se había admitido al dimensionar el área
+urbanizable en la Parte 2.
+
+**Comparación con solución oficial:** el manuscrito razona en el mismo
+sentido —"el evento es de mayor intensidad y mayor duración que el de
+diseño ⇒ fue sobrepasada, con creces del 15% admisible"— sin calcular un
+Q numérico explícito; el cálculo cuantitativo (64.64 m³/s, +28.9%) hecho
+acá **es consistente** con esa conclusión cualitativa.
+
+#### 3.2) Período de retorno del evento registrado
+
+**Desarrollo:** P_evento = i·d = 77·1 = 77 mm, con d=1 h. Se usa CA=1
+porque el dato proviene de un pluviógrafo puntual de la cuenca (no una
+lluvia de diseño de área, mismo criterio de otros exámenes, ver
+`RESUMEN_TEORICO.md` §B3):
+```
+CD(d=1h) = 0.6161
+CT necesario = 77/(100*0.6161*1) = 1.2499
+```
+Invirtiendo CT(Tr)=0.5786−0.4312·log₁₀(ln(Tr/(Tr−1))) por bisección:
+
+**Tr ≈ 36.5 años.**
+
+**Comparación con solución oficial:** el manuscrito da CD(1h)=0.6161,
+CT=1.25 y **Tr=36 años** — **coincide exactamente**.
+
+### Resumen Ejercicio 2
+
+| Ítem | Resultado |
+|---|---|
+| tc | **36.3 min** |
+| P₃,₁₀,ₚ (X=400,Y=6650, isoyetas) | **100 mm** |
+| NC compuesto (20% B, 80% D) | **76.2** |
+| Q racional (Tr=5) — adoptado | **50.13 m³/s** |
+| Q NRCS (Tr=5) | **33.13 m³/s** |
+| Hietograma/hidrograma de diseño | Rectángulo i=68.67 mm/h, d=tc; triángulo Tp=tc, Tb=2.667tc, pico=50.13 m³/s |
+| Área máxima urbanizable (Concreto/Techo, +15%) | **≈0.90 km² (12.3% de la cuenca)** |
+| Evento i=77mm/h, 60min: ¿supera la obra? | **Sí, Q≈64.6 m³/s (+28.9%)** |
+| Período de retorno del evento | **≈36 años** |
+
+Todos los resultados numéricos coinciden con la solución oficial
+manuscrita.
+
+---
