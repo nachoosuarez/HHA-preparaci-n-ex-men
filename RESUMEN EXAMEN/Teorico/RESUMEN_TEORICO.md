@@ -1,9 +1,10 @@
 # Resumen Teórico HHA — depurado a partir de los exámenes resueltos
 
 Este resumen se construyó leyendo completos los exámenes ya resueltos en
-`resueltos/` (2022 diciembre, 2024 diciembre, 2025 Febrero 1, 2025
-Febrero 2, 2026 Febrero, 2024 Julio, 2024 marzo, 2024 febrero, 2023
-diciembre, 2023 Julio, 2023 febrero_2 y 2023 Febrero) y extrayendo de ahí
+`resueltos/` (2020 Diciembre, 2020 Julio, 2022 Julio, 2022 diciembre, 2024
+diciembre, 2025 Febrero 1, 2025 Febrero 2, 2026 Febrero, 2024 Julio, 2024
+marzo, 2024 febrero, 2023 diciembre, 2023 Julio, 2023 febrero_2 y 2023
+Febrero) y extrayendo de ahí
 **todos los temas y fórmulas que efectivamente fueron preguntados**,
 fusionando los que se repiten entre exámenes en una sola sección
 enriquecida. Las fórmulas se verificaron/precisaron contra `Teórico
@@ -20,17 +21,18 @@ marzo (1/mar/2024); **2024 feb** = 2024 febrero (5-6/feb/2024); **2023 dic**
 **2023 feb 2** = 2023 febrero_2 (24/feb/2023, segunda llamada de
 febrero); **2023 feb** = 2023 Febrero (9/feb/2023, primera llamada de
 febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
-(25/jul/2022); **2020 dic** = 2020 Diciembre (22/dic/2020).
+(25/jul/2022); **2020 dic** = 2020 Diciembre (22/dic/2020); **2020 jul** =
+2020 Julio (7/jul/2020).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 14 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A2. Energía específica y tirante crítico | 14 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 14 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 13 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 9 | 2020 dic, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
+| A1. Ecuación de FGV y clasificación de canales M/S | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A2. Energía específica y tirante crítico | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 14 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 10 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 13 | 2020 dic, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
@@ -394,6 +396,35 @@ Cita: Teórico HHA §2.2 (transiciones de energía), §2.3.2–2.3.3
 (conjugados/resalto), §2.3.4 "Descarga ahogada de una compuerta" (Fig.
 2.3.7, momentum con flujo dividido), §2.5.5 (compuerta de fondo entre dos
 lagos), §2.5.6 (cambio de pendiente/sección).
+
+**Escalón INTERIOR a un tramo largo entre dos lagos (ni a la entrada ni a
+la salida)** (2020 jul, Ej.1: cañería que atraviesa el fondo de un canal
+trapezoidal en un punto intermedio, a distancia finita de ambos lagos).
+Es la combinación de A4 (dos lagos, canal muy largo ⇒ y≈yn lejos de los
+extremos) con el mecanismo de escalón de A5, con una sutileza: **Dmax no
+se calcula con E del lago sino con la energía específica LOCAL de
+aproximación al escalón** (E_aprox = y(x_escalón)+Q²/(2gA²), que en un
+canal muy largo es prácticamente En, no h_Lago, porque el perfil ya
+"olvidó" la condición de entrada mucho antes de llegar al escalón):
+Dmax = E_aprox − Ec. Si D>Dmax, el caudal en general **sí puede cambiar**
+respecto al caso sin escalón (a diferencia de cuando el control crítico
+ya estaba en la entrada, A4 "control crítico en la entrada, sección
+trapezoidal", donde una perturbación aguas abajo no lo altera): hay que
+iterar un `fzero` en Q tal que, con E1_nuevo=Ec(Q)+D fijando el tirante
+y1 justo aguas arriba del escalón (rama subcrítica), la curva M1/M2
+integrada desde ahí hacia atrás hasta el lago 1 cierre con E(x=0)=h_Lago1
+— igual patrón que el `fzero` de "cambio de pendiente" de A4, pero acá el
+nuevo control (crítico) está en medio del canal, no en un quiebre de
+geometría. Aguas abajo del escalón, la rama supercrítica (M3, y3=alterno
+de y1 para E1_nuevo) se integra hacia adelante hasta que su **conjugado**
+cruza la curva M1/M2 que llega desde el lago 2 (recalculada con el mismo
+Q nuevo) — resalto ahí, exactamente como en A3. En el caso numérico de
+2020 jul (canal muy largo, escalón a mitad de camino) el Q resultó
+prácticamente idéntico al del caso sin escalón (variación <0.1%), porque
+tanto el tramo lago1→escalón como el tramo escalón→lago2 son varias veces
+más largos que el desarrollo típico de una curva M1/M2 — pero **debe
+verificarse en cada caso**, no asumirse: si el escalón estuviera cerca de
+uno de los lagos el cambio de Q podría ser significativo.
 
 ## A6. Tensión rasante de fondo en FGV
 
