@@ -166,4 +166,125 @@ encima** de 1.65 m el resalto pasa a estar en el tramo I.
 
 ---
 
-## ESTADO: EN CURSO (ejercicios 2, 3 y 4 pendientes)
+## Ejercicio 2 (25 puntos) — Hidrología de una cuenca en Rocha
+
+### Enunciado (resumen)
+
+Cuenca en Rocha (X=650 km, Y=6200 km): Área=8.3 km², desnivel del cauce
+principal ΔH=45 m, longitud L=4250 m, Grupo Hidrológico C, pendiente
+media de la cuenca S=1.9%. Uso de suelo: 60% pastizales en condiciones
+hidrológicas **óptimas** + 40% cultivos en hileras rectas, condición
+**buena**. Flujo concentrado.
+
+1) Qmax y volumen de escorrentía para Tr=10 años.
+2) Tr de un evento observado con Qmax=19 m³/s, sabiendo que en los 5
+   días previos (febrero, estación de crecimiento) llovieron 25 mm.
+3) Máxima área adicional de cultivo en hileras (sin cambiar tc) para que
+   el Vesc(Tr=10) no aumente más de un 10% respecto a la Parte 1.
+
+### Teoría
+
+- **Tiempo de concentración** (Ramser-Kirpich, con la pendiente del
+  *cauce principal*, no la media de la cuenca) — RESUMEN_TEORICO.md §B2.
+- **Criterio de selección de método según tc** — con tc>1h se usa
+  **sólo NRCS** (el método Racional se desaconseja para cuencas
+  "grandes") — RESUMEN_TEORICO.md §B4.
+- **Número de Curva (NC)** de la Fig. 3.1.20 del Teórico, ponderado por
+  área cuando hay más de un uso de suelo — RESUMEN_TEORICO.md §B5. La
+  fila "Pradera o pastizal, condición Buena" trae la nota al pie
+  *"Óptimas condiciones: cubierta de pasto en el 75% o más"* — coincide
+  exactamente con la redacción del enunciado ("condiciones hidrológicas
+  óptimas"), así que esa es la fila correcta a usar (no hay una columna
+  "óptima" aparte).
+- **Corrección de NC por condición de humedad antecedente (AMC)**, según
+  la P5d y la estación (aquí de crecimiento, por ser febrero) —
+  RESUMEN_TEORICO.md §B6.
+- **Inversión de NC para un Vesc objetivo**, manteniendo tc fijo —
+  RESUMEN_TEORICO.md §B5 (mismo patrón que para un Qmax objetivo).
+
+### Herramienta y por qué
+
+Se replicaron en **Python** las fórmulas de la planilla `Eventos
+extremos.xlsx` (bloque alterno + Número de Curva + hidrograma unitario
+triangular SCS — ver `COMO_USAR_EVENTOS_EXTREMOS.md` §1) en vez de abrir
+la planilla interactivamente, porque este entorno no tiene Excel — mismo
+enfoque ya usado en los exámenes previos (p.ej. `2024 febrero/scripts/
+ej2_parte1.py`). El valor P(3,10)=74 mm (isoyetas, Fig. 3.1.10, para
+X=650 km/Y=6200 km) se tomó de la solución oficial manuscrita, porque el
+mapa de isoyetas no está digitalizado en este repositorio. Script:
+`resueltos/2022 Julio/scripts/Ejercicio2_hidrologia.py`.
+
+### Parte 1 — Qmax y Vesc (Tr=10 años)
+
+**Número de Curva ponderado** (Fig. 3.1.20, Grupo C): pastizal
+óptima=74, cultivo en hileras rectas buena=85:
+
+```
+NC = 0.60·74 + 0.40·85 = 78.4
+```
+
+**Tiempo de concentración** (Ramser-Kirpich, pendiente del cauce
+principal S=ΔH/L/10=45/4.25/10=1.06%):
+
+```
+tc = 0.4·L^0.77/S^0.385 = 1.19 hs = 71.5 min   ->  tc>1h  =>  SOLO método NRCS
+```
+
+Tormenta de diseño (bloque alterno, Δt=tc/7, P(3,10)=74mm, Tr=10) + NC=78.4
++ hidrograma unitario triangular SCS:
+
+| Variable | Valor |
+|---|---|
+| **Qmax (Tr=10 años)** | **31.07 m³/s** |
+| **Volumen de escorrentía** | **160 723 m³** |
+
+*Comparación con la solución oficial*: Qmax=31.06 m³/s, Vesc=160 733 m³
+— coincide (diferencia <0.01%, redondeo).
+
+### Parte 2 — Tr de un evento observado (Qmax=19 m³/s, P5d=25 mm)
+
+Febrero es **estación de crecimiento** en Uruguay; con P5d=25 mm < 35.56 mm
+corresponde **AMC I** (suelo más seco que la condición media de tabla):
+
+```
+NC(I) = 4.2·NC(II) / (10 - 0.058·NC(II)) = 4.2·78.4/(10-0.058·78.4) = 60.39
+```
+
+Se itera Tr (bisección) hasta que el Qmax del método NRCS, con este
+NC(I)=60.39, iguale el caudal observado de 19 m³/s:
+
+| Variable | Valor |
+|---|---|
+| NC corregido (AMC I) | 60.39 |
+| **Tr del evento** | **≈65 años** |
+
+*Comparación con la solución oficial*: NC(I)=60.39 (coincide exacto),
+Tr=65 años (coincide).
+
+### Parte 3 — Máxima área adicional de cultivo en hileras
+
+Se mantiene tc fijo (dato del enunciado) y se aumenta sólo la fracción
+de área x con cultivo en hileras (NC=85), reduciendo la de pastizal
+(NC=74). Se itera x (bisección) hasta que el Vesc(Tr=10) con el nuevo
+NC ponderado llegue al límite admisible (+10% del Vesc de la Parte 1):
+
+```
+Vesc_objetivo = 1.10 · 160 723 = 176 795 m³
+NC_ponderado(x) = (1-x)·74 + x·85
+```
+
+| Variable | Valor |
+|---|---|
+| Fracción de cultivo máxima | 54.05% del área total |
+| NC ponderado en el límite | 79.95 |
+| Área de cultivo original (40%) | 3.320 km² |
+| Área de cultivo máxima | 4.486 km² |
+| **Aumento máximo de área cultivada** | **≈1.17 km² (14.05% del área de la cuenca)** |
+
+*Comparación con la solución oficial*: la manuscrita da Vesc objetivo≈
+176 806 m³, área máxima≈54.1%, NC≈79.95 — coincide (diferencias <0.1%,
+redondeo).
+
+---
+
+## ESTADO: EN CURSO (ejercicios 3 y 4 pendientes)

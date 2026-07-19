@@ -33,12 +33,12 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 8 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 11 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B4. Método Racional (y criterio de selección según tc) | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 11 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| B6. Condición de humedad antecedente (AMC) | 7 | 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
-| B7. Volumen de escorrentía y embalses de retención | 5 | 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 12 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B4. Método Racional (y criterio de selección según tc) | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 12 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| B6. Condición de humedad antecedente (AMC) | 8 | 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
@@ -673,6 +673,17 @@ NC_ponderado=x·NC_urbano+(1-x)·NC_original (y el área urbanizable máxima
 Área_urb=x·Área_total). Es la misma lógica de "hallar el Tr de un caudal
 límite" (B4) pero iterando sobre NC en vez de sobre Tr, y con una relación
 NC→Qmax monótona pero sin forma cerrada (no alcanza con una regla de tres).
+La misma inversión sirve con **Vesc como objetivo en vez de Qmax** (2022
+jul, Ej.2 parte 3): una cuenca con dos usos de suelo mixtos desde el
+inicio (60% pastizal + 40% cultivo en hileras) aumenta la fracción de
+cultivo (mayor NC) sin cambiar tc; se itera la fracción de cultivo x
+(bisección) en NC_ponderado=(1-x)·NC_pastizal+x·NC_cultivo hasta que
+Vesc(Tr=10, NC_ponderado) no supere 1.10·Vesc_original, y el área
+cultivable máxima es x·Área_total (el aumento admisible de área es esa
+menos el área de cultivo ya existente). Exactamente la misma mecánica
+que con Qmax: Vesc y Qmax son ambos monótonos crecientes en NC, así que
+cualquiera de los dos sirve como variable objetivo de la bisección
+según lo que pida el enunciado.
 
 Cita: Teórico HHA §3.1.5 b)/c) y §3.1.6 "Método del NRCS (ex SCS)";
 Formulómetro "Cálculo de caudales máximos e hidrograma de crecida: Método
@@ -710,7 +721,14 @@ NC(II)=69 (tabla) se corrige a NC(III)=23·69/(10+0.13·69)=83.7, lo que
 25.4·(1000/83.7−10)=49.6mm) y por lo tanto **aumenta** fuertemente la
 precipitación efectiva Pe para la misma lluvia total — el efecto físico
 esperado de un suelo ya húmedo por lluvias previas: infiltra menos y
-escurre más.
+escurre más. **Primer caso con AMC I (2022 jul, Ej.2 parte 2):** evento
+en febrero (estación de crecimiento), P5d=25mm < 35.56mm ⇒ **AMC I**;
+NC(II)=78.4 (ponderado de tabla) se corrige a
+NC(I)=4.2·78.4/(10−0.058·78.4)=**60.39** — un NC bastante más bajo, el
+efecto opuesto al AMC III: suelo seco de antemano ⇒ infiltra más para la
+misma lluvia total, y por lo tanto hace falta una tormenta bastante más
+intensa (mayor Tr) para generar el mismo caudal pico que con NC de
+tabla.
 
 Cita: Teórico HHA §3.1.5 b) / Fig. 3.1.21; Formulómetro "Condiciones de
 humedad antecedente".
