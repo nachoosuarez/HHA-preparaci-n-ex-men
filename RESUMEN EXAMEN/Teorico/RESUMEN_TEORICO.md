@@ -19,16 +19,17 @@ marzo (1/mar/2024); **2024 feb** = 2024 febrero (5-6/feb/2024); **2023 dic**
 = 2023 diciembre (11/dic/2023); **2023 jul** = 2023 Julio (24/jul/2023);
 **2023 feb 2** = 2023 febrero_2 (24/feb/2023, segunda llamada de
 febrero); **2023 feb** = 2023 Febrero (9/feb/2023, primera llamada de
-febrero — no confundir con 2023 feb 2).
+febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
+(25/jul/2022).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A2. Energía específica y tirante crítico | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 11 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A1. Ecuación de FGV y clasificación de canales M/S | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A2. Energía específica y tirante crítico | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 12 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 8 | 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
@@ -218,6 +219,40 @@ autoconsistente (yn1<yc con el Q hallado):
 Cita: Teórico HHA §2.5.3 (caída libre), §2.5.4 (perfiles entre dos lagos,
 casos M y S), §2.5.5 (perfil con compuerta de fondo entre dos lagos), §2.5.6
 (canal con cambio de pendiente/empalme de tramos).
+
+**Canal de TRES tramos con un tramo HORIZONTAL intermedio (S=steep /
+horizontal / mild), resalto de posición variable** (2022 jul, Ej.1). Con
+un tramo de entrada steep muy largo (o "infinito"), un tramo horizontal y
+un tramo mild que descarga en un segundo lago: el tramo horizontal
+(S₀=0) **no tiene yn finito** (Manning no tiene solución con S=0), así
+que se clasifica sólo por yc, con dos curvas posibles: **H2** (y>yc,
+creciente yendo hacia aguas arriba) y **H3** (y<yc, evoluciona hacia yc
+según Fr) — no existe H1. Para ubicar el resalto:
+1. Se resuelve Q por control crítico en la entrada del tramo steep (como
+   arriba), y se calcula yn de cada tramo con pendiente definida.
+2. Si el lago de salida no ahoga el tramo mild (hLB≤yc), su salida tiene
+   control crítico (y=yc), independientemente del valor exacto de hLB
+   mientras sea ≤yc — se integra la curva subcrítica (M2/M1 según
+   corresponda) hacia atrás por el tramo mild y luego por el horizontal
+   (curva H2), hasta la unión con el tramo steep.
+3. **Error a evitar**: al llegar a la unión con el tramo steep, la rama
+   supercrítica que "trae" el tramo I **no se puede asumir constante en
+   yn** dentro del tramo horizontal — al cambiar S₀ cambia la EDO de
+   FGV, así que esa rama debe re-integrarse con la pendiente del nuevo
+   tramo (curva H3, partiendo de yn del tramo anterior) antes de
+   comparar su conjugado punto a punto con la curva subcrítica (H2) que
+   viene de aguas abajo (mismo método general de A3). Comparar
+   directamente el conjugado de yn (constante) contra el perfil
+   subcrítico en la unión entre tramos da un resultado **cualitativamente
+   equivocado** sobre en qué tramo cae el resalto.
+4. El **hLB umbral** para que el resalto pase de un tramo a otro (p.ej.
+   del tramo horizontal al steep) se halla con un `fzero` en hLB:
+   propagando hacia atrás la rama subcrítica desde la salida hasta la
+   unión entre tramos, se busca el hLB para el cual ese tirante iguala
+   el conjugado de yn del tramo aguas arriba (resalto justo en la
+   unión) — subir hLB por encima de ese umbral empuja el resalto hacia
+   aguas arriba (al tramo siguiente); por debajo, el resalto queda en el
+   tramo donde ya se ubicó.
 
 **Transición lago-canal ASIMÉTRICA: entrada (contracción) vs. salida
 (expansión)** (2022 dic, Ej.1). En un canal entre dos lagos, la
