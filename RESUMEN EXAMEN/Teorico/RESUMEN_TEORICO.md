@@ -42,11 +42,11 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C2. Curva de la bomba y punto de funcionamiento | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C3. Potencia consumida por el sistema de bombeo | 11 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
-| C4. Cavitación: NPSH disponible vs. requerido | 12 | 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C5. Bombas en serie y en paralelo | 5 | 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C2. Curva de la bomba y punto de funcionamiento | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C3. Potencia consumida por el sistema de bombeo | 12 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
+| C4. Cavitación: NPSH disponible vs. requerido | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C5. Bombas en serie y en paralelo | 6 | 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 2 | 2024 dic, 2023 feb 2 |
 
 ---
@@ -912,6 +912,29 @@ Hm=H_B−H_A=(p_B−p_A)/γ+(V_impulsión²−V_succión²)/2g, función de Q s�
 través de las velocidades (áreas de succión/impulsión, que pueden tener
 distinto diámetro). Se interseca igual con la curva H-Q de la bomba (C2)
 para hallar (Qpf,Hpf) (2024 feb, Ej.4 parte 1).
+
+**Caso particular: UN solo manómetro (aguas abajo de la bomba), con el
+extremo de aguas ARRIBA siendo un lago/depósito por tubería, y el
+extremo final de aguas abajo (tanque) de cota DESCONOCIDA** (2022 jul,
+Ej.4). Distinto del caso anterior (dos manómetros, misma cota): acá el
+manómetro reemplaza sólo a UNO de los dos extremos de la ecuación de
+instalación, y por eso el problema se separa en dos balances de energía
+independientes y sucesivos:
+1. **Lago → manómetro** (usa la tubería de succión completa, con sus
+   pérdidas Darcy-Weisbach+Colebrook, hasta la bomba, y después la
+   propia lectura del manómetro para la sección de aguas abajo): esto
+   alcanza para hallar Q **sin conocer la cota del tanque final** —
+   Hbomba(Q)=zA−z_lago+p_manómetro+V²/2g+ΔH(succión). Se itera Q
+   (bisección/`fzero`) hasta que la curva H-Q de la bomba cierre esta
+   ecuación.
+2. **Manómetro → tanque** (recién acá se usa la tubería de impulsión
+   completa, con Q ya conocido del paso 1): z_tanque=zA+p_manómetro+
+   V²/2g−ΔH(impulsión).
+Si además hay **dos bombas iguales en paralelo** compartiendo la misma
+succión y la misma impulsión (con pérdidas de acople despreciables),
+Q del paso 1 es el caudal TOTAL de la instalación, pero la curva H-Q a
+usar en el balance es la de **una sola bomba** evaluada en Q/2 (cada
+bomba entrega la mitad del caudal a la misma H).
 
 Cita: Teórico HHA §3.3.10 "Curva de la instalación" (Ec. 15, 18, 19);
 Formulómetro "Bombas — Carga hidráulica" / "Curva de la Instalación".

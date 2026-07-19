@@ -369,4 +369,129 @@ coincide en los tres resultados.
 
 ---
 
-## ESTADO: EN CURSO (ejercicio 4 pendiente)
+## Ejercicio 4 (25 puntos) — Dos bombas en paralelo, lectura de manómetro
+
+### Enunciado (resumen)
+
+Dos bombas **iguales** en paralelo elevan agua desde un lago (z₀=-4 m)
+hasta un tanque elevado, pasando por una succión común (D₁=110 mm,
+L₁=20 m, k₁=6, ε=0.05 mm) hasta las bombas (zA=+0.5 m) y luego una
+impulsión común (D₂=80 mm, L₂=80 m, k₂=4, ε=0.05 mm). Un **manómetro en
+la impulsión, inmediatamente aguas debajo de las bombas**, mide
+Pimp=20 m.c.a. Pérdidas en el acople entre bombas despreciables. Curvas
+de catálogo H-Q, η-Q y NPSHreq-Q dadas (iguales para cada bomba).
+
+1) a) Q y H de funcionamiento de cada bomba y factores de fricción; b)
+   cota de la superficie libre del tanque elevado; c) gráficos H-Q.
+2) Potencia consumida por el sistema y por cada bomba.
+3) Verificar que las bombas no cavitan (NPSH disponible vs. requerido).
+
+### Teoría
+
+- **Ecuación de la instalación de bombeo** (Darcy-Weisbach +
+  Colebrook-White) — RESUMEN_TEORICO.md §C1.
+- **Bombas en paralelo**: mismo H, caudales que se suman — RESUMEN_TEORICO.md §C5.
+- **Cavitación**: NPSH disponible vs. requerido — RESUMEN_TEORICO.md §C4.
+- **Caso particular de este ejercicio**: el extremo de aguas abajo no es
+  un tanque de cota conocida sino un **manómetro** que da directamente
+  la carga justo después de las bombas. Esto separa el problema en DOS
+  balances de energía independientes: (1) lago→manómetro, que alcanza
+  para hallar Q_inst sin conocer z1 (la cota del tanque no interviene
+  todavía); (2) manómetro→tanque, que recién ahí usa la tubería de
+  impulsión completa para despejar z1. Ver RESUMEN_TEORICO.md §C1
+  (nota nueva agregada en esta corrida).
+
+### Herramienta y por qué
+
+Se adaptó el patrón de `Bomba_manometros.m` (que resuelve con lecturas
+de manómetro) combinado con el de `Bombas_paralelo.m` (dos bombas
+iguales, mismo H) porque este ejercicio mezcla ambos: succión por
+tubería (con pérdidas Darcy-Weisbach + Colebrook, como en
+`Bomba_sola.m`) e impulsión con dato de manómetro en vez de tanque. Se
+iteró Q_inst por bisección hasta que la curva H-Q de la bomba (con
+Q_bomba=Q_inst/2) iguala la carga que exige el balance de energía
+lago→manómetro. Script:
+`resueltos/2022 Julio/scripts/Ejercicio4_bombas_paralelo_manometro.m`
+(usa `colebrook.m` de la carpeta `Bombas/`).
+
+### Parte 1 — Punto de funcionamiento y cota del tanque
+
+**a) Ecuación de pérdida de carga entre el lago y la sección del
+manómetro** (succión con pérdidas distribuidas y localizadas; el
+manómetro ya está en la tubería de impulsión, con su propio término
+cinético V₂²/2g, así que la impulsión aún no aporta pérdidas en este
+balance):
+
+```
+zA + Pimp + V2²/2g = z0 + Hbomba(Qinst/2) - (f1·L1/D1 + k1)·V1²/2g
+```
+(zA=cota bombas, Pimp=lectura manómetro en m.c.a., V1=Q_inst/A1,
+V2=Q_inst/A2, f1 por Colebrook-White con Re1 y ε1/D1)
+
+Se itera Q_inst (bisección) hasta que la curva de catálogo Hbomba(Q/2)
+cierre esta ecuación:
+
+| Variable | Valor |
+|---|---|
+| Q instalación (2 bombas) | 12.12 L/s |
+| **Q por bomba** | **6.06 L/s** |
+| **H por bomba (funcionamiento)** | **25.58 m** |
+| V₁ (succión) | 1.275 m/s ; Re₁=140 248 ; **f₁=0.0193** |
+| V₂ (impulsión) | 2.411 m/s ; Re₂=192 842 ; f₂=0.0195 |
+| Pérdida en la succión | 0.788 m |
+| η por bomba | 73.77 % |
+
+**b) Cota del tanque elevado**, ahora con la ecuación de energía entre
+el manómetro y el tanque (usando la impulsión completa L₂,D₂,k₂):
+
+```
+z1 = zA + Pimp + V2²/2g - (f2·L2/D2 + k2)·V2²/2g
+```
+
+| Variable | Valor |
+|---|---|
+| Pérdida en la impulsión | 6.957 m |
+| **Cota del tanque elevado z1** | **≈13.84 m** |
+
+**c) Gráfico H-Q**: la curva de instalación resulta de despejar
+Hm(Q)=zA-z0+Pimp+V2²/2g+(f1·L1/D1+k1)·V1²/2g en función de Q (creciente,
+cóncava hacia arriba por el término friccional), y se cruza con la
+curva H-Q de la bomba (decreciente) en el punto de funcionamiento
+(Q_bomba=6.06 L/s, H=25.58 m); la curva de "2 bombas" (paralelo) es la
+misma curva de bomba con el eje Q duplicado a cada H.
+
+### Parte 2 — Potencia consumida
+
+```
+Pot_bomba = γ·Qbomba·Hbomba / η = 1000·9.81·0.00606·25.58/0.7377
+```
+
+| Variable | Valor |
+|---|---|
+| **Potencia por bomba** | **2.06 kW** |
+| **Potencia del sistema (2 bombas)** | **4.12 kW** |
+
+### Parte 3 — Verificación de cavitación (NPSH)
+
+```
+NPSHdisp = (Patm-Pvap)/γ + (z0-zA) - hf_succión
+NPSHdisp = 10.10 + (-4-0.5) - 0.788 = 4.80 m
+```
+(Patm=101.3 kPa, Pvap=2.34 kPa a 20°C ⇒ (Patm-Pvap)/γ=10.10 m)
+
+| Variable | Valor |
+|---|---|
+| NPSH disponible | **4.80 m** |
+| NPSH requerido (en Q_bomba=6.06 L/s) | 3.79 m |
+| **Conclusión** | **NPSHdisp > NPSHreq ⇒ NO cavita** (margen 1.01 m) |
+
+*Comparación con la solución oficial*: la solución manuscrita, de
+lectura difícil por caligrafía, trae exactamente estos mismos
+resultados una vez leída con cuidado — Q_inst=12.11 L/s, Q_bomba=
+6.05 L/s, f₁=0.0193, H_bomba=25.6 m, η=73.7%, z1=13.85 m, Pot_bomba=
+2.06 kW, Pot_sistema=4.12 kW, NPSHdisp=4.81 m, NPSHreq=3.79 m, "no
+cavita" — coincide en todos los valores.
+
+---
+
+## ESTADO: COMPLETO
