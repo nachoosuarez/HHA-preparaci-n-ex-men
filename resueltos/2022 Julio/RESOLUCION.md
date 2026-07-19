@@ -287,4 +287,86 @@ redondeo).
 
 ---
 
-## ESTADO: EN CURSO (ejercicios 3 y 4 pendientes)
+## Ejercicio 3 (20 puntos) — Delimitación de cuenca y tiempo de concentración
+
+### Enunciado (resumen)
+
+1) Delimitar la cuenca de la cañada Sin Nombre (Canelones), punto de
+   cierre X=470.7 km, Y=6212.5 km, sobre carta SGM con curvas de nivel
+   cada 5 m.
+2) Asumiendo que la longitud del cauce principal de la cuenca delimitada
+   en 1) es L=4250 m, determinar: 2.1) el desnivel máximo ΔH del cauce
+   principal (indicando las cotas consideradas); 2.2) la pendiente por
+   extremos; 2.3) el tiempo de concentración (flujo concentrado).
+
+### Teoría
+
+- **Delimitación de cuencas y divisoria de aguas**: la divisoria corta
+  perpendicularmente las curvas de nivel; al ganar altura lo hace por el
+  lado convexo (loma/nacientes), al perder altura por el lado cóncavo
+  (vaguada de la cuenca vecina), y nunca cruza un curso de agua salvo en
+  el propio punto de cierre — RESUMEN_TEORICO.md §B1.
+- **Pendiente del cauce principal por extremos** (S=ΔH/L) y **tiempo de
+  concentración** (Ramser-Kirpich) — RESUMEN_TEORICO.md §B1-§B2.
+
+### Herramienta y por qué
+
+La Parte 1 es un trazado gráfico sobre la carta topográfica (sin fórmula
+cerrada): se sigue la divisoria de aguas con las reglas de arriba. El
+propio examen trae la solución oficial ya graficada (línea roja) en el
+PDF (página 7), que sirve para verificar el trazado — no se re-delimitó
+la cuenca desde cero, sino que se verificó consistencia con esa
+delimitación oficial y con las cotas usadas en su Parte 2.
+
+Para la Parte 2 se usa el mismo cálculo de tiempo de concentración de
+`RESUMEN EXAMEN/Codigos/` (ya aplicado en el Ejercicio 2 de este mismo
+examen), sólo que ahora la pendiente sale de leer cotas en la carta en
+vez de venir dada en una tabla. Script:
+`resueltos/2022 Julio/scripts/Ejercicio3_delimitacion_tc.py`.
+
+### Parte 1 — Delimitación de la cuenca
+
+Se traza la divisoria de aguas alrededor del punto de cierre
+(X=470.7 km, Y=6212.5 km, sobre el curso de agua marcado en la carta),
+siguiendo las lomas que rodean ese curso (cortando perpendicularmente
+las curvas de nivel de 5 en 5 m) hasta cerrar el contorno en el propio
+punto de cierre — coincide con el contorno delimitado en la solución
+oficial (PDF página 7).
+
+### Parte 2 — Desnivel, pendiente y tiempo de concentración
+
+**2.1) Desnivel máximo del cauce principal.** Cotas consideradas: cota
+más alta del cauce principal dentro de la cuenca delimitada (nacimiento,
+próximo a una cota acotada de 88.0 m marcada en la carta) y cota del
+punto de cierre (≈42 m, interpolada entre las curvas de nivel de 40 y
+45 m que lo rodean):
+
+```
+ΔH = H_max - H_cierre = 88.0 - 42.0 = 46 m
+```
+
+**2.2) Pendiente del cauce principal por extremos:**
+
+```
+S = ΔH / L / 10 = 46 / 4.25 / 10 = 1.08 %
+```
+
+**2.3) Tiempo de concentración** (flujo concentrado ⇒ Ramser-Kirpich):
+
+```
+tc = 0.4·L^0.77/S^0.385 = 0.4·4.25^0.77/1.08^0.385 = 1.18 hs = 70.9 min
+```
+
+| Variable | Valor |
+|---|---|
+| ΔH | 46 m |
+| S (por extremos) | 1.08 % |
+| **tc** | **≈1.18 hs (70.9 min)** |
+
+*Comparación con la solución oficial*: la manuscrita da
+H_cierre≈42 m, H_max≈88 m ⇒ ΔH=46 m, S=46/4250=1.08%, tc=1.18 hs —
+coincide en los tres resultados.
+
+---
+
+## ESTADO: EN CURSO (ejercicio 4 pendiente)
