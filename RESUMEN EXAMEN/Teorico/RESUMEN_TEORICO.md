@@ -44,10 +44,10 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C2. Curva de la bomba y punto de funcionamiento | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| C3. Potencia consumida por el sistema de bombeo | 14 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
-| C4. Cavitación: NPSH disponible vs. requerido | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C2. Curva de la bomba y punto de funcionamiento | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| C3. Potencia consumida por el sistema de bombeo | 15 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
+| C4. Cavitación: NPSH disponible vs. requerido | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | C5. Bombas en serie y en paralelo | 7 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 3 | 2020 dic, 2024 dic, 2023 feb 2 |
 
@@ -1202,6 +1202,25 @@ lado seguro** (hacia 0, no hacia más profundidad) a la precisión pedida
 por el enunciado. Con succión compartida por varias bombas en paralelo,
 NPSH_disp usa el Q **total** (C4) mientras que NPSH_req usa el Q
 **individual** (=Q_total/n_bombas si son idénticas) en cada iteración.
+
+**Instalación que RECIRCULA al mismo tanque cerrado (presión de tanque
+como incógnita de diseño)** (2020 feb, Ej.4). Si la succión y la
+descarga están **dentro del mismo tanque cerrado** (p.ej. la bomba
+recircula agua desde el nivel libre del tanque, z1, de vuelta a una
+descarga libre más arriba, z2, ambas dentro del mismo espacio de aire a
+presión pT — típicamente pT<0, tanque a vacío parcial): p1=p2=pT y se
+**cancelan exactamente** en la ecuación de la instalación (C1), que
+queda Hinst=(z2−z1)+[1+ks+fs·Ls/D+ki+fi·Li/D]·U²/2g — **no depende de
+pT**. Esto simplifica la pregunta típica "presión mínima admisible en
+el tanque para que la bomba no cavite": a diferencia del caso "nivel
+mínimo del tanque de succión" de arriba (donde el punto de
+funcionamiento se corre y hace falta iterar con `fzero`), acá el punto
+de funcionamiento (Q, H, η, NPSH_req) **no cambia con pT** (pT no
+aparece en la curva de instalación), así que la presión mínima sale en
+**forma cerrada**, despejando pT de NPSH_disp(pT)=NPSH_req(Q_PF):
+pmín=ρ·[NPSH_req,PF − z1 + Δh_succión(Q_PF) + zA − 10.1]. Con z1 como
+superficie libre grande dentro del tanque, vale la misma cancelación
+del término cinético de HA que en la "trampa común" de arriba.
 
 Cita: Teórico HHA §3.3.14 "Cavitación"; Formulómetro "Bombas — Cavitación".
 

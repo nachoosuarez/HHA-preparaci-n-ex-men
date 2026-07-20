@@ -412,4 +412,140 @@ escaneo).
 
 ---
 
-## Ejercicio 4 — pendiente
+## Ejercicio 4 (25 puntos) — Bombeo con recirculación a tanque a presión negativa
+
+### Enunciado (resumen)
+
+Instalación que recircula agua desde y hacia el mismo tanque, con
+presión inferior a la atmosférica: descarga libre a cota z2=5 m en la
+parte superior del tanque; nivel de agua en el tanque z1=3 m; manómetro
+en la parte superior del tanque pT=-10 kPa; bomba a cota zA=2 m (curva
+característica dada en tabla Q-H-NPSHr-η). Succión e impulsión con
+igual diámetro interno D=120 mm, rugosidad ε=0.05 mm; Ls=0.3 m, ks=2
+(succión); Li=10 m, ki=3 (impulsión).
+
+1. Determinar Q y H de la bomba; escribir la ecuación de la curva de
+   la instalación.
+2. Determinar la potencia consumida.
+3. Determinar si la bomba cavita; escribir la ecuación de NPSH
+   disponible.
+4. Determinar la presión mínima admisible en el tanque para que la
+   bomba no cavite.
+
+### Teoría
+
+- **Ecuación de la instalación** (RESUMEN_TEORICO.md §C1): balance de
+  energía entre dos puntos con pérdidas distribuidas (Darcy-Weisbach +
+  Colebrook-White, `colebrook.m`) y localizadas (coeficientes k).
+- **Clave física de este ejercicio (no estaba en el resumen, se
+  agregó): recirculación al mismo tanque cerrado** (§C4, nuevo párrafo):
+  tanto el nivel libre z1 como la descarga z2 están dentro del **mismo**
+  espacio de aire cerrado del tanque, a la **misma** presión pT (dato
+  del manómetro) ⇒ p1=p2=pT se **cancelan exactamente** en la ecuación
+  de la instalación, que queda sin depender de pT. Como z1 es una
+  superficie libre grande, v1≈0.
+- **Punto de funcionamiento** (§C2): intersección de la curva de la
+  bomba (interpolada de la tabla) con la curva de la instalación.
+- **Potencia consumida** (§C3): P=ρ·g·Q·H/η.
+- **Cavitación / NPSH disponible** (§C4): NPSH_disp=z1+p1/(ρg)
+  −Δh_succión−zA+10.1 (constante 10.1=(Patm−Pvap)/γ; el término cinético
+  de z1 se cancela por ser superficie libre — misma "trampa común" ya
+  documentada). Con p1=p2 cancelados en la instalación, el punto de
+  funcionamiento **no depende de pT**, así que la presión mínima para
+  no cavitar sale en forma **cerrada** (sin iterar), despejando pT de
+  NPSH_disp=NPSH_req.
+
+### Herramienta y por qué
+
+Se usó **Octave**, adaptando el template canónico
+`RESUMEN EXAMEN/Codigos/Bombas/Bomba_sola.m` (una sola bomba,
+succión+impulsión con pérdidas por Colebrook-White) a este caso
+particular (mismo D en succión e impulsión, p1=p2 cancelados, z1
+superficie libre). Script:
+`resueltos/2020 febrero/scripts/Ejercicio4_Bomba.m` (+ `colebrook.m`).
+
+### Parte 1 — Punto de funcionamiento
+
+Ecuación de la instalación (p1=p2=pT cancelados, v1≈0):
+
+```
+Hinst(Q) = (z2-z1) + [1 + ks + fs·Ls/D + ki + fi·Li/D] · U²/(2g) ,   U=Q/A
+```
+
+Intersección con la curva de la bomba (interpolación `pchip` de la
+tabla):
+
+```
+Q_PF = 0.0304 m3/s (30.4 L/s)
+H_PF = 4.765 m
+Re_PF = 3.226e5 , f_PF (Colebrook) = 0.0176
+eta_PF = 72.4 %
+```
+
+**Resultado Parte 1: Q ≈ 30.4 L/s, H ≈ 4.77 m.**
+
+*Comparación con la solución oficial* (pág. 8, manuscrita): Q=0.0303
+m³/s, H=4.75 m, Re=3.2×10⁵, f=0.0176, η=72.14% — **coincide**
+(diferencias de centésimas por redondeo de la interpolación).
+
+### Parte 2 — Potencia consumida
+
+```
+P = ρ·g·Q_PF·H_PF/eta_PF = 1000·9.81·0.0304·4.765/0.724 = 1962 W ≈ 1.96 kW
+```
+
+**Resultado Parte 2: P ≈ 1.96 kW.**
+
+*Comparación con la solución oficial*: P=1.96 kW — **coincide
+exactamente**.
+
+### Parte 3 — Cavitación
+
+```
+Δh_succión(PF) = (ks + f_PF·Ls/D)·U_PF²/(2g) = 0.753 m
+
+NPSH_disponible = z1 + pT/(ρg) - Δh_succión - zA + 10.1
+                = 3 + (-10000)/(1000·9.81) - 0.753 - 2 + 10.1 = 9.328 m
+
+NPSH_requerido(Q_PF) = 3.12 m  (interpolado de la tabla)
+```
+
+9.33 m > 3.12 m ⇒ **la bomba NO cavita** (margen amplio, ~6.2 m).
+
+**Resultado Parte 3: NPSH_disp ≈ 9.33 m > NPSH_req ≈ 3.12 m — no
+cavita.**
+
+*Comparación con la solución oficial*: NPSH_disp=9.33 m, NPSH_req=3.15
+m, "no cavita" — **coincide** (NPSH_req difiere en centésimas por
+redondeo de interpolación).
+
+### Parte 4 — Presión mínima admisible en el tanque
+
+Como p1=p2 se cancelan en la curva de la instalación, el punto de
+funcionamiento (y por lo tanto Δh_succión y NPSH_req) **no cambia** con
+pT — se despeja directamente pT de NPSH_disp(pT)=NPSH_req(Q_PF):
+
+```
+p_min = ρ·[ NPSH_req,PF - z1 + Δh_succión,PF + zA - 10.1 ]
+      = 1000·[ 3.12 - 3 + 0.753 + 2 - 10.1 ] = -70 911 Pa ≈ -70.9 kPa
+```
+
+**Resultado Parte 4: p_mín ≈ -70.9 kPa** (el tanque puede llegar hasta
+esa presión, más negativa que eso la bomba empieza a cavitar).
+
+*Comparación con la solución oficial*: p_mín=-70.5 kPa — **coincide**
+(diferencia de ~0.4 kPa, arrastre del redondeo de NPSH_req en la Parte
+3).
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| Parte 1: Q, H (punto de funcionamiento) | **Q≈30.4 L/s, H≈4.77 m** |
+| Parte 2: Potencia consumida | **≈1.96 kW** |
+| Parte 3: cavitación | **NPSH_disp≈9.33 m > NPSH_req≈3.12 m → no cavita** |
+| Parte 4: presión mínima en el tanque | **≈-70.9 kPa** |
+
+---
+
+## ESTADO: COMPLETO
