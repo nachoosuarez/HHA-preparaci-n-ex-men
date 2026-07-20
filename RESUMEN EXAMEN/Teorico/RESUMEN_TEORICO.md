@@ -3,8 +3,8 @@
 Este resumen se construyó leyendo completos los exámenes ya resueltos en
 `resueltos/` (2020 Diciembre, 2020 Julio, 2022 Julio, 2022 diciembre, 2024
 diciembre, 2025 Febrero 1, 2025 Febrero 2, 2026 Febrero, 2024 Julio, 2024
-marzo, 2024 febrero, 2023 diciembre, 2023 Julio, 2023 febrero_2 y 2023
-Febrero) y extrayendo de ahí
+marzo, 2024 febrero, 2023 diciembre, 2023 Julio, 2023 febrero_2, 2023
+Febrero y 2019 Diciembre) y extrayendo de ahí
 **todos los temas y fórmulas que efectivamente fueron preguntados**,
 fusionando los que se repiten entre exámenes en una sola sección
 enriquecida. Las fórmulas se verificaron/precisaron contra `Teórico
@@ -24,18 +24,19 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 (25/jul/2022); **2020 dic** = 2020 Diciembre (22/dic/2020); **2020 jul** =
 2020 Julio (7/jul/2020); **2020 feb** = 2020 febrero (28/feb/2020);
 **2020 feb-13** = 2020 feb 2 (13/feb/2020, primera llamada de febrero —
-no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020).
+no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020);
+**2019 dic** = 2019 Diciembre (16/dic/2019).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A2. Energía específica y tirante crítico | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A1. Ecuación de FGV y clasificación de canales M/S | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
+| A2. Energía específica y tirante crítico | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
 | A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 15 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 10 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
-| A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
+| A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
 | B1. Delimitación de cuencas y divisoria de aguas | 14 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13 |
 | B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13 |
@@ -220,6 +221,27 @@ autoconsistente (yn1<yc con el Q hallado):
   nada**: en flujo supercrítico la información no viaja hacia aguas
   arriba, así que toda la rama de salida es una curva S2/S3 fija, sin
   resalto, con el ajuste final al nivel del lago concentrado en el borde.
+
+**Canal tipo M CORTO (no "muy largo") entre dos lagos con AMBOS niveles
+conocidos, uno de ellos variable** (2019 dic, Ej.1). Si el canal es
+corto, no alcanza a "olvidar" la condición de aguas abajo y no sirve la
+aproximación y(0)≈yn de la A4 "canal M muy largo": hay que integrar el
+perfil completo entre los dos extremos (shooting). Con hLB (salida) dado
+como dato fijo: BC de salida y(x=L)=hLB (expansión, sin V²/2g); se itera
+Q (`fzero` externo) hasta que la energía en la entrada (contracción, con
+V²/2g) cierre con hLA. Si en cambio se pregunta por el **rango de hLB
+para el cual Q no depende de hLB**: existe siempre que el canal sea tipo
+M, y el mecanismo es que, al bajar hLB, el control migra de "lago de
+salida" a **crítico en la propia salida** (como una caída libre
+interna): se resuelve el mismo shooting pero con BC de salida
+y(x=L)=yc(Q) en vez de hLB, obteniendo el Qmax que el lago de entrada
+puede descargar y, de paso, el hLB umbral (=yc(Qmax)) por debajo del
+cual Q ya no cambia (la perturbación de un hLB aún más bajo no viaja
+aguas arriba a través de la sección crítica). Por encima del umbral, Q
+decrece al aumentar hLB (más remanso ⇒ tirantes más altos en toda la
+longitud ⇒ menor velocidad necesaria en la entrada para llegar a la
+misma hLA). Ver script canónico nuevo `dos_lagos_trap.m` (carpeta
+FGV_trapezoidal), con modos `'hLB_dado'` y `'critico_salida'`.
 
 Cita: Teórico HHA §2.5.3 (caída libre), §2.5.4 (perfiles entre dos lagos,
 casos M y S), §2.5.5 (perfil con compuerta de fondo entre dos lagos), §2.5.6
@@ -466,6 +488,16 @@ EDO de FGV) para hallar la zona donde τ₀ supera un valor admisible τmax
 nivel de un lago aguas abajo que ubique un **resalto** justo en el límite de
 esa zona: aguas abajo del resalto (y>yc, subcrítico) τ₀ es baja, por lo que
 toda esa rama queda automáticamente segura.
+
+**Sin resalto, sobre una curva M2 con control crítico en un extremo**
+(2019 dic, Ej.1 parte c). Si el perfil no tiene resalto (todo subcrítico,
+p.ej. una M2 entre el tirante crítico de salida y un lago de entrada), el
+riesgo de erosión se concentra directamente en el extremo de **menor
+tirante** (mayor τ₀, por ser decreciente en y): en ese caso alcanza con
+hallar el único punto x donde τ₀(y(x))=τmax (por interpolación sobre el
+perfil ya calculado) y reportar como zona insegura el tramo entre ese
+punto y el extremo de tirante mínimo — no hace falta buscar un resalto
+si no lo hay.
 
 Cita: Teórico HHA §2.1/§2.3 (tensión rasante, pendiente de energía);
 Formulómetro "Flujo Uniforme" / "Flujo Gradualmente Variado".
