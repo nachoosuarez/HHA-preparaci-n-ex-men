@@ -235,3 +235,135 @@ esquema del manuscrito).
 | Perfil en el cauce (evento) | Curva **M2**, 1.25 m (lago) → 1.37 m (alcantarilla) |
 
 ---
+
+## EJERCICIO 2 (30 puntos) — Cuenca en Maldonado: caudal de diseño, período de retorno de una obra y evento observado
+
+**Datos:** cuenca en Maldonado (X=590 km, Y=6200 km), A=8.35 km²,
+L_cauce_ppal=5.15 km, ΔH_cauce_ppal=158 m, S_cuenca=1.85%, flujo
+concentrado. Uso de suelo: 65% pastizales en condición hidrológica
+mala + 35% cultivo agrícola por curvas de nivel en condición
+hidrológica buena. Unidad de suelos: San Carlos.
+
+Teoría usada: tiempo de concentración por Ramser-Kirpich (§B2), Método
+Racional (§B4), Método NRCS con Número de Curva ponderado e hidrograma
+unitario triangular SCS (§B5), y el criterio de selección de método
+según tc (20 min<tc<1h ⇒ ambos métodos, se adopta el mayor). Todos
+temas ya cubiertos en `RESUMEN_TEORICO.md`; se agregó sólo una nota
+sobre cómo pasar de una unidad de suelo con nombre propio (aquí "San
+Carlos") al grupo hidrológico A/B/C/D vía la Tabla 3.1.5 del Teórico
+(§B5, "De la unidad de suelo (nombre) al grupo hidrológico").
+
+### Parte 1) Caudal máximo en el punto de cierre, Tr=10 años
+
+**Concepto.** tc≈55 min (Ramser-Kirpich con L=5.15 km, S=ΔH/L/10=3.07%)
+cae en la franja 20min<tc<1h ⇒ se calculan **ambos** métodos (Racional
+y NRCS) y se adopta el **mayor** caudal (criterio del Teórico §3.1.5,
+ya documentado en `RESUMEN_TEORICO.md` §B4).
+
+- **Método Racional:** C ponderado por área = 0.65·C(pastizal, cond.
+  mala, plano 0-2%, Tr=10) + 0.35·C(cultivo, cond. buena, plano 0-2%,
+  Tr=10) = 0.65·0.30+0.35·0.36 = **0.321** (Tabla 3.1.4 de Chow).
+- **Método NRCS:** San Carlos → grupo hidrológico **C** (Tabla 3.1.5).
+  NC ponderado = 0.65·NC(pastizal, cond. mala, grupo C)+0.35·NC(cultivo
+  en curvas de nivel, cond. buena, grupo C) = 0.65·86+0.35·82 =
+  **84.6** (Fig. 3.1.20). Se arma la tormenta de diseño por bloque
+  alterno (12 bloques, Δt=tc/7, §B3) y se convoluciona con el
+  hidrograma unitario triangular SCS.
+
+**Herramienta:** cálculo directo (fórmulas cerradas de la IDF de
+Uruguay + retención NRCS), sin necesidad de la planilla Excel para esta
+parte — se generalizó en Python el mismo patrón ya usado en
+`resueltos/2024 Julio/scripts/ej3.py` (que a su vez cita
+`COMO_USAR_EVENTOS_EXTREMOS.md`) porque conviene reutilizar la misma
+convolución para las 3 partes de este ejercicio (diseño, inversión de
+Tr, evento observado).
+
+**Script:** `scripts/ej2.py`.
+
+**Resultado:**
+```
+tc = 0.9177 h = 55.1 min ;  Scp = 3.07%
+Metodo Racional:  C=0.321,  P(tc,Tr=10)=44.29 mm, i=48.26 mm/h -> Qmax = 35.93 m3/s
+Metodo NRCS:      NC=84.60, S=46.24mm, Tp=0.616h, Tb=1.643h    -> Qmax = 49.98 m3/s
+=> Se adopta el mayor: Qmax = 49.98 m3/s (NRCS)
+```
+
+**Caudal máximo de diseño (Tr=10 años) ≈ 50.0 m³/s (método NRCS, mayor que el Racional).**
+
+**Comparación con solución oficial:** el manuscrito obtiene Q_racional=
+35.93 m³/s (coincide exactamente) y Q_NRCS=50.01 m³/s (vs 49.98 acá,
+diferencia de 0.03 m³/s, redondeo). Coincide en adoptar el NRCS por ser
+el mayor.
+
+### Parte 2) Período de retorno de una obra diseñada para 62 m³/s
+
+**Concepto.** Se invierte el hidrograma NRCS (con el mismo NC=84.6 de
+la Parte 1) variando Tr hasta que su Qmax alcance el caudal de diseño
+de la obra dado (62 m³/s) — mismo patrón que "hallar el Tr de un
+caudal límite dado" ya documentado en §B4, pero iterando sobre el
+hidrograma completo (no sobre el Racional) porque acá el NRCS ya fue el
+método adoptado en la Parte 1.
+
+**Script:** `scripts/ej2.py` (misma función `hidrograma_diseno_NRCS`,
+barrida en Tr).
+
+**Resultado:**
+```
+Tr=15.0 anios -> Qmax = 57.20 m3/s
+Tr=19.5 anios -> Qmax = 61.91 m3/s
+Tr=20.0 anios -> Qmax = 62.37 m3/s
+Tr exacto para Qmax=62 m3/s -> Tr = 19.60 anios
+```
+
+**Período de retorno de diseño de la obra ≈ 20 años.**
+
+**Comparación con solución oficial:** el manuscrito prueba Tr=15
+(Q=57.25), 20 (Q=62.4) y 19.5 (Q=62.0), concluyendo **Tr≈20 años** —
+coincide exactamente (diferencias de centésimas de m³/s en cada fila).
+
+### Parte 3) Evento observado (febrero de 2019): ¿se sobrepasa la obra y por cuánto tiempo?
+
+**Concepto.** Ahora, en vez de la tormenta de diseño (bloque alterno),
+se usa el hietograma REAL medido (12 intervalos de 0.13 h, ya en orden
+CRONOLÓGICO, sin reordenar) como entrada a la MISMA convolución NRCS
+(NC=84.6, mismo hidrograma unitario triangular con Tp=Δt/2+0.6tc,
+usando el Δt real del evento=0.13h en vez del Δt=tc/7 de la tormenta de
+diseño). Se calcula la precipitación efectiva incremental bloque a
+bloque y se convoluciona para obtener el hidrograma completo; se mide
+cuánto tiempo el caudal resultante supera el caudal de diseño de la
+obra (62 m³/s, dato de la Parte 2).
+
+**Herramienta:** misma función de convolución que las Partes 1 y 2
+(`hidrograma_convolucion` en `ej2.py`), aplicada directamente sobre la
+serie observada (sin el paso de bloque alterno, que sólo aplica para
+construir una tormenta de DISEÑO a partir de la IDF).
+
+**Datos observados (P, mm, por intervalo de 0.13 h):** 2.7, 3.0, 3.4,
+4.1, 5.3, 8.9, 21.9, 6.5, 4.6, 3.7, 3.2, 2.8 (total 70.1 mm en 1.56 h).
+
+**Resultado:**
+```
+Pe total = 34.58 mm
+Qmax = 72.91 m3/s en t = 1.528 h
+La alcantarilla (Qdiseno=62 m3/s) es SOBREPASADA
+desde t=1.333 h hasta t=1.853 h  (duracion = 31.2 minutos)
+```
+
+**La alcantarilla ES sobrepasada durante el evento; el caudal de diseño
+(62 m³/s) se supera durante ≈31 minutos, con un pico de ≈72.9 m³/s.**
+
+**Comparación con solución oficial:** el manuscrito obtiene Qmax=72.85
+m³/s (vs 72.91 acá) y reporta que la obra es sobrepasada desde t=1.32h
+hasta t=1.86h, es decir 32 minutos (vs 31.2 min acá) — **coincide**
+dentro del margen de precisión numérica esperable.
+
+### Resumen Ejercicio 2
+
+| Ítem | Resultado |
+|---|---|
+| Qmax de diseño (Tr=10 años, Racional/NRCS) | 35.93 / **49.98 m³/s** (se adopta NRCS) |
+| Tr de una obra diseñada para 62 m³/s | **≈20 años** |
+| Qmax del evento observado (feb/2019) | **≈72.9 m³/s** |
+| ¿Se sobrepasa la obra de 62 m³/s? | **Sí, durante ≈31 minutos** |
+
+---

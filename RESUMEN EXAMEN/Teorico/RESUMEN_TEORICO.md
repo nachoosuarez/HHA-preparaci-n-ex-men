@@ -37,10 +37,10 @@ no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020).
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 10 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 14 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 15 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B4. Método Racional (y criterio de selección según tc) | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 15 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13 |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13 |
+| B4. Método Racional (y criterio de selección según tc) | 16 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13 |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13 |
 | B6. Condición de humedad antecedente (AMC) | 9 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
@@ -713,6 +713,16 @@ adoptando el mayor caudal). También se aplica igual, pero con el hietograma
 **observado** en su orden cronológico real (sin reordenar por bloque
 alterno), para verificar si un evento de lluvia real supera la capacidad de
 diseño de una obra.
+
+**De la unidad de suelo (nombre) al grupo hidrológico A/B/C/D.** El NC
+depende del grupo hidrológico del suelo, que no siempre es un dato
+directo: el enunciado puede dar el nombre de la **unidad de suelos**
+predominante (p.ej. "San Carlos", "Rivera" — nombres de la Carta de
+Reconocimiento de Suelos del Uruguay), y hay que buscar a qué grupo
+A/B/C/D corresponde en la Tabla 3.1.5 del Teórico ("Grupo hidrológico
+asociado a las unidades de suelos del Uruguay", Durán 1997) antes de
+entrar a la tabla de NC (Fig. 3.1.20) con el uso de suelo y ese grupo
+(ejemplo: 2020 feb-13, Ej.2 — unidad "San Carlos" → grupo C).
 
 **Número de Curva ponderado (cuenca con usos de suelo mixtos).** Si la
 cuenca tiene más de un uso de suelo (p.ej. una fracción se urbaniza, o hay
