@@ -247,4 +247,96 @@ discreto más próximo).
 
 ---
 
-**ESTADO: EN CURSO** (falta Ejercicio 3 y 4)
+## Ejercicio 4 (25 puntos) — Punto de funcionamiento de una bomba, cota máxima sin cavitar
+
+### Enunciado (resumen)
+
+Bomba única que eleva agua desde un tanque inferior (zT1=0 m) a un tanque
+elevado (zT2=25 m). Tuberías de succión e impulsión, ambas D=250 mm,
+ε=0.02 mm; Ls=25 m (succión, k=2.5 localizado); Lt=550 m (impulsión
+total, k=1.5 localizado, incluye la descarga al tanque elevado). Cota
+del eje de la bomba zA=2 m. Curva de la bomba (tabla Q-H-NPSHr-η dada).
+
+1) Punto de funcionamiento: a) Q bombeado; b) verificar que no cavita;
+   c) potencia consumida.
+2) Máxima cota a la que se puede colocar la bomba (para alejarla del
+   tanque inferior) sin que cavite, con las mismas longitudes/pérdidas.
+3) En la cota límite de 2), el tanque elevado sube a 30 m: ¿cavita la
+   bomba en esta nueva configuración?
+
+**Nota sobre la solución oficial manuscrita (p.9):** el esquema
+manuscrito trae datos de tubería **distintos** a los de la letra impresa
+(L=29 m/k=2.6 en succión y L=850 m/k=2 en impulsión, en vez de Ls=25 m/
+k=2.5 y Lt=550 m/k=1.5 de la letra). Esto es consistente con lo ya visto
+en otros exámenes de este curso (p.ej. `resueltos/2020 Diciembre/`) donde
+el ejercicio de bombas trae **datos individualizados por alumno/variante**
+mientras el resto del examen es común — por eso Ejercicios 1 y 2
+coinciden casi exactamente con la manuscrita pero este Ejercicio 4 no. Se
+resuelve acá con los datos de la **letra impresa** (la fuente autoritativa
+para este examen), y se compara solo la **metodología** contra la
+manuscrita, no los valores numéricos exactos.
+
+### Teoría
+
+- **C1 (ecuación de la instalación)**: Hm(Q)=(z2−z1)+Δh(succión,Q)+
+  Δh(impulsión,Q), con Δh=f·(L/D)·v²/2g (Colebrook-White) + k·v²/2g. Esta
+  ecuación **no depende de zA** (la cota de la bomba no aparece en ningún
+  término): mover la bomba a lo largo de la misma tubería no cambia el
+  punto de funcionamiento (Q,H), sólo cambia el NPSH disponible.
+- **C2 (punto de funcionamiento)**: intersección de la curva de la bomba
+  H(Q) (catálogo) con Hm(Q) (instalación).
+- **C3 (potencia)**: P=γ·Q·H/η, con η interpolado en el Q del punto de
+  funcionamiento.
+- **C4 (cavitación) y "Cota máxima de la bomba sin cavitar"**: NPSH_disp
+  depende sólo del tramo de succión y de zA; como Q no cambia con zA
+  (ver C1), el margen NPSH_disp−NPSH_req en el punto de funcionamiento
+  actual se puede sumar directamente a la zA actual para hallar la cota
+  límite: zA,max = zA + (NPSH_disp−NPSH_req).
+
+### Práctica
+
+**Herramienta:** Octave, adaptando `Bombas/Bomba_sola.m` (intersección
+numérica curva de bomba vs. curva de instalación, con `colebrook.m` para
+el factor de fricción) — es exactamente el caso que ese script resuelve
+(una bomba única, succión+impulsión con Colebrook). Script:
+`scripts/Ejercicio4_bomba.m`.
+
+#### 1) Punto de funcionamiento
+
+| Q (m³/s) | H (m) | η (%) | Potencia (kW) | NPSH_disp (m) | NPSH_req (m) |
+|---|---|---|---|---|---|
+| 0.0688 | 28.84 | 75.3 | 25.85 | 7.70 | 4.80 |
+
+**Q = 0.069 m³/s (68.8 L/s), H = 28.8 m, P = 25.9 kW. NPSH_disp=7.70 m >
+NPSH_req=4.80 m ⇒ NO cavita** (margen de 2.90 m).
+
+#### 2) Cota máxima de la bomba sin cavitar
+
+Como Hm(Q) no depende de zA, el Q y el margen NPSH_disp−NPSH_req=2.90 m
+de la parte 1 no cambian al mover la bomba: la cota límite es
+directamente zA + margen.
+
+**zA,max = 2 + 2.90 = 4.90 m.**
+
+#### 3) Con zA=4.90 m y el tanque elevado a 30 m: ¿cavita?
+
+Al subir zT2 de 25 a 30 m cambia la curva de instalación (mayor desnivel
+estático) ⇒ nuevo punto de funcionamiento, con **menor Q** (la curva de
+la bomba es decreciente en H, y ahora se necesita más H):
+
+| Q (m³/s) | H (m) | NPSH_disp (m) | NPSH_req (m) |
+|---|---|---|---|
+| 0.0514 | 32.22 | 4.97 | 3.20 |
+
+**NPSH_disp=4.97 m > NPSH_req=3.20 m ⇒ NO cavita** (margen de 1.77 m,
+más ajustado que en la parte 1, pero todavía seguro).
+
+Comparación metodológica con la solución oficial (p.9, datos de tubería
+distintos según la nota de arriba): mismo procedimiento en las 3 partes
+(punto de funcionamiento por intersección de curvas, margen NPSH para la
+cota máxima, recálculo completo del PF al cambiar el nivel del tanque
+elevado) y misma conclusión cualitativa (no cavita en ningún caso).
+
+---
+
+**ESTADO: EN CURSO** (falta Ejercicio 3)

@@ -47,10 +47,10 @@ no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020);
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13 |
-| C2. Curva de la bomba y punto de funcionamiento | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13 |
-| C3. Potencia consumida por el sistema de bombeo | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13 |
-| C4. Cavitación: NPSH disponible vs. requerido | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13 |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
+| C2. Curva de la bomba y punto de funcionamiento | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
+| C3. Potencia consumida por el sistema de bombeo | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic |
+| C4. Cavitación: NPSH disponible vs. requerido | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
 | C5. Bombas en serie y en paralelo | 8 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb, 2020 feb-13 |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 3 | 2020 dic, 2024 dic, 2023 feb 2 |
 | D1. Diseño de alcantarillas: tipos de flujo 1-6 (clasificación de Bodhaine) | 1 | 2020 feb-13 |
@@ -1233,7 +1233,15 @@ z_bomba por encima de z_tanque (en vez de una carga de succión positiva).
 **Cota máxima de la bomba sin cavitar.** Para un Q y unas longitudes de
 tubería fijas, se despeja la cota de la bomba que hace NPSH_disp=NPSH_req
 (límite de cavitación): z_bomba,max = z_tanque + (Patm−Pvap)/γ −
-h_succión(Q) − NPSH_req(Q) (2024 jul, Ej.4).
+h_succión(Q) − NPSH_req(Q) (2024 jul, Ej.4). Atajo equivalente sin
+recalcular nada desde cero: como Q (y por lo tanto NPSH_disp y NPSH_req)
+**no cambian** al mover la bomba a lo largo de la misma tubería (ver C1:
+Hm=HB−HA no depende de z_bomba), alcanza con sumar a la cota actual el
+**margen** ya calculado en el punto de funcionamiento: z_bomba,max =
+z_bomba,actual + (NPSH_disp−NPSH_req) (2019 dic, Ej.4 parte 2: margen=2.90 m
+a z_bomba=2 m ⇒ z_bomba,max≈4.90 m). Ojo: si además cambia el **nivel de
+un tanque** (no solo la posición de la bomba), sí hay que resolver un
+nuevo punto de funcionamiento — ver el caso siguiente.
 
 **Con manómetro de succión dado directamente.** Si se conoce p_A (lectura
 del manómetro en la brida de succión, ver C1) en vez de tener que calcular
