@@ -273,5 +273,143 @@ Ramser-Kirpich y resultado **tc=1.5 hs** — coincide exactamente.
 
 ---
 
-## Ejercicio 3 — pendiente
+## Ejercicio 3 (25 puntos) — Hidrograma de crecida, Número de Curva y período de retorno de un evento observado
+
+### Enunciado (resumen)
+
+Cuenca al suroeste de Artigas (X=350 km, Y=6600 km), A=12.8 km²,
+tc>1 hr. Se registró en junio un evento con el siguiente hietograma
+(precipitación total y efectiva ya dadas, por bloques de 1 h):
+
+| t (h) | 0-1 | 1-2 | 2-3 | 3-4 | 4-5 |
+|---|---|---|---|---|---|
+| P (mm) | 11 | 17 | 52 | 12 | 6 |
+| Pefectiva (mm) | 0 | 0.4 | 23.5 | 0.3 | 0.1 |
+
+1. Despreciando Pef<1 mm en el intervalo, determinar y graficar el
+   hidrograma de crecida a partir de t=0. HU triangular simétrico
+   (tb=2·tp), tb=1.5 h, qp=3.10 m³/s/mm.
+2. Con P en los 5 días previos=16 mm, determinar el Número de Curva.
+3. Estimar el período de retorno del evento de precipitación TOTAL
+   (dato de pluviógrafo).
+
+### Teoría
+
+- **Convolución con Hidrograma Unitario** (RESUMEN_TEORICO.md §B5): el
+  hidrograma de crecida es la suma de la respuesta de cada pulso de
+  lluvia efectiva, cada uno escalando y desplazando en el tiempo la
+  misma curva unitaria (aquí triangular, dato directo del enunciado —
+  no hace falta calcularla con la fórmula SCS a partir de tc/A).
+- **Número de Curva a partir de un evento observado** (§B5, relación
+  NRCS): Pef=(P−0.2S)²/(P+0.8S) si P>0.2S, con S=25400/NC−254. Si se
+  conocen P y Pef (totales) de un evento real, se **invierte** esa
+  relación para hallar S y de ahí NC — el mismo camino inverso que se
+  usa para hallar Tr a partir de un caudal (B4), aplicado acá sobre la
+  lámina.
+- **Condición de humedad antecedente (AMC)** (§B6): el NC así obtenido
+  corresponde a la condición de humedad *real* del suelo durante ESE
+  evento — hay que ubicarla (con P5d y la estación del año) para saber
+  si ese NC ya es el NC(II) de tabla o si hace falta "des-corregirlo".
+  Junio en Uruguay es estación **inactiva**; con P5d=16 mm, cae en el
+  rango AMC II (12.7-27.94 mm) ⇒ el NC obtenido directamente del evento
+  **ya es** el NC(II) de tabla, sin necesidad de conversión.
+- **Período de retorno de una lámina puntual registrada** (§B3): dato de
+  pluviógrafo (no hay corrección por área, CA=1) ⇒
+  P=P(3,10)·CD(d)·CT(Tr); se despeja CT y se invierte numéricamente
+  para Tr.
+
+### Herramienta y por qué
+
+Los tres numeritos (Qp de un único pulso, inversión de S↔NC, inversión
+de CT↔Tr) son cálculos algebraicos directos/una bisección — no hace
+falta la planilla `Eventos extremos.xlsx` completa (que arma la
+tormenta de diseño por bloque alterno) porque acá el hietograma **ya
+viene dado**, no hay que construirlo (caso "Hoja 4", ver
+`COMO_USAR_EVENTOS_EXTREMOS.md`, aunque tampoco hace falta esa hoja
+particular porque P/Pef totales ya están dados por bloque). Se usó
+**Python** (biseccion simple, sin dependencias) para las dos
+inversiones numéricas y para verificar la aritmética de la convolución:
+`resueltos/2020 febrero/scripts/Ejercicio3.py`.
+
+### Parte 1 — Hidrograma de crecida
+
+Sólo el bloque [2,3] h tiene Pef≥1 mm (23.5 mm); los otros tres (0.4,
+0.3, 0.1 mm) se desprecian según el enunciado. La convolución se reduce
+entonces a un **único pulso**: el HU triangular (tp=0.75 h, tb=1.5 h,
+qp=3.10 m³/s/mm) escalado por 23.5 mm y desplazado para arrancar al
+inicio de ese bloque (t=2 h):
+
+```
+Qp = Pef · qp = 23.5 mm · 3.10 m³/s/mm = 72.85 m³/s
+
+Hidrograma resultante:
+  t=0 a t=2h:    Q=0 (sin aporte, los bloques previos son despreciables)
+  t=2h:          Q=0, empieza a crecer
+  t=2h+tp=2.75h: Q=Qp=72.85 m³/s (pico)
+  t=2h+tb=3.5h:  Q=0 (fin del hidrograma)
+  t>3.5h:        Q=0
+```
+
+**Resultado Parte 1: hidrograma triangular con pico Qmax = 72.85 m³/s
+en t = 2.75 h**, subiendo desde t=2h y terminando en t=3.5h.
+
+*Comparación con la solución oficial*: Qmax=23.5×3.10=72.85 m³/s con
+pico marcado entre t=2.75h y fin en t=3.5h — **coincide exactamente**.
+
+### Parte 2 — Número de Curva
+
+```
+P total  = Σ P   = 11+17+52+12+6 = 98 mm
+Pef total = Σ Pef = 0+0.4+23.5+0.3+0.1 = 24.3 mm
+
+Pef = (P-0.2S)² / (P+0.8S)  =>  (biseccion en S)  S = 135.74 mm
+NC = 25400/(S+254) = 25400/(135.74+254) = 65.17
+```
+
+Chequeo de AMC: junio ⇒ estación inactiva; P5d=16 mm está dentro de
+12.7-27.94 mm ⇒ **AMC II** ⇒ el NC recién hallado ya es el NC(II) de
+tabla de la cuenca, sin corrección adicional.
+
+**Resultado Parte 2: NC ≈ 65.2** (redondeando la tabla NRCS a NC=65).
+
+*Comparación con la solución oficial*: S=136.03 mm, NC=65.1, AMC II
+(P5ant=16mm en junio) sin corregir — **coincide** (diferencia de
+±0.1-0.3 en NC por redondeo intermedio de S).
+
+### Parte 3 — Período de retorno del evento de precipitación total
+
+Dato puntual de pluviógrafo ⇒ sin corrección de área (CA=1):
+
+```
+P total = 98 mm  (mismo total de la Parte 2; la solución oficial
+                   escribe "99mm", se interpreta como error de lectura
+                   del escaneo — la suma de la tabla da 98mm exacto)
+D = 5 h            (duración total del evento registrado, 0 a 5h)
+P(3,10) = 96 mm    (lectura gráfica, Fig. 3.1.10 del Teórico, para
+                     el punto X=350km/Y=6600km al SO de Artigas)
+
+CD(5h) = 1.0287·5/(5+1.0293)^0.8083 = 1.2038      (rama d>3h)
+CT objetivo = P/(P(3,10)·CD) = 98/(96·1.2038) = 0.8480
+
+CT(Tr) = 0.5786 - 0.4312·log10(ln(Tr/(Tr-1))) = 0.8480
+  => (bisección numérica) Tr ≈ 4.73 años
+```
+
+**Resultado Parte 3: Tr ≈ 4.7 años.**
+
+*Comparación con la solución oficial*: P3,10=96mm, D=5h,
+CT(Tr)=0.8479, Tr=4.75 años — **coincide** (diferencia de centésimas de
+año por redondeo, usando Ptotal=98 en vez del "99" ilegible del
+escaneo).
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| Parte 1: Qmax hidrograma | **72.85 m³/s** en t=2.75 h (sube desde t=2h, termina en t=3.5h) |
+| Parte 2: Número de Curva | **NC ≈ 65** (AMC II, sin corregir) |
+| Parte 3: Período de retorno (P total) | **Tr ≈ 4.7-4.75 años** |
+
+---
+
 ## Ejercicio 4 — pendiente

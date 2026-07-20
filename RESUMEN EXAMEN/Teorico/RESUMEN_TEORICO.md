@@ -36,10 +36,10 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 14 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 15 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | B4. Método Racional (y criterio de selección según tc) | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 14 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
-| B6. Condición de humedad antecedente (AMC) | 8 | 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 15 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
+| B6. Condición de humedad antecedente (AMC) | 9 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
@@ -752,6 +752,27 @@ menos el área de cultivo ya existente). Exactamente la misma mecánica
 que con Qmax: Vesc y Qmax son ambos monótonos crecientes en NC, así que
 cualquiera de los dos sirve como variable objetivo de la bisección
 según lo que pida el enunciado.
+
+**Hallar el NC a partir de un evento observado (inverso)** (2020 feb,
+Ej.3 parte 2). Si el enunciado da el hietograma de un evento REAL con su
+precipitación total P y su precipitación efectiva Pe (ya medidas, p.ej.
+por diferencia entre pluviógrafo y aforo), se puede despejar el NC de la
+propia cuenca sin conocer uso de suelo ni tabla: se invierte
+Pe=(P−0.2S)²/(P+0.8S) en S (bisección) y NC=25400/(S+254). El NC así
+obtenido corresponde a la condición de humedad *real* del suelo durante
+ESE evento — antes de darlo por bueno como "el NC de la cuenca" (el de
+tabla, AMC II) hay que revisar con la P de los 5 días previos y la
+estación (B6) si ese evento cayó en AMC I/II/III: si cayó en AMC II, el
+NC obtenido ya es directamente el de tabla; si hubiera caído en AMC I o
+III, habría que aplicar la fórmula de corrección de B6 **en sentido
+inverso** (despejar NC(II) a partir del NC(I) o NC(III) recién hallado)
+antes de reportarlo como el NC representativo de la cuenca. Cuando
+además el HU triangular ya viene dado con sus tres parámetros (tp/tb/qp,
+en vez de pedir calcularlo con la fórmula SCS a partir de A y tc), la
+convolución de la Parte 1 se reduce a identificar qué bloques de Pe son
+significativos (descartando los que el enunciado marca como
+despreciables) y sumar la respuesta triangular de cada uno, escalada por
+su Pe y desplazada al inicio de su bloque.
 
 Cita: Teórico HHA §3.1.5 b)/c) y §3.1.6 "Método del NRCS (ex SCS)";
 Formulómetro "Cálculo de caudales máximos e hidrograma de crecida: Método
