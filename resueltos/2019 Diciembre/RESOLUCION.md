@@ -137,4 +137,114 @@ precisión de la lectura gráfica manuscrita).
 
 ---
 
-**ESTADO: EN CURSO** (falta Ejercicio 2, 3 y 4)
+## Ejercicio 2 (25 puntos) — Método Racional, NRCS y área urbanizable máxima
+
+### Enunciado (resumen)
+
+Cuenca en Colonia, punto de cierre X=350 km, Y=6250 km. Uso de suelo:
+**pastizales, condición hidrológica buena**; unidad de suelos **Ecilda
+Paullier - Las Brujas**; flujo **concentrado**. Datos: Área=4.15 km²,
+Lcp=2.05 km, ΔH=38 m, S(cuenca)=1.95%.
+
+1) Caudal de diseño de una alcantarilla en el punto de cierre, Tr=5 años.
+   Justificar la metodología.
+2) Con esa obra construida, se proyecta una urbanización (áreas
+   concreto/techo). Máxima superficie urbanizable si el caudal de diseño
+   puede aumentar hasta 20% (mismo Tr, mismo tc, no cambia por la
+   urbanización).
+3) En el escenario de 2), un evento extremo da Q=32 m³/s en el punto de
+   cierre. Hallar su período de retorno.
+
+### Teoría
+
+- **B2 (tiempo de concentración, Kirpich)**: tc=0.4·L^0.77/S^0.385, con S
+  del **cauce principal** (ΔH/L/10), no la pendiente media de la cuenca.
+- **B3 (curvas IDF de Uruguay)**: P=P(3,10)·CT(Tr)·CD(d)·CA(A,d).
+- **B4 (método Racional, criterio de selección según tc)**: con
+  20 min<tc<1 h se calculan **ambos** métodos (Racional y NRCS) y se
+  adopta el **mayor** caudal.
+- **B4, "Coeficiente de escorrentía ponderado y área urbanizable
+  máxima"**: si tc no cambia con la urbanización, Q∝C (i y A quedan
+  fijos), así que el área urbanizable máxima sale en forma cerrada:
+  `C*_objetivo=(1+x%)·C_original` y `A₂=A_T·(C*−C1)/(C2−C1)`.
+- **B4, "hallar el Tr de un caudal límite dado"**: C sale de la Tabla
+  3.1.4 (Chow), tabulada en columnas discretas de Tr (2,5,10,25,50,100).
+  Acá, en vez de quedarse con el escalón tabulado más próximo, se
+  **interpola linealmente** C entre las dos columnas adyacentes (10 y 25
+  años) para estimar el Tr "exacto" que da Q=32 m³/s — variante más
+  precisa del mismo procedimiento cuando se pide directamente el Tr de un
+  evento (no solo verificar si supera un umbral).
+- **B5 (NRCS)**: NC de Fig. 3.1.20 (pastizal, condición **buena**, grupo
+  **C** ⇒ **NC=74**); grupo hidrológico de la unidad "Ecilda
+  Paullier-Las Brujas" ⇒ **C** (Tabla 3.1.5, Durán 1997).
+- **Tabla 3.1.4 (Chow, Teórico HHA pág. 9)**, filas usadas: "Pastizales,
+  Plano 0-2%" (Tr=2,5,10,25,50,100,500 ⇒ C=0.25, 0.28, 0.30, 0.34, 0.37,
+  0.41, 0.53) y "Concreto/techo" (C=0.75, 0.80, 0.83, 0.88, 0.92, 0.97,
+  1.00). S(cuenca)=1.95% cae en la fila "Plano 0-2%".
+
+### Práctica
+
+**Herramienta:** Python, replicando exactamente las fórmulas de la hoja
+`Cálculos (grande)` de `Eventos extremos.xlsx`
+(`RESUMEN EXAMEN/Teorico/COMO_USAR_EVENTOS_EXTREMOS.md`) — IDF de
+Uruguay, método Racional, y método NRCS (bloque alterno + NC + hidrograma
+unitario triangular SCS). Se eligió Python en vez de operar la planilla a
+mano porque las partes 2) y 3) piden **iterar** el modelo (despejar un
+área y, después, invertir un Tr), lo que conviene automatizar en vez de
+recalcular la hoja celda a celda en cada tanteo. Script:
+`scripts/Ejercicio2_racional_NRCS.py` (la función `Q_nrcs` se validó
+contra el mini-ejemplo de referencia de `COMO_USAR_EVENTOS_EXTREMOS.md`
+§5, cuenca del Río Negro, Tr=10: reproduce Qmax NRCS=25.6 m³/s).
+
+#### 1) Caudal de diseño (Tr=5 años)
+
+- S(cauce)=ΔH/Lcp/10=38/2.05/10=1.854% ⇒ **tc (Kirpich) = 0.548 h ≈ 33
+  min**. Como 20 min<tc<1 h, corresponde calcular **ambos** métodos.
+- **Racional:** C(pastizal, Tr=5, Tabla 3.1.4)=0.28; i(Tr=5, d=tc)=61.4
+  mm/h ⇒ **Q_racional = 19.8 m³/s**.
+- **NRCS:** NC=74, con la tormenta de diseño por bloque alterno (12
+  bloques, Δt=tc/7) ⇒ **Q_NRCS ≈ 9.7 m³/s**.
+
+**Q_diseño = 19.8 m³/s (método Racional, por ser el mayor de los dos).**
+
+Comparación con la solución oficial (p.6): Q_racional=19.7 m³/s (coincide,
+diferencia de milésimas por redondeo de tc/P310), Q_NRCS≈10.2 m³/s (algo
+más alto que el calculado, 9.7 m³/s — la diferencia no cambia el método
+adoptado, ya que en ambos casos el Racional sigue siendo mayor).
+
+#### 2) Área urbanizable máxima (+20% del caudal, mismo tc)
+
+Con Tr=5 fijo y tc fijo, i no cambia: Q=C·i·A/360 ⇒ Q∝C. El objetivo es
+C\*=Q\*·360/(i·A) con Q\*=1.2·19.8=23.8 m³/s:
+
+- **C\* objetivo = 0.336** (Cpast=0.28, Cct=0.80 a Tr=5).
+- `x = (C*−Cpast)/(Cct−Cpast) = 0.108` (10.8% del área).
+- **Área urbanizable máxima = 0.108×4.15 km² ≈ 0.447 km² ≈ 44.7 ha.**
+
+Comparación con la solución oficial (p.6): Área≈43.95 ha (coincide, dentro
+del margen de redondeo de los pasos anteriores).
+
+#### 3) Período de retorno del evento Q=32 m³/s
+
+Con la fracción urbanizada x=0.108 fija (misma cuenca de la parte 2), se
+itera Tr en el método Racional con el **coeficiente ponderado** C\*(Tr)
+= Cpast(Tr)·(1−x) + Cct(Tr)·x, interpolando Cpast(Tr) y Cct(Tr)
+linealmente entre las columnas tabuladas de la Tabla 3.1.4:
+
+| Tr (años) | Cpast(Tr) | Cct(Tr) | C\*(Tr) | i (mm/h) | Q (m³/s) |
+|---|---|---|---|---|---|
+| 10 | 0.300 | 0.830 | 0.357 | 71.4 | 29.4 |
+| 15 | 0.313 | 0.847 | 0.371 | 77.1 | 32.9 |
+| **13.57** | **0.309** | **0.842** | **0.367** | **75.4** | **32.0** |
+
+**Tr ≈ 13.6 años (≈14 años redondeando al entero).**
+
+Comparación con la solución oficial (p.6): tabla con Tr=10 (Q=29.3) y
+Tr=15 (Q=32.7) ⇒ Tr≈14 años (coincide con el resultado interpolado
+≈13.6-14 años; ambos usan el mismo método de interpolar linealmente C
+entre las columnas tabuladas de Tr en vez de solo verificar el escalón
+discreto más próximo).
+
+---
+
+**ESTADO: EN CURSO** (falta Ejercicio 3 y 4)

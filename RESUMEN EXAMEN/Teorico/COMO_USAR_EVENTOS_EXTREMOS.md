@@ -370,6 +370,26 @@ resultado oficial ya confirmado.
    `resueltos/2025_FEBRERO 2/RESOLUCION.md`, Ejercicio 2, Parte 2:
    135 932 m³).
 
+**Ejemplo con coeficiente C del método Racional PONDERADO (no NC) y área
+urbanizable máxima, más inversión de Tr por interpolación continua**,
+Ejercicio 2 de `resueltos/2019 Diciembre/RESOLUCION.md` (Colonia:
+Área=4.15 km², Lcp=2.05 km, ΔH=38 m, pastizales condición buena, unidad de
+suelos Ecilda Paullier-Las Brujas → grupo C, NC=74; tc=32.9 min ⇒
+20 min<tc<1h ⇒ ambos métodos, Racional=19.8 m³/s > NRCS≈9.7 m³/s ⇒ se
+adopta Racional). El bloque `M2:M5` de NC ponderado (sección 2.b) es solo
+para el método NRCS — **no hay un bloque análogo para el coeficiente C
+del método Racional** en ninguna de las dos hojas (`J3` sólo admite un
+valor único); si el ejercicio pide un área urbanizable máxima ponderando
+C (no NC), hay que armar la ponderación C\*=C1·(1−x)+C2·x a mano, fuera
+de la planilla (igual fórmula cerrada que en B4 del `RESUMEN_TEORICO.md`,
+ya que tc no cambia con la urbanización ⇒ Q∝C). Parte 3 de este mismo
+ejercicio pide directamente el Tr "exacto" de un caudal dado (no solo
+verificar un umbral): en vez de quedarse con el escalón de Tr tabulado
+más cercano, conviene interpolar C linealmente entre las dos columnas de
+Tr adyacentes de la Tabla 3.1.4 y recién ahí iterar sobre Tr — da un
+resultado más fino (Tr≈13.6 años) que coincide con el de la solución
+oficial (interpolando entre Tr=10 y Tr=15, Q=29.4 y 32.9 m³/s ⇒ Tr≈14).
+
 Otro ejemplo de referencia útil, con números distintos y **cuenca chica**
 de dos usos de suelo, es el Ejercicio 2 de `resueltos/2024 diciembre/RESOLUCION.md`
 (Tacuarembó: Área=7.5 km², ΔH=90 m, L=3800 m, S cauce=2.37%, Tr=5,

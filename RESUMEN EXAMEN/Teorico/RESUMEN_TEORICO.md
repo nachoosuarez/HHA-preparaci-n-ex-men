@@ -38,10 +38,10 @@ no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020);
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 10 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
 | B1. Delimitación de cuencas y divisoria de aguas | 14 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13 |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13 |
-| B4. Método Racional (y criterio de selección según tc) | 16 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13 |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13 |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
+| B4. Método Racional (y criterio de selección según tc) | 17 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic |
 | B6. Condición de humedad antecedente (AMC) | 9 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
@@ -669,11 +669,28 @@ práctica de resolverlo es **probar los Tr tabulados** (con su C
 correspondiente) hasta encontrar el escalón donde Q cruza el valor límite,
 y adoptar ese Tr tabulado como respuesta (no interpolar entre columnas).
 
+**Variante: interpolar C linealmente entre columnas cuando se pide el Tr
+"exacto"** (2019 dic, Ej.2 parte 3). Si el enunciado pide directamente
+**determinar el período de retorno** de un caudal dado (no solo verificar
+si supera un umbral de diseño), conviene un resultado más fino que el
+escalón tabulado: se interpola C **linealmente en Tr** entre las dos
+columnas adyacentes de la Tabla 3.1.4 (p.ej. entre Tr=10 y Tr=25) para
+tener C(Tr) como función continua, y se itera/`fzero` sobre esa función
+hasta que Q(Tr)=Q_objetivo. Con una cuenca urbanizada de forma mixta
+(coeficiente ponderado C\*(Tr)=Cpast(Tr)·(1−x)+Cct(Tr)·x, ambos
+interpolados con la misma Tr), el mismo procedimiento da directamente el
+Tr real (2019 dic: Tr≈13.6 años, sin necesitar redondear a una columna
+tabulada) — más preciso que el criterio de "quedarse con el escalón" de
+2023 dic, que es preferible sólo cuando el objetivo es una verificación
+binaria (¿se supera o no un caudal de diseño ya fijado a un Tr tabulado?).
+
 **Coeficiente de escorrentía ponderado y área urbanizable máxima**
 (2023 dic, Ej.2 parte c; 2020 jul, Ej.2 parte 2 — mismo cálculo con
 Aₜ=7.3 km², C1=0.36 pastizal, C2=0.80 concreto/techo, x=15% ⇒
-A2=0.896 km² ≈12.3% del área; ver también B5 para el NC ponderado análogo del
-método NRCS). Si una fracción A₂ de la cuenca (área total Aₜ) se urbaniza
+A2=0.896 km² ≈12.3% del área; 2019 dic, Ej.2 parte 2 — Aₜ=4.15 km²,
+C1=0.28 pastizal cond. buena, C2=0.80 concreto/techo, +20% de caudal
+admisible ⇒ x≈10.8% ⇒ A2≈0.447 km²; ver también B5 para el NC ponderado
+análogo del método NRCS). Si una fracción A₂ de la cuenca (área total Aₜ) se urbaniza
 (desarrollo en concreto/techo, C₂≈0.8-0.95) y el resto (A₁=Aₜ-A₂) conserva
 su C₁ original, el coeficiente de escorrentía efectivo de toda la cuenca es
 el promedio ponderado por área:
