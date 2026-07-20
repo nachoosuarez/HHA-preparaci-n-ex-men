@@ -339,4 +339,137 @@ elevado) y misma conclusión cualitativa (no cavita en ningún caso).
 
 ---
 
-**ESTADO: EN CURSO** (falta Ejercicio 3)
+## Ejercicio 3 (25 puntos) — Delimitación de cuenca, pendiente, índice de compacidad y Tr
+
+### Enunciado (resumen)
+
+1) En la carta topográfica adjunta (SGM, curvas de nivel cada 5 m),
+   delimitar la cuenca de la cañada "Sin nombre", afluente del arroyo La
+   Pedrera (Canelones), punto de cierre X=491.9 km, Y=6173.0 km.
+2) Pendiente por extremos del cauce principal (Lcp=4150 m dato).
+   Seleccionar el índice de compacidad más apropiado entre Ic=1.0, 1.1,
+   1.4, justificando.
+3) Período de retorno de una precipitación P=45 mm en d=1 hora,
+   registrada en un pluviógrafo dentro de la cuenca delimitada.
+
+### Teoría
+
+- **B1 (delimitación de cuencas)**: la divisoria corta perpendicular a
+  las curvas de nivel, por el lado convexo al ganar altura y cóncavo al
+  perderla, y nunca cruza un curso de agua salvo en el punto de cierre.
+  Índice de compacidad Ic=[√π/(2π)]·P/√A: cuencas muy alargadas (como una
+  cañada angosta que sigue un único valle) dan Ic sensiblemente mayor a
+  1 (cuenca circular ideal, Ic=1).
+- **B2 (pendiente por extremos)**: S=ΔH/Lcp (Lcp en km, ΔH en m, S en %
+  tras dividir entre 10 según la convención de Kirpich) — acá sólo se
+  pide la pendiente, no Tc.
+- **B3 (curvas IDF, "hallar el Tr de un evento observado")**: se invierte
+  P=P(3,10)·CT(Tr)·CD(d) (CA=1, dato puntual de pluviógrafo) despejando
+  CT(Tr)=P/(P310·CD(d)) e invirtiendo numéricamente CT(Tr) (sin forma
+  cerrada).
+
+### Práctica
+
+**Herramienta y limitación importante:** la carta topográfica es un
+escaneo de muy baja resolución (fotocopia de varias generaciones de un
+plano SGM 1:50000 de curvas cada 5 m). Se renderizó la página 3 del PDF
+del examen a 300 dpi y se inspeccionó visualmente (Python/Pillow) para
+ubicar el **punto de cierre** (el círculo gris impreso en el plano, que
+coincide exactamente con un cruce de la cuadrícula, consistente con
+X=491.9/Y=6173.0) y el arroyo **La Pedrera** (rotulado en el plano), con
+una cañada tributaria sin nombre que baja desde el N/NE y se une a la
+Pedrera justo en el punto de cierre. **A la resolución disponible del
+escaneo no se puede trazar la divisoria de aguas con precisión de
+milímetro** (las curvas de nivel finas se distinguen apenas del ruido de
+la fotocopia): se muestra en `scripts/ej3_cuenca_delimitada.png` el punto
+de cierre confirmado y una divisoria **esquemática/aproximada**
+(polígono alargado siguiendo el valle visible de la cañada tributaria,
+según el criterio de B1), suficiente para razonar la forma general de la
+cuenca (Parte 2) pero **no** para medir un área con precisión.
+
+#### 1) Delimitación (ver `scripts/ej3_cuenca_delimitada.png`)
+
+Punto de cierre localizado (círculo rojo en la imagen, sobre el marcador
+impreso del examen). Divisoria aproximada trazada siguiendo el valle de
+la cañada tributaria hacia aguas arriba (magenta en la imagen),
+perpendicular a las curvas de nivel visibles, sin cruzar el cauce salvo
+en el punto de cierre — **de forma esquemática dada la resolución del
+escaneo** (ver limitación arriba).
+
+#### 2) Pendiente por extremos e índice de compacidad
+
+Elevaciones leídas de las cotas/curvas visibles en el plano: cota más
+alta del cauce (naciente, zona norte de la cuenca) ≈**55 m**; cota en el
+punto de cierre ≈**26 m** (coincide con la cota puntual "26.3" rotulada
+junto a la confluencia con La Pedrera, visible en el escaneo). Con
+Lcp=4150 m (dato):
+
+```
+ΔH = 55 - 26 = 29 m
+S_cp = ΔH / Lcp / 10 = 29 / 4.15 / 10 = 0.699 % ≈ 0.70 %
+```
+
+**S_cp ≈ 0.70 %.**
+
+**Índice de compacidad: Ic = 1.4** (el mayor de los tres valores dados).
+Justificación: una cañada tributaria que recorre 4150 m de longitud
+siguiendo un único valle angosto (visible en el plano: el corredor de la
+cañada es apenas más ancho que 1 celda de la cuadrícula de 1 km, a lo
+largo de más de 4 celdas) es una cuenca **muy alargada** — Ic se aleja
+mucho de 1 (círculo) cuanto más elongada y angosta es la forma, por lo
+que corresponde el valor más alto de la terna dada.
+
+Comparación con la solución oficial (p.7): S_cp=(55-26)/4150m=0.007=0.7%
+(coincide exactamente) e Ic≈1.4 (coincide, mismo razonamiento de "cuenca
+muy alargada").
+
+#### 3) Período de retorno de P=45 mm en d=1 h
+
+P(3,10) en el punto de cierre: **79 mm**, leído de la Fig. 3.1.10
+(isoyetas) — confirmado independientemente renderizando esa figura del
+Teórico HHA: el punto (X=491.9, Y=6173.0) cae inmediatamente al lado de
+la isolínea gruesa de 80 mm (levemente por debajo), consistente con
+≈79 mm.
+
+Con CA=1 (dato puntual de pluviógrafo, sin corrección de área) y
+CD(d=1h)=0.6208·1/(1.0137)^0.5639=**0.616** (fórmula exacta de la IDF de
+Uruguay — ver `scripts/Ejercicio3_parte3_Tr.py`, validado contra las dos
+fuentes primarias, Teórico HHA y Formulómetro, que traen la misma
+fórmula):
+
+```
+CT(Tr) objetivo = P/(P310·CD) = 45/(79×0.616) = 0.9246
+```
+
+Invirtiendo CT(Tr) numéricamente (`fzero`/bisección):
+
+| Tr (años) | P(Tr)=P310·CT(Tr)·CD (mm) |
+|---|---|
+| 2 | 31.5 |
+| 5 | 41.8 |
+| 10 | 48.7 |
+| **6.86** | **45.0** |
+| 25 | 57.3 |
+
+**Tr ≈ 6.9 años.**
+
+**Diferencia con la solución oficial (p.7, Tr=5.25 años):** la
+manuscrita arma una tabla con Tr=10→P=51.7mm y Tr=5→P=44.5mm, lo que
+implica un CD(1h) usado de 51.7/79≈0.654 (con CT(10)=1 exacto) —
+distinto del valor de fórmula cerrada (0.616) usado acá. La causa más
+probable es que la planilla/manuscrito original leyó CD **gráficamente**
+de la Fig. 3.1.10/3.1.11 (el propio Teórico aclara que estas relaciones
+"se presentan en forma gráfica", y su Ejemplo 3 resuelto en el texto usa
+CD=0.60 para d=1h como lectura redondeada de gráfico, ya distinto del
+0.616 exacto de la fórmula) en vez de aplicar la fórmula cerrada con
+todos los decimales; no se descarta tampoco que, igual que en el
+Ejercicio 4 de este mismo examen, el manuscrito visible corresponda a
+otra variante/otro alumno. Se adopta acá el resultado de la **fórmula
+cerrada exacta** (Tr≈6.9 años) por ser reproducible y trazable a la
+fuente primaria (Teórico HHA y Formulómetro, ambos verificados
+visualmente en esta resolución), dejando asentado que el procedimiento
+es idéntico al oficial (mismo despeje, misma inversión de CT).
+
+---
+
+**ESTADO: COMPLETO**

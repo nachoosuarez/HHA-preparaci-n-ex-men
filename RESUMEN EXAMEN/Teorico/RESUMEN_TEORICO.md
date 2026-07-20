@@ -37,7 +37,7 @@ no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020);
 | A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 10 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
-| B1. Delimitación de cuencas y divisoria de aguas | 14 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B1. Delimitación de cuencas y divisoria de aguas | 15 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic |
 | B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
 | B4. Método Racional (y criterio de selección según tc) | 17 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
@@ -538,6 +538,24 @@ método Racional, B4).
 Cita: Teórico HHA §1.2.1 "Cuenca como sistema hidrológico"; Formulómetro
 "Morfología de Cuencas".
 
+**Cuando el escaneo de la carta topográfica es de muy baja resolución**
+(2019 dic, Ej.3 — fotocopia de varias generaciones, curvas de nivel casi
+indistinguibles del ruido): renderizar la página del PDF a alta
+resolución (300 dpi, `pdftoppm`) e inspeccionarla por partes (recortes
+con Pillow) ayuda a **ubicar con certeza el punto de cierre** (suele
+venir marcado con un símbolo impreso distinto de los demás —círculo
+relleno, cruz, etc.— y coincide con un cruce de la cuadrícula UTM si las
+coordenadas del enunciado son "redondas") y a leer **cotas puntuales**
+(números sueltos junto a la red de drenaje) con más confianza que las
+curvas de nivel finas en sí. Si aun así la divisoria no puede trazarse
+con precisión de milímetro, es preferible **decir explícitamente que es
+una delimitación esquemática/aproximada** (ilustrando el criterio
+correcto: perpendicular a las curvas, sin cruzar el cauce) en vez de
+inventar un polígono falsamente preciso — y resolver las partes
+numéricas del ejercicio con los datos que sí da el enunciado de forma
+inequívoca (longitud del cauce, coordenadas del punto de cierre) en
+lugar de con medidas propias sobre un trazo de baja confianza.
+
 ## B2. Tiempo de concentración (Ramser-Kirpich)
 
 **Concepto.** tc es el tiempo de viaje de la partícula de agua que recorre
@@ -610,7 +628,12 @@ puntual, sin corrección por área) ⇒ CT=0.837 ⇒ Tr≈4.5 años; otro ejempl
 2023 feb 2 Ej.2 parte 2.1 — Imax=98mm/h en d=0.3h (bloque más intenso del
 hietograma), P(3,10)=81mm, CA=1 ⇒ CT≈1.01 ⇒ Tr≈10 años; otro ejemplo,
 2022 dic Ej.2 parte 2.2 — P=16.5mm en d=5min, P(3,10)=76mm, CA=1 (dato
-puntual) ⇒ CT≈1.126 ⇒ Tr≈19 años. **Nota:** cuando
+puntual) ⇒ CT≈1.126 ⇒ Tr≈19 años; otro ejemplo, 2019 dic Ej.3 parte 3 —
+P=45mm en d=1h, P(3,10)=79mm, CA=1 ⇒ CT≈0.925 ⇒ Tr≈6.9 años (la solución
+oficial manuscrita da Tr≈5.25 años usando un CD(1h)≈0.65 leído
+gráficamente, contra el CD(1h)=0.616 de la fórmula cerrada exacta — ver
+`resueltos/2019 Diciembre/RESOLUCION.md` para el detalle de la
+diferencia). **Nota:** cuando
 CT objetivo sale muy cerca de 1 (=CT(10) por definición), la inversión es
 muy sensible a redondeos de CD/CT — conviene reportar el **Tr tabulado**
 más próximo (2, 5, 10, 25, 50, 100 años) en vez del valor "exacto" con
