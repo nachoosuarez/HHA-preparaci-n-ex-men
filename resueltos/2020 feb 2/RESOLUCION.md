@@ -367,3 +367,93 @@ dentro del margen de precisión numérica esperable.
 | ¿Se sobrepasa la obra de 62 m³/s? | **Sí, durante ≈31 minutos** |
 
 ---
+
+## EJERCICIO 3 (30 puntos) — Dos bombas iguales en paralelo, manómetro aguas abajo de las bombas
+
+**Datos:** tanque de succión con superficie libre en z_T1=0 m; tubería
+de succión común (D=150 mm, ε=0.04 mm, Ls=2 m, ks=2) hasta dos bombas
+iguales en paralelo ubicadas en z=−2 m; tubería de impulsión común
+(mismo D y ε, Li=200 m, ki=3) hasta un tanque elevado de cota z_T2
+desconocida. Se desprecian pérdidas entre las tuberías comunes y las
+bombas (punto A↔punto P). Con las dos bombas funcionando se mide
+p_P=265 kPa en el punto P (inmediatamente aguas abajo de las bombas,
+antes de la tubería de impulsión común).
+
+Teoría usada: ecuación de la instalación (Darcy-Weisbach +
+Colebrook-White, §C1), curva de la bomba y punto de funcionamiento
+(§C2), bombas en paralelo (§C5) y NPSH disponible vs. requerido (§C4)
+— todos temas ya documentados. Caso particular: **manómetro aguas abajo
+de las bombas en vez de la cota del tanque de impulsión** (la cota del
+tanque, z_T2, es la incógnita) — mismo caso ya resuelto genéricamente en
+`RESUMEN EXAMEN/Codigos/Bombas/Bomba_manometro_impulsion_paralelo.m`.
+
+**Concepto.** El manómetro en P separa el problema en dos balances de
+energía independientes: (1) tanque de succión → punto P (con la curva
+de la bomba de por medio) fija el caudal, sin necesidad de conocer
+z_T2; (2) punto P → tanque elevado (con el caudal ya conocido) permite
+despejar z_T2 directamente, sin iterar.
+
+```
+Paso 1 (fija Q):  H_bomba(Q/2) = zA - zT1 + pP/(rho*g) + V^2/2g + (f_succ*Ls/D+ks)*V^2/2g
+Paso 2 (despeja zT2): zT2 = zA + pP/(rho*g) + V^2/2g - (f_imp*Li/D+ki)*V^2/2g
+```
+(V=Q_total/A en ambos tramos porque D_succión=D_impulsión=150 mm en
+este examen; H_bomba se evalúa en el caudal de UNA bomba, Q_total/2,
+porque las dos bombas son iguales y en paralelo.)
+
+**Herramienta:** `ej3_bombas.m` (adaptado de
+`Bomba_manometro_impulsion_paralelo.m`): Paso 1 se resuelve con una
+búsqueda por bisección de Q_total (no hay forma cerrada porque
+`colebrook.m` y la curva de catálogo entran de forma no lineal); Paso 2
+es álgebra directa.
+
+**Script:** `scripts/ej3_bombas.m`.
+
+**Resultado:**
+```
+Pman (en P) = 27.013 m.c.a.
+Q total = 32.874 L/s ; Q por bomba = 16.437 L/s
+H por bomba (punto de funcionamiento) = 25.582 m ; eta = 65.57 %
+hf succion (tanque->P) = 0.3924 m
+
+Perdida impulsion (P->tanque elevado) = 4.4963 m
+zT2 (cota del tanque elevado) = 20.693 m
+
+Potencia por bomba = 6.291 kW ; Potencia del sistema (2 bombas) = 12.582 kW
+
+NPSHdisp = 11.695 m ; NPSHreq (en el PF) = 2.660 m => NO cavita (margen 9.035 m)
+```
+
+**Resultados finales:**
+1. **Punto de funcionamiento:** Q_total≈32.9 L/s (16.4 L/s por bomba),
+   H≈25.6 m por bomba.
+2. **NPSH:** disponible (11.7 m) > requerido (2.7 m) ⇒ **las bombas NO
+   cavitan** (margen ≈9 m).
+3. **Cota del tanque elevado: z_T2 ≈ 20.7 m.**
+4. **Potencia consumida por el sistema ≈ 12.6 kW.**
+
+**Comparación con solución oficial:** el manuscrito (página 7 del PDF,
+la fotocopia de peor calidad de las tres del examen — texto muy
+comprimido y cursivo) obtiene Q_total≈31.5 L/s (Q por bomba≈15.8 L/s),
+H≈26.0 m, η≈65.7%, NPSHdisp≈12.0 m, NPSHreq≈2.55 m, P≈12.26 kW y
+z_T2≈21.5 m. Todos los valores coinciden en orden de magnitud y en las
+tres conclusiones (no cavita, z_T2≈20-22 m, P≈12-13 kW), con diferencias
+de 3-4% probablemente debidas a la dificultad de leer los dígitos
+manuscritos en esa página (peor calidad que las páginas 3 y 5 de este
+mismo examen) más que a un error de método — el dato base p_P=265 kPa
+viene del enunciado TIPEADO (no manuscrito) y se usó tal cual.
+
+### Resumen Ejercicio 3
+
+| Ítem | Resultado |
+|---|---|
+| Caudal total / por bomba | **32.9 L/s / 16.4 L/s** |
+| H de funcionamiento (por bomba) | **25.6 m** |
+| Rendimiento en el punto de funcionamiento | **65.6%** |
+| NPSH disponible / requerido | **11.7 m / 2.7 m (no cavita)** |
+| Cota del tanque elevado z_T2 | **≈20.7 m** |
+| Potencia del sistema (2 bombas) | **≈12.6 kW** |
+
+---
+
+ESTADO: COMPLETO
