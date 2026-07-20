@@ -173,6 +173,105 @@ de la integración hacia atrás.
 
 ---
 
-## Ejercicio 2 — pendiente
+## Ejercicio 2 (20 puntos) — Delimitación de cuenca + tiempo de concentración
+
+### Enunciado (resumen)
+
+Cañada Saca Calzones, departamento de Lavalleja, punto de cierre
+X=528.6 km, Y=6194.9 km (carta SGM, curvas de nivel cada 5 m, adjunta).
+
+1. Delimitar la cuenca correspondiente.
+2. Definir tiempo de concentración y determinarlo, asumiendo flujo
+   concentrado y longitud del cauce principal L=6470 m.
+
+### Teoría
+
+- **Definición de tc** (RESUMEN_TEORICO.md §B2): tc es el tiempo de
+  viaje de la partícula de agua que recorre el trayecto hidráulicamente
+  (no necesariamente el geométricamente) más largo hasta el punto de
+  cierre — el instante en que toda la cuenca empieza a aportar
+  simultáneamente al caudal de salida.
+- **Delimitación de cuencas** (§B1): la divisoria se traza perpendicular
+  a las curvas de nivel, por las lomas/crestas que separan la red de
+  drenaje que converge al punto de cierre de las cuencas vecinas; nunca
+  cruza un cauce salvo exactamente en el punto de cierre.
+- **Flujo concentrado ⇒ fórmula de Ramser-Kirpich** (§B2):
+  tc = 0.4·L^0.77/S^0.385, con L en km y **S en %** = ΔH(m)/L(km)/10.
+
+### Herramienta y por qué
+
+**Parte 1:** delimitación gráfica manual sobre la carta topográfica (no
+hay fórmula cerrada). Se extrajo a imagen la carta de
+`EXAMENES/2020 febrero.pdf` (pág. 3, con el punto de cierre marcado; pág.
+5 trae una segunda copia en escala de grises, sin ningún polígono
+dibujado): `scripts/ej2_carta_completa.jpg` (carta completa) y
+`scripts/ej2_carta_zoom_X.jpg` (zoom sobre el entorno del punto X).
+
+**Parte 2:** cálculo directo con la fórmula de Ramser-Kirpich (no hace
+falta Octave ni la planilla de eventos extremos — L viene dado por el
+enunciado, sólo falta ΔH, que sale de la carta).
+
+### Paso a paso
+
+**Parte 1) Delimitación de la cuenca.**
+
+El punto de cierre (X, marcador rojo) está sobre la Cañada Saca Calzones,
+justo aguas abajo de donde ésta recibe un par de afluentes menores
+visibles convergiendo desde el noreste (entre las cotas 55-60 m). Desde
+ahí la cañada sigue aguas abajo hacia el suroeste, uniéndose a la Cañada
+Membrillos (fuera de la cuenca de cierre en X). La red de drenaje que
+alimenta el punto de cierre se extiende hacia el noreste/este, ganando
+altura de forma bastante sostenida — las curvas de nivel suben desde
+~55-60 m cerca de X hasta las lomas de más de 100 m que bordean el
+"Valle de Solís" y continúan subiendo hacia el Cerro Gordillo (136.8 m,
+punto más alto legible en la zona), consistente con la diferencia de
+nivel ΔH≈87 m usada en la Parte 2 para un cauce principal de L=6.47 km.
+El camino pavimentado que corre por la cresta (línea roja en la carta,
+de NO a SE bordeando el valle) sigue de cerca la divisoria de aguas en
+buena parte de su trazado, como suele pasar con los caminos que evitan
+cruzar cursos de agua. La cuenca resultante es alargada, en forma de
+"herradura" abierta hacia el suroeste (hacia X), apoyada en las lomas
+altas al norte y al este (hacia Cerro Gordillo) y cerrando en el punto
+de cierre.
+
+**Nota de precisión** (misma limitación que en `resueltos/2022
+diciembre/RESOLUCION.md` Ej.3 y `resueltos/2023 diciembre/RESOLUCION.md`
+Ej.3): ninguna de las dos copias de la carta disponibles en el PDF trae
+el polígono de la cuenca ya dibujado — la descripción de arriba es una
+lectura manual de la carta siguiendo el procedimiento de §B1, con la
+misma precisión con la que se traza a mano en el examen real, sin
+verificación numérica cruzada de área/perímetro contra un polígono
+oficial (la solución manuscrita de la pág. 6 tampoco trae el dibujo, va
+directo al cálculo de tc).
+
+**Parte 2) Tiempo de concentración.**
+
+```
+ΔH = 138 − 51 = 87 m     (cota más alta de la cuenca − cota del cauce en el cierre)
+L  = 6.47 km              (dato del enunciado)
+S  = ΔH(m) / L(km) / 10 = 87 / 6.47 / 10 = 1.345 %
+
+tc = 0.4 · L^0.77 / S^0.385 = 0.4 · 6.47^0.77 / 1.345^0.385
+   = 0.4 · 4.212 / 1.121 = 1.503 h
+```
+
+**Resultado Parte 2: tc ≈ 1.50 horas.**
+
+*Comparación con la solución oficial* (pág. 6, manuscrita, legible):
+misma definición de tc en palabras, mismo ΔH=87 m, L=6.47 km, fórmula de
+Ramser-Kirpich y resultado **tc=1.5 hs** — coincide exactamente.
+
+### Resultado final
+
+| Ítem | Resultado |
+|---|---|
+| Parte 1: cuenca delimitada | Cuenca alargada NE-SO apoyada en las lomas hacia Cerro Gordillo, cerrando en X=528.6/Y=6194.9 sobre la Cañada Saca Calzones (ver `scripts/ej2_carta_zoom_X.jpg`) |
+| ΔH | 87 m |
+| L (cauce principal) | 6.47 km |
+| S (Kirpich) | 1.345 % |
+| **tc** | **1.50 h** |
+
+---
+
 ## Ejercicio 3 — pendiente
 ## Ejercicio 4 — pendiente

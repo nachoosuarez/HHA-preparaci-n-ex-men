@@ -34,8 +34,8 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 | A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 15 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 10 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
-| B1. Delimitación de cuencas y divisoria de aguas | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 14 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
+| B1. Delimitación de cuencas y divisoria de aguas | 14 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 15 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb |
 | B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | B4. Método Racional (y criterio de selección según tc) | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 14 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2 |
