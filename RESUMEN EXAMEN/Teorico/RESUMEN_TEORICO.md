@@ -22,16 +22,16 @@ marzo (1/mar/2024); **2024 feb** = 2024 febrero (5-6/feb/2024); **2023 dic**
 febrero); **2023 feb** = 2023 Febrero (9/feb/2023, primera llamada de
 febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 (25/jul/2022); **2020 dic** = 2020 Diciembre (22/dic/2020); **2020 jul** =
-2020 Julio (7/jul/2020).
+2020 Julio (7/jul/2020); **2020 feb** = 2020 febrero (28/feb/2020).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A2. Energía específica y tirante crítico | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 15 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 14 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A1. Ecuación de FGV y clasificación de canales M/S | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A2. Energía específica y tirante crítico | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 15 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 10 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 1 | 2025 feb 1 |
 | B1. Delimitación de cuencas y divisoria de aguas | 13 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
@@ -300,6 +300,26 @@ hacia el lago en flujo supercrítico — y sólo hay que recalcular yn del
 tramo modificado y, si corresponde, ubicar un resalto dentro de ese
 tramo (comparando conjugado de la rama M3/S2 entrante contra la rama M2
 de salida, igual que en el caso de dos tramos completo).
+
+**Mismo principio con cambio de SECCIÓN Y RUGOSIDAD (no de pendiente)**
+(2020 feb, Ej.1). El razonamiento "el tramo de entrada supercrítico fija
+Q, y el cambio aguas abajo no puede alterarlo" no depende de qué cambie
+en el segundo tramo — vale igual si lo que cambia es la geometría de la
+sección (p.ej. trapezoidal→rectangular) y/o el n de Manning, siempre que
+la pendiente S0 y el tramo de entrada no se toquen. Procedimiento: (1)
+resolver Q con las dos hipótesis de control (M vs. S) en el tramo de
+entrada, igual que arriba, y quedarse con la consistente; (2) con ese
+mismo Q, calcular yc y yn del tramo modificado (con su propia geometría)
+y clasificarlo; (3) si el tramo de entrada era S (supercrítico en toda
+su longitud) y el tramo nuevo resulta M con el tirante entrante por
+debajo de su yc, hay un **resalto obligatorio** dentro del tramo nuevo
+(curva M3 creciente hasta un resalto, luego uniforme a yn) — se ubica
+con el mismo método de conjugado-vs-curva-de-cola de A3, integrando la
+rama subcrítica hacia atrás desde muy lejos aguas abajo (donde y→yn del
+tramo nuevo; el resultado es insensible a qué tan lejos se arranque esa
+integración, conviene verificarlo probando 2-3 distancias distintas).
+En sección rectangular el conjugado tiene fórmula cerrada (`Mom_rect.m`,
+más simple/preciso que el trapezoidal iterativo `Mom_trap.m`).
 
 ## A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo
 
