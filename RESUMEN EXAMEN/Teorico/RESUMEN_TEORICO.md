@@ -22,7 +22,9 @@ marzo (1/mar/2024); **2024 feb** = 2024 febrero (5-6/feb/2024); **2023 dic**
 febrero); **2023 feb** = 2023 Febrero (9/feb/2023, primera llamada de
 febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 (25/jul/2022); **2020 dic** = 2020 Diciembre (22/dic/2020); **2020 jul** =
-2020 Julio (7/jul/2020); **2020 feb** = 2020 febrero (28/feb/2020).
+2020 Julio (7/jul/2020); **2020 feb** = 2020 febrero (28/feb/2020);
+**2020 feb-13** = 2020 feb 2 (13/feb/2020, primera llamada de febrero —
+no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020).
 
 ## Índice de temas
 
@@ -50,6 +52,7 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 | C4. Cavitación: NPSH disponible vs. requerido | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
 | C5. Bombas en serie y en paralelo | 7 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 3 | 2020 dic, 2024 dic, 2023 feb 2 |
+| D1. Diseño de alcantarillas: tipos de flujo 1-6 (clasificación de Bodhaine) | 1 | 2020 feb-13 |
 
 ---
 
@@ -1340,6 +1343,99 @@ de caer al agua — una **descarga libre** (C1): H2=z2+v2²/2g, sin
 recuperar la cinética. La ecuación de la instalación es la misma de
 siempre (Hb=(H2−H1)+ΔH_succ+ΔH_imp), sólo que z1 y z2 son dos alturas
 del mismo tanque en vez de dos tanques separados.
+
+---
+
+# D. Diseño de alcantarillas
+
+## D1. Diseño de alcantarillas: tipos de flujo 1-6 (clasificación de Bodhaine)
+
+**Concepto.** Una alcantarilla es un conducto corto (bajo un terraplén
+vial) que conecta un cauce/cuenca de aporte con un curso o lago aguas
+abajo. Según cómo se relacionen los niveles de agua arriba (h1) y aguas
+abajo (h4) con la altura/diámetro D de la alcantarilla y con sus
+características (pendiente, rugosidad, longitud, forma de la
+embocadura), el flujo cae en uno de **6 tipos** (adaptación de Bodhaine,
+"Measurement of peak discharge at culverts by indirect methods"). El
+origen de cotas de todas las fórmulas de esta sección es el **zampeado
+(fondo) de la SALIDA** de la alcantarilla (z=0 ahí); h1, h3, h4 son
+cargas piezométricas medidas desde ese datum en las secciones (1) aguas
+arriba, (3) salida a tubo lleno, (4) salida con nivel de aguas abajo.
+
+```
+Tipo 1 (entrada y salida ahogadas):       h1/D>=1  y  h4/D>=1
+Tipo 2 (entrada ahogada, sale a tubo lleno,
+        "hidraulicamente larga"):          h1/D>=1.5  y  h4/D<1
+Tipo 3 (entrada ahogada, sale a superficie libre
+        como orificio, "hidraulicamente corta"): h1/D>=1.5  y  h4/D<1
+Tipos 4/5/6: entrada NO ahogada, flujo a superficie libre dentro de la
+        alcantarilla (funciona como un canal corto, controlado por
+        Manning/critico dentro del conducto) — no desarrollados aún en
+        los exámenes resueltos.
+```
+
+**Balance de carga Tipo 1** (entre las secciones (1) y (4), despreciando
+la diferencia de términos cinéticos entre ambas):
+
+```
+h1 = h4 + Q²/(2g·CD1²·AT²) + n²·Q²·L / (AT²·Rh^(4/3))
+        \____ perdida localizada ____/   \___ perdida distribuida (Manning) ___/
+AT = area de la seccion llena (B·H rectangular, o pi·D²/4 circular)
+Rh = AT / Pm ,  Pm = 2H+B (rectangular) o pi·D (circular)
+```
+
+**Balance de carga Tipo 2** (entre las secciones (1) y (3), con h3=D —
+la salida es un "chorro" a tubo lleno que conserva su término cinético):
+
+```
+Q = CD1 · AT · sqrt( 2g·(h1-h3) / (1 + 2g·CD1²·n²·L/Rh^(4/3)) ) ,   h3=D
+```
+
+**Coeficiente de descarga CD1 (=CD2), Tabla 3.2.1**, función de la
+terminación de la embocadura (r/D, r/a, w/D o w/a — el redondeo o
+achaflanado de la arista de entrada; CD1=1/sqrt(1+kE1)):
+
+| r/D, r/a, w/D o w/a | kE1/2 | CD1 (=CD2) |
+|---|---|---|
+| 0.00 | 0.42 | 0.84 |
+| 0.02 | 0.29 | 0.88 |
+| 0.06 | 0.21 | 0.91 |
+| 0.08 | 0.09 | 0.96 |
+| 0.10 | 0.06 | 0.97 |
+| 0.12 | 0.04 | 0.98 |
+
+**Cuándo se usa.** (1) Se verifica primero la condición de Tipo 1
+(ambos extremos ahogados) — para eso hace falta conocer el tirante de
+aguas abajo de la alcantarilla, que en general no es un dato directo
+sino el resultado de resolver el **FGV del cauce/canal aguas abajo**
+(curva M1/M2 desde el nivel del lago o del cauce de salida, ver §A4);
+si además la alcantarilla desemboca sobre un cauce natural (no
+directamente sobre el lago), el tirante de aguas arriba h1 y el de
+aguas abajo h4 pueden estar referidos a datums locales ligeramente
+distintos entre sí (el zampeado de la entrada de la alcantarilla puede
+estar más alto que el de su salida, en z=S₀_alc·L_alc) — hay que sumar
+o restar ese desnivel antes de comparar h1/h4 con la formula (que
+siempre usa el datum de la SALIDA). (2) Si no está ahogada la salida
+(h4/D<1) pero sí la entrada (h1/D≥1.5), hay que distinguir Tipo 2 de
+Tipo 3 con el ábaco gráfico Fig. 3.2.5/3.2.6 del Teórico (eje L/D,
+curvas según pendiente S₀ y forma de la embocadura) — no tiene fórmula
+cerrada, es lectura gráfica; alcantarillas largas y de pendiente baja
+caen del lado Tipo 2 (fluyen llenas por fricción), cortas y de
+pendiente alta caen del lado Tipo 3 (control por la entrada, como un
+orificio). (3) Para **verificar si un evento supera el caudal de
+diseño de una alcantarilla** sin conocer el caudal del evento
+directamente (sólo un tirante aguas arriba medido), se itera: se prueba
+un Q, se resuelve el FGV del cauce aguas abajo con ese Q para ver si la
+salida sigue ahogada, y se resuelve el balance de carga del tipo que
+corresponda con el h1 dado — el Q correcto es el que hace autoconsistente
+la hipótesis de tipo de flujo asumida (ejemplo completo:
+`resueltos/2020 feb 2/RESOLUCION.md` ["2020 feb-13"], Ejercicio 1, donde la condición
+de diseño resulta Tipo 1 y un evento extremo posterior, con mayor
+tirante aguas arriba pero menor nivel de lago aguas abajo, pasa a
+Tipo 2 y supera el caudal de diseño).
+
+Cita: Teórico HHA §3.2 "Diseño de Alcantarillas" (§3.2.1 tipos de flujo,
+Tabla 3.2.1 coeficiente de descarga, Fig. 3.2.5/3.2.6 ábaco Tipo2/Tipo3).
 
 ---
 
