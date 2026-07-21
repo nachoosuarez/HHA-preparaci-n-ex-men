@@ -4,7 +4,7 @@ Este resumen se construyó leyendo completos los exámenes ya resueltos en
 `resueltos/` (2020 Diciembre, 2020 Julio, 2022 Julio, 2022 diciembre, 2024
 diciembre, 2025 Febrero 1, 2025 Febrero 2, 2026 Febrero, 2024 Julio, 2024
 marzo, 2024 febrero, 2023 diciembre, 2023 Julio, 2023 febrero_2, 2023
-Febrero, 2019 Diciembre y 2019 julio) y extrayendo de ahí
+Febrero, 2019 Diciembre, 2019 julio y 2019 febrero 2) y extrayendo de ahí
 **todos los temas y fórmulas que efectivamente fueron preguntados**,
 fusionando los que se repiten entre exámenes en una sola sección
 enriquecida. Las fórmulas se verificaron/precisaron contra `Teórico
@@ -26,17 +26,19 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 **2020 feb-13** = 2020 feb 2 (13/feb/2020, primera llamada de febrero —
 no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020);
 **2019 dic** = 2019 Diciembre (16/dic/2019); **2019 jul** = 2019 julio
-(22/jul/2019).
+(22/jul/2019); **2019 feb 2** = 2019 febrero 2 (22/feb/2019 — no
+confundir con "2019 febrero.pdf", la otra llamada de febrero de 2019,
+aún sin resolver en este repo).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul |
-| A2. Energía específica y tirante crítico | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 jul |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul |
-| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 10 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
+| A1. Ecuación de FGV y clasificación de canales M/S | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2 |
+| A2. Energía específica y tirante crítico | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2 |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 jul, 2019 feb 2 |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2 |
+| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 11 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2 |
 | A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
 | B1. Delimitación de cuencas y divisoria de aguas | 15 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
@@ -502,6 +504,38 @@ tanto el tramo lago1→escalón como el tramo escalón→lago2 son varias veces
 más largos que el desarrollo típico de una curva M1/M2 — pero **debe
 verificarse en cada caso**, no asumirse: si el escalón estuviera cerca de
 uno de los lagos el cambio de Q podría ser significativo.
+
+**Escalón MUY CERCA de un lago con control crítico en la entrada (un
+solo lago, no dos)** (2019 feb 2, Ej.1: canal trapezoidal S, escalón
+Δz=0.5 m a sólo x=40 m de la entrada, sobre L=450 m totales hasta caída
+libre). Caso más simple que el anterior: como el control de la entrada
+ya es crítico (A4, "control crítico en la entrada, sección
+trapezoidal"), Dmax se calcula igual que siempre
+(Dmax=E_natural(x_escalón)−Ec, con E_natural leído sobre la curva S2 que
+sale del lago) y, si D>Dmax, el remanso subcrítico que aparece aguas
+arriba del escalón se resuelve buscando su cruce (conjugado vs. curva
+S2, método de A3) con la rama que viene del lago **dentro del tramo
+[0, x_escalón]** — si ese cruce (el resalto) queda bien adentro de ese
+tramo (acá, x_resalto≈13 m de un tramo de 40 m), el remanso no llega a
+tocar la entrada y el Q de control crítico no cambia; si el escalón
+estuviera aún más cerca de la entrada, convendría verificar que el
+resalto no "se coma" todo el tramo [0, x_escalón] (lo que sí obligaría a
+recalcular Q, como en el caso de arriba).
+
+**Nota numérica: la EDO de FGV es singular en yc (1−Fr²=0)** — cualquier
+curva que arranque justo en el control crítico (yc en la entrada de un
+lago tipo S, o yc en una caída libre) necesita tolerancias de
+`ode23`/`ode45` bastante más finas que el default
+(`odeset('RelTol',1e-10,'AbsTol',1e-12)`): con las tolerancias por
+defecto, el primer tramo de la curva (muy cerca de yc, donde la
+pendiente dy/dx es muy grande) se resuelve con paso demasiado grueso y
+el perfil resultante se aparta visiblemente del correcto más adelante
+(en 2019 feb 2, el tirante a 40 m del inicio salía ≈0.69 m con
+tolerancias por defecto en vez de ≈0.724 m con tolerancias finas — un
+9% de error que además cambiaba la conclusión cualitativa de si un
+escalón ahogaba o no la sección). Conviene aplicar esta tolerancia fina
+por defecto en cualquier integración de FGV que arranque en un control
+crítico, no sólo cuando el resultado "se ve raro".
 
 ## A6. Tensión rasante de fondo en FGV
 
