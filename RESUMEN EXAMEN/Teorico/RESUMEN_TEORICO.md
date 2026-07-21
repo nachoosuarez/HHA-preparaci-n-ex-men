@@ -48,12 +48,12 @@ no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020);
 | B8. Infiltración de Horton y tiempo de encharcamiento | 3 | 2025 feb 2, 2023 feb 2, 2019 jul |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
-| C2. Curva de la bomba y punto de funcionamiento | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
-| C3. Potencia consumida por el sistema de bombeo | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic |
-| C4. Cavitación: NPSH disponible vs. requerido | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
-| C5. Bombas en serie y en paralelo | 8 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb, 2020 feb-13 |
-| C6. Regulación de caudal por válvula (pérdida localizada variable) | 3 | 2020 dic, 2024 dic, 2023 feb 2 |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
+| C2. Curva de la bomba y punto de funcionamiento | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
+| C3. Potencia consumida por el sistema de bombeo | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
+| C4. Cavitación: NPSH disponible vs. requerido | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
+| C5. Bombas en serie y en paralelo | 9 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb, 2020 feb-13, 2019 jul |
+| C6. Regulación de caudal por válvula (pérdida localizada variable) | 4 | 2020 dic, 2024 dic, 2023 feb 2, 2019 jul |
 | D1. Diseño de alcantarillas: tipos de flujo 1-6 (clasificación de Bodhaine) | 1 | 2020 feb-13 |
 
 ---
@@ -1136,6 +1136,28 @@ abajo), la energía cinética de salida V²/(2g) **no se recupera** y debe
 incluirse como parte de la carga exigida por la instalación. Si ambos
 extremos son superficies libres de grandes depósitos (v≈0), esos términos
 cinéticos se anulan en la ecuación de instalación.
+
+**Ojo al reusar los scripts canónicos de `Bombas/` con diámetros de
+succión e impulsión DISTINTOS** (2019 jul, Ej.4: Ds=300mm, Di=250mm,
+río y tanque elevado — ambos extremos superficies libres). Los scripts
+`Bomba_sola.m`/`Bombas_paralelo.m` calculan
+`HA=z1+p1/γ+vs²/2g-ΔH(succión)` y `HB=z2+p2/γ+vi²/2g+ΔH(impulsión)`
+con el término cinético SIEMPRE sumado — válido tal cual sólo si
+vs=vi (mismo diámetro en toda la instalación, caso en que esos términos
+se cancelan solos al restar Hm=HB-HA) o si alguno de los extremos es
+una descarga libre real (chorro a la atmósfera, ver párrafo anterior).
+Si los dos extremos son grandes depósitos de superficie libre PERO con
+**diámetros de succión e impulsión distintos** (caso típico de "río →
+bombas → tanque elevado" con Ds≠Di), hay que **borrar ambos términos
+cinéticos** y usar la forma reducida `Hm=(z2-z1)+ΔH(succión)+ΔH(impulsión)`
+(que es la misma fórmula que trae escrita la propia solución oficial de
+este examen: H_INST=HT-HR+(ks+f_s·Ls/Ds)·Us²/2g+(ki+kv+f_i·Li/Di)·Ui²/2g,
+sin ningún término cinético "suelto" fuera de los paréntesis de pérdidas)
+— de lo contrario el resultado queda contaminado por una diferencia
+`(vi²-vs²)/2g` que no tiene sustento físico cuando ambos extremos son
+reservorios grandes. Mismo criterio aplica al cálculo de NPSH_disp (C4):
+la HA usada ahí nunca lleva el término cinético de la succión, tenga o
+no la impulsión un diámetro distinto.
 
 **Cuándo se usa.** Es la base de todo problema de bombeo: para cada Q de
 prueba se calcula Hm(Q) de la instalación (iterando f con Colebrook-White,

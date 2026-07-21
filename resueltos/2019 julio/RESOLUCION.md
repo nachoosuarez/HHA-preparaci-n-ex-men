@@ -413,10 +413,165 @@ conclusión: "se sobrepasa la obra".
 
 ---
 
-## Ejercicio 4
+## Ejercicio 4 — Bombas en paralelo con regulación por válvula
 
-Pendiente — queda para la próxima corrida.
+### Enunciado (resumen)
+
+Dos bombas idénticas en paralelo (curva de catálogo dada) elevan agua de
+un río hacia un tanque elevado (zT=20 m). Succión compartida:
+Ls=10 m, Ds=300 mm, εs=0.04 mm, ks=1. Impulsión compartida:
+Li=100 m, Di=250 mm, εi=0.04 mm, ki=2, con una válvula de compuerta
+(kv_abierta=0). Cota del eje de las bombas zB=1 m. Agua a 20°C, 1 atm.
+
+Curva de catálogo (c/u de las 2 bombas, idénticas):
+
+```
+Q (L/s)     0    25    50    75   100   125   150
+H (m.c.a.) 38    37    35    31    26    19    12
+rend (%)    0    45    70    76    71    56    30
+NPSHr (m) 3.1   3.5   4.3  5.20   7.1   9.2    13
+```
+
+1) Con válvula abierta y nivel del río zR=0 m:
+   a) Punto de funcionamiento del sistema y de cada bomba.
+   b) Potencia consumida por el sistema.
+   c) Verificar que las bombas no cavitan.
+2) Nivel mínimo al que puede descender el río sin que exista cavitación.
+3) Con zR=0 m, cerrar parcialmente la válvula para reducir el caudal
+   del sistema a Q=150 L/s:
+   a) Valor de kv correspondiente.
+   b) Nuevo punto de funcionamiento del sistema y de cada bomba.
+   c) Potencia consumida.
+   d) Verificar que las bombas no cavitan.
+
+### Teoría (RESUMEN_TEORICO.md §C1-C6)
+
+- **C1** Ecuación de la instalación: Hm=HB-HA con pérdidas
+  distribuidas (Colebrook-White) y localizadas en succión e impulsión.
+  **Nota importante para este ejercicio** (añadida al resumen): con
+  Ds≠Di y **ambos extremos siendo superficies libres de grandes
+  depósitos** (río y tanque), la ecuación de instalación **no lleva
+  ningún término cinético suelto** fuera de las pérdidas — los `ks`,
+  `ki` del enunciado ya incluyen todas las pérdidas localizadas
+  (entrada, salida, accesorios). La plantilla genérica de
+  `Bomba_sola.m`/`Bombas_paralelo.m` (que sí suma `+v²/2g` en HA y HB)
+  sólo da el mismo resultado si Ds=Di o si hay una descarga libre real
+  (chorro) — no es el caso acá, hay que usar la forma reducida
+  `Hm=(zT-zR)+(ks+fs·Ls/Ds)·Us²/2g+(ki+kv+fi·Li/Di)·Ui²/2g` (la misma
+  que trae la solución oficial manuscrita).
+- **C2** Dos bombas idénticas en paralelo: curva equivalente H(Q_total)
+  = H_catálogo(Q_total/2); punto de funcionamiento = intersección con
+  la curva de instalación.
+- **C3** Potencia consumida: Pc=γ·Q_sistema·H_sistema/η(Q_bomba).
+- **C4** NPSH disponible = HA - zB + 10.1 m, con HA **sin** término
+  cinético (se cancela, ver nota de la sección — misma lógica que la
+  ecuación de instalación cuando el origen es una superficie libre).
+- **C6** Caso inverso "hallar kv dado Q objetivo": con Q conocido, el
+  problema es directo (sin iterar), se despeja kv de la ecuación de la
+  instalación evaluada en ese Q.
+
+Cita: Teórico HHA §3.3 (bombas, instalación, cavitación, bombas en
+paralelo); Formulómetro "Bombas — Ecuación de la instalación /
+Cavitación / Bombas en paralelo".
+
+### Herramienta y por qué
+
+Se usó Octave (`colebrook.m` para el factor de fricción; sin más
+dependencias, ya que la forma reducida de Hm de este ejercicio es
+autocontenida) porque es un problema estándar de bombeo con pérdidas
+Darcy-Weisbach/Colebrook y una válvula reguladora — el caso de uso
+central de `RESUMEN EXAMEN/Codigos/Bombas`. Se adaptó (no copió tal
+cual) `Bombas_paralelo.m`, corrigiendo la ecuación de instalación a la
+forma reducida sin términos cinéticos sueltos (ver Teoría arriba) tras
+detectar, comparando contra la solución oficial, que la plantilla
+genérica con `+v²/2g` da un ≈6% de error en Q cuando Ds≠Di. Para la
+Parte 2 (zR mínimo) se usó `fzero` sobre zR, buscando el cero de
+NPSHdisp(zR)-NPSHreq(Q(zR)) (el punto de funcionamiento cambia con zR,
+así que hay que resolverlo autoconsistentemente). Para la Parte 3.a
+(hallar kv) se despejó algebraicamente en un solo paso (C6, caso
+inverso, sin iterar). Script completo:
+`resueltos/2019 julio/scripts/Ejercicio4_bombas_paralelo_valvula.m`
+(+ `colebrook.m`).
+
+### Paso a paso
+
+**Parte 1) zR=0, válvula abierta.**
+
+```
+Curva equivalente: H_eq(Q) = H_catalogo(Q/2)   (2 bombas identicas en paralelo)
+Curva instalacion: Hm(Q) = (zT-zR) + (ks+fs*Ls/Ds)*Us^2/2g + (ki+fi*Li/Di)*Ui^2/2g
+
+Interseccion: Qsistema = 193.9 L/s ; Hsistema = 26.69 m
+Qbomba = 96.9 L/s (=Qsistema/2) ; Hbomba = 26.69 m
+```
+
+a) **Qsistema ≈ 194 L/s, Hsistema ≈ 26.7 m** (Qbomba≈97 L/s cada una).
+
+b) Potencia: η(Qbomba=97 L/s)≈71.9% (interpolado de la curva de
+rendimiento) ⇒ **Pc = γ·Qsist·Hsist/η = 9800×0.1939×26.69/0.719 ≈
+70.6 kW**.
+
+c) NPSH: NPSHdisp=8.54 m > NPSHreq(97 L/s)=6.85 m ⇒ **las bombas NO
+cavitan**.
+
+**Comparación con la solución oficial:** coincide muy bien en todos los
+valores — Qsistema=193 L/s (≈194, <0.5%), Hsistema=Hbomba=26.7 m
+(idéntico), Qbomba=96.5 L/s (≈97, <0.5%), Pc≈70.1 kW (calculado con los
+mismos redondeos que el manuscrito, ≈9800×0.193×26.7/0.72), NPSHdisp=
+8.55 m (≈8.54, idéntico) y NPSHreq=6.8 m (≈6.85, idéntico). (Nota:
+Qsistema en el manuscrito se leyó inicialmente como "183 L/s" por la
+calidad del escaneo; una inspección más cercana confirma que dice
+**193** L/s, consistente con Qbomba×2=96.5×2=193.)
+
+**Parte 2) Nivel mínimo del río sin cavitación.**
+
+Al bajar zR, el punto de funcionamiento se desplaza (mayor desnivel a
+vencer ⇒ menor Q) y el NPSHdisp baja (menor carga de aproximación en la
+succión) — hay que resolver ambos efectos a la vez con `fzero`:
+
+```
+zR_min tal que NPSHdisp(zR_min) = NPSHreq(Qbomba(zR_min))
+=> zR_min = -2.34 m ; con Qbomba=90.1 L/s ; Hbomba=28.14 m en ese punto
+```
+
+**Resultado Parte 2: zR_min ≈ -2.3 m.**
+
+**Comparación con la solución oficial:** coincide razonablemente —
+manuscrito: zR_min=-2.3 m (idéntico), Qbomba=88.7 L/s (vs. 90.1 L/s,
+≈1.6% de diferencia), Hbomba=28.0 m (vs. 28.14 m, ≈0.5%) — diferencias
+menores atribuibles a la precisión de la resolución gráfica/iterativa
+manual de este punto (a diferencia de las Partes 1 y 3, acá no hay
+forma cerrada y el manuscrito no expone los pasos intermedios de su
+iteración para comparar más en detalle).
+
+**Parte 3) Cerrar la válvula para Qsistema=150 L/s (zR=0).**
+
+Con Q=150 L/s conocido (75 L/s por bomba), el problema es directo (C6,
+caso inverso): se lee Hbomba=31.0 m de la curva de catálogo en 75 L/s y
+se despeja kv de la ecuación de instalación evaluada en Q=150 L/s:
+
+```
+31.0 = (20-0) + (1+fs*10/0.3)*Us^2/2g + (2+kv+fi*100/0.25)*Ui^2/2g
+=> kv = 14.57
+```
+
+a) **kv ≈ 14.6.**
+
+b) Nuevo punto de funcionamiento (por construcción, ya que kv se eligió
+para esto): **Qsistema=150 L/s, Hsistema=Hbomba=31.0 m, Qbomba=75 L/s.**
+
+c) Potencia: η(75 L/s)=76% ⇒ **Pc = 9800×0.150×31.0/0.76 ≈ 60.0 kW**.
+
+d) NPSH: NPSHdisp=8.76 m > NPSHreq(75 L/s)=5.20 m ⇒ **NO cavitan**
+(cerrar la válvula reduce Q, lo que reduce el NPSHreq más de lo que
+cambia el NPSHdisp — coherente con la nota de C6 del resumen teórico:
+el riesgo de cavitación generalmente disminuye al cerrar la válvula).
+
+**Comparación con la solución oficial:** coincide exactamente — kv=14.5
+(≈14.57), Qsistema=150 L/s y Hsistema=Hbomba=31.0 m (idénticos),
+Pc≈9800×0.150×31/0.76≈60.0 kW (idéntico), NPSHdisp=8.76 m (idéntico) y
+NPSHreq=5.2 m (idéntico), con la misma conclusión "NO CAVITA".
 
 ---
 
-ESTADO: EN CURSO (falta Ejercicio 4)
+ESTADO: COMPLETO
