@@ -489,6 +489,15 @@ diseño de la Parte 1 durante 1.88 hs.
 11. **`Hoja 4` no aplica el piso de infiltración mínima** (a diferencia de
     las hojas grande/chica) — si el ejercicio lo requiere, agregarlo a
     mano.
+12. **Invertir el Tr de un evento observado NO siempre usa CA=1.** Si el
+    dato es una lectura **puntual** de pluviómetro/pluviógrafo, sí se usa
+    CA=1 (no hay área que promediar). Pero si el "evento registrado" es
+    el mismo que se usa para generar el caudal en el punto de cierre de
+    una cuenca (osea, se trata como lluvia caída sobre TODA el área de
+    aporte, no en un punto), hay que incluir `CA(d,Área)` igual que en la
+    tormenta de diseño — omitirlo subestima fuertemente el Tr resultante
+    (ver `resueltos/2019 julio/RESOLUCION.md`, Ejercicio 3, Parte 2.a:
+    con CA≈0.83 da Tr≈222 años; con CA=1 por error daría Tr≈54 años).
 
 ---
 

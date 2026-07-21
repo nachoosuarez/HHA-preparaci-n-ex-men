@@ -276,10 +276,147 @@ por bloque y ambos redondean al mismo total de 12mm.
 
 ---
 
-## Ejercicio 3 y 4
+## Ejercicio 3 — Caudal de diseño NRCS con NC ponderado, Tr de un evento y AMC
 
-Pendientes — quedan para la próxima corrida.
+### Enunciado (resumen)
+
+Cuenca en Florida (X=480000 m, Y=6250000 m), Área=75 km², Lcp=12500 m,
+ΔH=70 m, S media=1.8%. Uso de suelo: 75% pastizales + 25% cultivo en
+hileras rectas, ambos en condición hidrológica **buena**; suelo
+predominante **Cerro Chato**; flujo concentrado.
+
+1) Caudal de diseño de una obra de drenaje (pequeño puente) para
+   Tr=100 años. Justificar la metodología.
+2) Ocurre un evento registrado (hietograma de 12 bloques de 0.5 h: P=3,
+   5, 8, 10, 13, 21, 49, 16, 9, 7, 5, 3 mm):
+   a) Período de retorno de la intensidad máxima del evento.
+   b) Caudal máximo en el punto de cierre para ese evento, sabiendo que
+      la precipitación acumulada en los 5 días previos (junio) fue de
+      62 mm. Verificar si se sobrepasó la condición de diseño.
+
+### Teoría (RESUMEN_TEORICO.md §B1-B6)
+
+- **B1** "Cerro Chato" → Grupo Hidrológico **B** (Tabla 3.1.5 del
+  Teórico, verificado con `pdftotext` sobre `Teórico HHA.pdf`).
+- **B2** Kirpich: tc = 0.4·L^0.77/S^0.385, con S=ΔH/L/10 del cauce
+  principal (no la pendiente media de la cuenca, que es sólo un dato
+  extra sin uso en este ejercicio, ya que no se pide el método
+  Racional — ver B4 criterio de selección).
+- **B4** Criterio de selección de método: tc>1h ⇒ **sólo NRCS**.
+- **B5** Número de Curva **ponderado** por uso de suelo mixto
+  (NC_ponderado = Σ fracción·NC_i, Fig. 3.1.20 del Teórico según uso,
+  tratamiento, condición hidrológica y grupo B).
+- **B3** Inversión de Tr de un evento observado: CT=P/(P310·CD·CA),
+  invertir CT(Tr) numéricamente. Con **CA incluido** (a diferencia de
+  un dato puntual de pluviógrafo) porque este evento está registrado
+  sobre **toda la cuenca de aporte** (el mismo que genera el caudal en
+  el punto de cierre en la parte b), no es una lectura puntual.
+- **B6** AMC: con P5d y estación (activa/inactiva) se determina AMC
+  I/II/III y se corrige el NC de tabla.
+
+Cita: Teórico HHA §3.1.2, §3.1.4, §3.1.5, §3.1.6, Tabla 3.1.5 (grupos
+hidrológicos de suelos), Fig. 3.1.20 (Número de Curva); Formulómetro
+"Eventos extremos".
+
+### Herramienta y por qué
+
+Se usó Python (replicando la lógica de la hoja **"Cálculos (chica)"**
+de `Eventos extremos.xlsx` — la hoja indicada para NC ponderado por uso
+de suelo mixto, ver `COMO_USAR_EVENTOS_EXTREMOS.md` §0 y §2.b — y el
+mismo patrón de tormenta de diseño por bloque alterno + hidrograma
+unitario SCS ya usado en `resueltos/2024 diciembre/scripts/ej2_parte1.py`)
+porque es más rápido de verificar con precisión numérica (bisección
+exacta para invertir Tr, integración exacta del bloque alterno) que
+operar la planilla real celda por celda para un examen ya resuelto; en
+el examen real se completaría directamente `Cálculos (chica)` con
+`M2=0.25` (%cultivo), `M3=78`, `M4=61` (NC ponderado automático en
+`M5`), más la corrección de AMC a mano en `J7` para la parte 2.b (la
+planilla no tiene una celda que la calcule sola, ver §2.e del
+instructivo). Script:
+`resueltos/2019 julio/scripts/Ejercicio3_NRCS_cuenca.py`.
+
+### Paso a paso
+
+**Datos base:**
+
+```
+Grupo hidrologico: Cerro Chato -> B  (Tabla 3.1.5)
+NC pastizal, cond. Buena, grupo B (sin tratamiento, SR)      = 61
+NC cultivo en hileras rectas (SR), cond. Buena, grupo B      = 78
+NC ponderado = 0.75*61 + 0.25*78 = 65.25
+
+S cauce principal = dH/L/10 = 70/12.5/10 = 0.56 %
+tc (Kirpich) = 0.4*12.5^0.77/0.56^0.385 = 3.50 hs   (> 1 h => SOLO metodo NRCS)
+```
+
+**Parte 1) Caudal de diseño, Tr=100 años.**
+
+Tormenta de diseño por bloque alterno (Δt=tc/7=0.4995 h≈30 min, 12
+bloques), con P310=82 mm (isoyeta en Florida), CT(100)=1.4401:
+
+```
+Tormenta de diseño total = 141.9 mm
+S(NC=65.25) = 135.27 mm ; Ia=0.2S = 27.05 mm
+Pe total (con piso de infiltracion 1.2 mm/h, grupo B) = 52.72 mm
+Hidrograma unitario SCS: Tp=2.35 hs, Tb=6.26 hs, qp=66.45 m3/s/cm
+```
+
+**Resultado Parte 1: Qmax diseño (NRCS, Tr=100) = 266.0 m³/s.**
+
+**Comparación con la solución oficial:** coincide muy bien — el
+manuscrito da NC=65.25 (idéntico) y **Qmax=265 m³/s** (diferencia
+<0.4%, atribuible a redondeos intermedios del cálculo manual).
+
+**Parte 2.a) Tr de la intensidad máxima registrada.**
+
+El bloque más intenso del hietograma es P=49 mm en d=0.5 h:
+
+```
+CD(0.5h) = 0.4519 ; CA(0.5h, 75 km2) = 0.8319   (CA incluido: evento sobre toda la cuenca)
+CT objetivo = 49 / (82*0.4519*0.8319) = 1.5896
+Invirtiendo CT(Tr) (biseccion) => Tr = 221.6 años
+```
+
+**Resultado Parte 2.a: Tr ≈ 220-225 años** (se adopta el tabulado más
+cercano, 200 o 250 años según la tabla disponible).
+
+**Comparación con la solución oficial:** coincide casi exactamente — el
+manuscrito da CD=0.45, CA=0.83, CTr=1.5895 y **Tr≈225 años** (idéntico
+al cálculo, con la mínima diferencia esperable por redondeo de CD/CA
+leídos vs. calculados con la fórmula cerrada).
+
+**Parte 2.b) Caudal máximo del evento, con corrección de NC por AMC.**
+
+```
+P5d = 62 mm, junio (estacion INACTIVA) > 27.94 mm => AMC III
+NC(III) = 23*NC(II)/(10+0.13*NC(II)) = 23*65.25/(10+0.13*65.25) = 81.20
+S(NC=III) = 58.81 mm ; Ia = 11.76 mm
+```
+
+Se aplica el hietograma **registrado**, en su orden cronológico real
+(sin reordenar por bloque alterno), con el mismo hidrograma unitario ya
+calculado (mismo tc, y el ancho de bloque del hietograma observado,
+0.5h, coincide con Δt=tc/7 de la Parte 1 — no es casualidad, así se
+arma la tormenta de diseño):
+
+```
+Pe total (evento registrado, NC=III=81.2) = 95.62 mm
+Qmax evento = 496.8 m3/s
+```
+
+**Resultado Parte 2.b: Qmax evento ≈ 497 m³/s > Qmax diseño (266 m³/s,
+Tr=100) ⇒ la condición de diseño de la obra fue SOBREPASADA.**
+
+**Comparación con la solución oficial:** coincide — NC(III)=81.2
+(idéntico) y **Qmax=495 m³/s** (diferencia <0.4%), con la misma
+conclusión: "se sobrepasa la obra".
 
 ---
 
-ESTADO: EN CURSO (falta Ejercicio 3 y 4)
+## Ejercicio 4
+
+Pendiente — queda para la próxima corrida.
+
+---
+
+ESTADO: EN CURSO (falta Ejercicio 4)

@@ -39,11 +39,11 @@ no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020);
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 10 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
 | B1. Delimitación de cuencas y divisoria de aguas | 15 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
-| B4. Método Racional (y criterio de selección según tc) | 17 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic |
-| B6. Condición de humedad antecedente (AMC) | 9 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
+| B4. Método Racional (y criterio de selección según tc) | 18 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic, 2019 jul |
+| B6. Condición de humedad antecedente (AMC) | 10 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2019 jul |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 3 | 2025 feb 2, 2023 feb 2, 2019 jul |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
@@ -672,6 +672,20 @@ más próximo (2, 5, 10, 25, 50, 100 años) en vez del valor "exacto" con
 decimales, que puede variar varias décimas de año según la precisión
 usada en los pasos intermedios).
 
+**CA se incluye si el evento es sobre TODA la cuenca (no un dato
+puntual)** (2019 jul, Ej.3 parte 2.a). En todos los ejemplos anteriores
+CA=1 porque el dato es una lectura **puntual** de pluviómetro/pluviógrafo
+(sin área que promediar). Pero si el hietograma "registrado" es el mismo
+que después se usa para generar el caudal en el punto de cierre de una
+cuenca (osea, se interpreta como lluvia caída de forma más o menos
+uniforme sobre toda el área de aporte, no en un único punto), hay que
+incluir CA(d,Área) en la inversión igual que en la tormenta de diseño:
+CT=P/(P310·CD(d)·CA(d,Área)). Ejemplo: P=49mm en d=0.5h, P310=82mm,
+Área=75km² ⇒ CD(0.5h)=0.452, CA(0.5h,75km²)=0.832 ⇒ CT=1.590 ⇒ Tr≈222
+años (vs. Tr≈54 años si se calculara con CA=1 por error, ya que CA<1
+reduce la precipitación puntual equivalente y por lo tanto reduce el CT
+objetivo — omitirlo subestima fuertemente el período de retorno real).
+
 Cita: Teórico HHA §3.1.4; Formulómetro "Eventos extremos — Relaciones
 Intensidad Duración Frecuencia".
 
@@ -927,7 +941,11 @@ NC(II)=69 (tabla) se corrige a NC(III)=23·69/(10+0.13·69)=83.7, lo que
 25.4·(1000/83.7−10)=49.6mm) y por lo tanto **aumenta** fuertemente la
 precipitación efectiva Pe para la misma lluvia total — el efecto físico
 esperado de un suelo ya húmedo por lluvias previas: infiltra menos y
-escurre más. **Primer caso con AMC I (2022 jul, Ej.2 parte 2):** evento
+escurre más. (Mismo P5d=62mm, mismo mes/estación inactiva y misma
+conclusión AMC III reaparecen en 2019 jul, Ej.3 parte 2.b, con un
+NC(II) ponderado distinto, 65.25 → NC(III)=81.2 — fórmula y umbral son
+los mismos, sólo cambia el NC de partida.) **Primer caso con AMC I
+(2022 jul, Ej.2 parte 2):** evento
 en febrero (estación de crecimiento), P5d=25mm < 35.56mm ⇒ **AMC I**;
 NC(II)=78.4 (ponderado de tabla) se corrige a
 NC(I)=4.2·78.4/(10−0.058·78.4)=**60.39** — un NC bastante más bajo, el
