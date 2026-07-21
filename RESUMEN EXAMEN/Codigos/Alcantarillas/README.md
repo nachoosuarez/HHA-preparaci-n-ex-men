@@ -58,4 +58,6 @@ y la salida (z=S0·distancia) antes de usarlo como h.
 
 Ejemplo numérico completo: `resueltos/2020 feb 2/scripts/ej1_alcantarilla_tipo1.m`
 y `ej1_evento.m` (Tipo 1 en condición de diseño, Tipo 2 en un evento
-extremo con caudal mayor).
+extremo con caudal mayor). Caso "canal infinito sin lago" (h4=yn del
+canal, sin integrar FGV): `resueltos/2019 febrero/scripts/Ejercicio1_alcantarilla.m`
+(Tipo 1 con Qd=10 m³/s, Tipo 2 con Qt=6 m³/s, mismo canal).

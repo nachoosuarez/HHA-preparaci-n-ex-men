@@ -56,7 +56,7 @@ aún sin resolver en este repo).
 | C4. Cavitación: NPSH disponible vs. requerido | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
 | C5. Bombas en serie y en paralelo | 9 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb, 2020 feb-13, 2019 jul |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 4 | 2020 dic, 2024 dic, 2023 feb 2, 2019 jul |
-| D1. Diseño de alcantarillas: tipos de flujo 1-6 (clasificación de Bodhaine) | 1 | 2020 feb-13 |
+| D1. Diseño de alcantarillas: tipos de flujo 1-6 (clasificación de Bodhaine) | 2 | 2020 feb-13, 2019 feb-07 |
 
 ---
 
@@ -1676,7 +1676,17 @@ la hipótesis de tipo de flujo asumida (ejemplo completo:
 `resueltos/2020 feb 2/RESOLUCION.md` ["2020 feb-13"], Ejercicio 1, donde la condición
 de diseño resulta Tipo 1 y un evento extremo posterior, con mayor
 tirante aguas arriba pero menor nivel de lago aguas abajo, pasa a
-Tipo 2 y supera el caudal de diseño).
+Tipo 2 y supera el caudal de diseño). (4) Caso particular **canal
+infinito sin lago** (el cauce aguas arriba y aguas abajo es el mismo
+canal prismático, sin un embalse que fije el nivel): el tirante aguas
+abajo h4 es directamente el **tirante normal yn** de ese canal para el
+caudal dado (Manning), sin necesidad de integrar un perfil de FGV — se
+verifica primero yn/D≥1 (Tipo 1) y si no, se resuelve con h3=D (Tipo 2);
+la clasificación M/S del canal (yn vs yc, §A1) también determina qué
+curva de remanso se forma aguas arriba de la alcantarilla si queda
+ahogada (ejemplo: `resueltos/2019 febrero/RESOLUCION.md`, Ejercicio 1:
+canal M en ambos caudales, Q=10 da Tipo 1 con curva M1 aguas arriba y
+Q=6 da Tipo 2 con resalto aguas abajo).
 
 Cita: Teórico HHA §3.2 "Diseño de Alcantarillas" (§3.2.1 tipos de flujo,
 Tabla 3.2.1 coeficiente de descarga, Fig. 3.2.5/3.2.6 ábaco Tipo2/Tipo3).
