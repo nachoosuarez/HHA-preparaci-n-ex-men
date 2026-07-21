@@ -50,10 +50,10 @@ aún sin resolver en este repo).
 | B8. Infiltración de Horton y tiempo de encharcamiento | 3 | 2025 feb 2, 2023 feb 2, 2019 jul |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
-| C2. Curva de la bomba y punto de funcionamiento | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
-| C3. Potencia consumida por el sistema de bombeo | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
-| C4. Cavitación: NPSH disponible vs. requerido | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
+| C2. Curva de la bomba y punto de funcionamiento | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
+| C3. Potencia consumida por el sistema de bombeo | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
+| C4. Cavitación: NPSH disponible vs. requerido | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
 | C5. Bombas en serie y en paralelo | 9 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb, 2020 feb-13, 2019 jul |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 4 | 2020 dic, 2024 dic, 2023 feb 2, 2019 jul |
 | D1. Diseño de alcantarillas: tipos de flujo 1-6 (clasificación de Bodhaine) | 1 | 2020 feb-13 |
@@ -1184,6 +1184,24 @@ abajo), la energía cinética de salida V²/(2g) **no se recupera** y debe
 incluirse como parte de la carga exigida por la instalación. Si ambos
 extremos son superficies libres de grandes depósitos (v≈0), esos términos
 cinéticos se anulan en la ecuación de instalación.
+
+**Descarga libre dentro de un tanque PRESURIZADO** (2019 feb 2, Ej.4:
+tanque elevado con nivel de agua a +10 m y presión interior 100 kPa; la
+tubería de impulsión descarga libre —como un chorro, no sumergida— a
++12 m, por encima del nivel de agua, dentro del espacio de aire del
+propio tanque). Es la combinación de los dos casos de arriba: por un
+lado, al ser descarga **libre** (chorro, no hacia un gran depósito que
+absorba la velocidad), el término cinético de salida V²/(2g) de la
+propia tubería de impulsión **no se cancela** y debe incluirse en H2;
+por otro lado, la **presión** a usar en H2 no es la atmosférica sino la
+del **aire presurizado del tanque** (100 kPa en este caso), porque el
+chorro descarga dentro de ese espacio, no al aire libre:
+`H2 = z_descarga + p_tanque/γ + V²/(2g)`. Si además Ds=Di (mismo
+diámetro en succión e impulsión, como en este examen), el resultado es
+simplemente que el término cinético de la impulsión NO se cancela con
+el de la succión (que sí es ≈0 por ser un tanque abierto grande), a
+diferencia del caso "ambos extremos son depósitos grandes" donde sí se
+cancelaban entre sí.
 
 **Ojo al reusar los scripts canónicos de `Bombas/` con diámetros de
 succión e impulsión DISTINTOS** (2019 jul, Ej.4: Ds=300mm, Di=250mm,

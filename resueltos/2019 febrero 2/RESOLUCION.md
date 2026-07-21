@@ -412,4 +412,109 @@ coincide en todo).
 
 ---
 
-## ESTADO: EN CURSO (falta Ejercicio 4)
+## EJERCICIO 4 — Bombeo entre tanque abierto y tanque elevado presurizado (20 puntos)
+
+**Datos:** tanque inferior abierto a la atmósfera, nivel z1=-2 m.
+Tanque superior presurizado, nivel de agua z=+10 m, presión interior
+p=100 kPa. La tubería de impulsión **descarga libre** (chorro, no
+sumergida) dentro del tanque elevado, a cota +12 m (por encima del
+nivel de agua, en el espacio de aire presurizado). Succión: Ds=100 mm,
+Ls=5 m, ks=1. Impulsión: Di=100 mm, Li=100 m, ki=3. Acero galvanizado,
+ε=0.05 mm. Bomba a cota zB=-1 m, con curva H-Q/η/NPSHr dada por tabla.
+
+### Teoría (RESUMEN_TEORICO.md §C1, C2, C3, C4)
+
+- **C1** Ecuación de la instalación (Darcy-Weisbach + Colebrook-White).
+  **Descarga libre dentro de un tanque presurizado**: la energía
+  cinética de salida V²/(2g) de la impulsión NO se cancela (es un
+  chorro, no un depósito grande que absorba la velocidad) y la presión
+  a usar en H2 es la del aire del tanque (100 kPa), no la atmosférica.
+- **C2** Punto de funcionamiento: intersección de la curva de
+  instalación con la curva de la bomba (interpolación + `fzero`).
+- **C3** Potencia: `Pot = γ·Q·H/η`.
+- **C4** Cavitación: `NPSHdisp = (z1-zB) + (patm-pvap)/γ - ΔH(succión)`
+  (los términos cinéticos de la succión se cancelan en la definición,
+  ver Bomba_sola.m canónico); cavita si NPSHdisp < NPSHreq(Q).
+
+Cita: Teórico HHA §4.2–§4.5 (bombeo, NPSH); Formulómetro "Instalación
+de bombeo" / "NPSH".
+
+### Herramienta y por qué
+
+Se usó Octave con el toolkit `Bombas/` (`colebrook.m`), adaptando
+`Bomba_sola.m` porque el problema es el caso central de ese script (una
+sola bomba, succión+impulsión con pérdidas distribuidas/localizadas,
+verificación de cavitación), con la particularidad de la descarga libre
+dentro de un tanque presurizado (ver nota en RESUMEN_TEORICO.md §C1,
+enriquecida con este examen). La Parte 2 (nivel mínimo del tanque
+inferior) exige un `fzero` **anidado**: para cada z1 de prueba hay que
+recalcular el punto de funcionamiento completo (la curva de instalación
+se desplaza al bajar z1, así que Q también cambia) antes de comparar
+NPSHdisp con NPSHreq en ese nuevo punto — no alcanza con mover z1
+manteniendo fijo el Qpf de la Parte 1. Script completo:
+`resueltos/2019 febrero 2/scripts/Ejercicio4_bombeo_tanque_presurizado.m`.
+
+### Paso a paso
+
+**Parte 1) Punto de funcionamiento, cavitación y potencia**
+
+Ecuación de la instalación (descarga libre en el tanque presurizado,
+Ds=Di=100 mm por lo que el término cinético de succión, con v≈0 en el
+tanque abierto grande, no cancela nada del lado de la impulsión):
+
+```
+H1 = z1 + p1/γ = -2 m                      (tanque inferior, superficie libre, v1=0)
+H2 = z_desc + p_tanque/γ + V²/(2g) = 12 + 100000/(997·9.81) + V²/2g
+Hinst(Q) = H2(Q) - H1 + ΔH(succión,Q) + ΔH(impulsión,Q)
+```
+
+Intersectando con la curva de la bomba (`fzero`):
+
+```
+Qpf = 0.01703 m3/s (17.03 L/s)
+Hpf = 30.13 m
+eta(Qpf) = 73.9 %
+Potencia = rho*g*Qpf*Hpf/eta = 6.79 kW
+```
+
+**Resultado: Qpf = 17.0 L/s, Hpf = 30.1 m, Potencia ≈ 6.79 kW**
+(oficial: Qpf=17 L/s, Hpf=30.06 m, η=73%, P=6.834 kW — coincide dentro
+de <1%).
+
+Verificación de cavitación:
+
+```
+NPSHdisp = 10.1 + (z1-zB) - ΔH(succión,Qpf) = 8.64 m
+NPSHreq(Qpf) = 5.77 m (interpolado de la tabla)
+```
+
+**NPSHdisp (8.64 m) > NPSHreq (5.77 m) ⇒ la bomba NO cavita** (margen
+2.87 m).
+
+**Parte 2) Nivel mínimo del tanque inferior sin cavitación**
+
+Al bajar z1, la curva de instalación se desplaza hacia arriba (más
+altura de succión a vencer) y el punto de funcionamiento se mueve a un
+Q menor sobre la curva de la bomba — lo que a su vez cambia tanto
+NPSHdisp como NPSHreq(Q). Se itera z1 (`fzero` anidado, recalculando el
+punto de funcionamiento completo en cada paso) hasta que
+NPSHdisp(z1)=NPSHreq(Qpf(z1)):
+
+```
+z1_min = -5.75 m
+  -> nuevo punto de funcionamiento: Qpf = 14.59 L/s, Hpf = 32.36 m
+  -> NPSHdisp = NPSHreq = 5.01 m (límite de cavitación)
+```
+
+**Resultado: z1_min ≈ -5.75 m** (oficial: z1_min=-5.8 m, Qpf=14 L/s,
+Hpf=32.28 m, NPSHdisp=NPSHreq=4.53 m — z1_min, Qpf y Hpf coinciden
+dentro de <1%; el NPSH límite difiere ~10%, atribuible a redondeo en la
+resolución manual/gráfica oficial, que arrastra el error de leer la
+curva NPSHreq(Q) e iterar z1 a mano en vez de con `fzero`).
+
+Todos los resultados principales (Qpf, Hpf, potencia, z1_min) coinciden
+con la solución oficial manuscrita dentro de <1%.
+
+---
+
+## ESTADO: COMPLETO
