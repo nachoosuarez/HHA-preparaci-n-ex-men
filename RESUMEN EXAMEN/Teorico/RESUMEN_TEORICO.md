@@ -41,11 +41,11 @@ aún sin resolver en este repo).
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 11 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2 |
 | A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
 | B1. Delimitación de cuencas y divisoria de aguas | 16 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 feb 2 |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
-| B4. Método Racional (y criterio de selección según tc) | 19 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
-| B6. Condición de humedad antecedente (AMC) | 11 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2019 jul, 2019 feb 2 |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| B4. Método Racional (y criterio de selección según tc) | 20 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| B6. Condición de humedad antecedente (AMC) | 12 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2019 jul, 2019 feb 2, 2019 feb-07 |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 3 | 2025 feb 2, 2023 feb 2, 2019 jul |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
@@ -908,6 +908,23 @@ más alto reduce la infiltración (más Pe, más volumen de escorrentía) y el t
 más chico concentra ese mayor volumen en un hidrograma más picudo (mayor Qp,
 menor Tp/Tb) — ver ejemplo completo en `resueltos/2024 Julio/RESOLUCION.md`,
 Ejercicio 3, Parte 3.
+
+**Caso con efectos OPUESTOS (NC baja, tc baja): no asumir el signo del
+resultado, simular.** Si el cambio de uso de suelo es hacia una práctica
+de manejo MEJOR (p.ej. pastizal cond. mala → cultivo en curvas de nivel
+cond. buena), el NC ponderado puede **bajar** (más infiltración) aunque
+el tc también baje (p.ej. por mejor cobertura/canalización) — los dos
+efectos compiten: tc menor concentra el hidrograma (sube Qp), pero NC
+menor reduce el volumen de Pe (baja Qp). El signo neto no es obvio a
+priori; hay que recalcular el hidrograma completo con el NC y el tc
+nuevos y comparar. Para "¿qué Tr da ahora el mismo Qmax de diseño
+(capacidad ya fija de una obra existente)?" se itera Tr con NC_nuevo y
+tc_nuevo fijos (misma bisección de B4) — si el efecto del NC domina, el
+Tr resultante es MAYOR al original (la obra queda con más margen: hace
+falta un evento más raro para igualar su capacidad), aunque el tc haya
+bajado (ver `resueltos/2019 febrero/RESOLUCION.md`, Ejercicio 2 Parte 2:
+65% pastizal mala→maíz curvas de nivel buena, NC 86→83.4, tc −8%, el
+Tr del caudal de diseño original sube de 5 a ≈7.5 años).
 
 **Caso más simple: urbanización SIN cambio de tc** (2023 feb 2, Ej.3 parte
 c). Si el enunciado aclara que el desarrollo urbano **no** altera el tiempo

@@ -119,6 +119,118 @@ locales de `trap_geom.m`, `eq_yn.m`, `eq_yc.m`).
 
 ---
 
-## EJERCICIO 2, 3, 4 — pendientes
+## EJERCICIO 2 — Caudal de diseño, cambio de uso de suelo y evento extremo (30 puntos)
 
-## ESTADO: EN CURSO (Ejercicio 1 resuelto; faltan 2, 3 y 4)
+**Datos:** cuenca en Cerro Largo (punto de cierre X=650 km, Y=6400 km),
+Área=5.10 km², ΔH=120 m (desnivel del cauce ppal.), L=3600 m (largo del
+cauce ppal.), S=1.95% (pendiente **media de la cuenca**, no la del
+cauce). Uso de suelo: pastizales naturales condición hidrológica MALA,
+unidad de suelos San Manuel, flujo concentrado.
+
+1) Caudal de diseño de una alcantarilla en el punto de cierre, Tr=5 años.
+2) Se cultiva el 65% del área con maíz sembrado por curvas de nivel,
+   condición hidrológica BUENA; el tc total se reduce 8%. Estimar el
+   nuevo Tr del caudal encontrado en 1).
+3) En esas condiciones, evento extremo en febrero (hietograma de 12
+   bloques de 5 min dado). Calcular el caudal del evento y determinar
+   si supera el caudal de diseño, con P de los 5 días previos=38 mm.
+
+### Teoría (RESUMEN_TEORICO.md §B2, §B3, §B4, §B5, §B6)
+
+- **B2** tc por Ramser-Kirpich (flujo concentrado): usa la pendiente del
+  **cauce principal** (ΔH/L/10), NO la pendiente media de la cuenca
+  dada aparte (esa S=1.95% solo sirve para elegir el coeficiente C del
+  método Racional, Tabla 3.1.4).
+- **B4** Criterio de selección de método según tc: tc<20min→solo
+  Racional; 20min<tc<1h→ambos, adoptar el mayor; tc>1h→solo NRCS.
+- **B5** Método NRCS completo (tormenta de diseño por bloque alterno +
+  Número de Curva + hidrograma unitario triangular SCS) para el caudal
+  de diseño; **NC ponderado** por área cuando hay más de un uso de
+  suelo (§B5 "NC ponderado"); caso de **efectos opuestos** cuando el
+  nuevo uso de suelo baja el NC a la vez que baja el tc (§B5, nuevo
+  párrafo agregado con este examen) — no se puede asumir el signo del
+  resultado, hay que simular.
+- **B6** AMC: estación de crecimiento (primavera-verano, incluye
+  febrero) con umbrales AMC I<35.56mm, AMC II 35.56–53.34mm, AMC
+  III>53.34mm (distintos de los umbrales de estación inactiva).
+
+Cita: Teórico HHA §3.1.5 (tc, Racional, criterio de selección), §3.1.6
+(NRCS), §3.1.5 b) (AMC); Formulómetro "Tiempo de Concentración" /
+"Método Racional" / "Método NRCS" / "Condición de Humedad Antecedente".
+
+### Herramienta y por qué
+
+Se usó Python (replicando exactamente las fórmulas de
+`Eventos extremos.xlsx`, hoja "Cálculos (grande)", documentadas en
+`RESUMEN EXAMEN/Teorico/COMO_USAR_EVENTOS_EXTREMOS.md`) en vez de la
+planilla misma, porque la Parte 2 necesita **iterar Tr** (bisección)
+hasta que el hidrograma NRCS con el NC y tc nuevos reproduzca el
+caudal de diseño de la Parte 1 — la planilla no tiene una celda que
+invierta Tr automáticamente (ver "Errores comunes" ítem 9 del
+instructivo), así que conviene envolver el cálculo en una función y
+tantear/biseccionar en código, siguiendo el mismo patrón ya usado en
+`resueltos/2020 Diciembre/scripts/ej2_parte2.py`. P(3,10)=80mm, C=0.28
+y NC=86/82 son lecturas gráficas (isoyetas Fig 3.1.10, Tabla 3.1.4,
+Fig 3.1.20) tomadas de la solución oficial manuscrita. Scripts:
+`resueltos/2019 febrero/scripts/ej2_parte1.py`, `ej2_parte2.py`,
+`ej2_parte3.py`.
+
+### Paso a paso — Parte 1: caudal de diseño (Tr=5)
+
+1. S cauce principal = ΔH/L(km)/10 = 120/3.6/10 = 3.333 %.
+2. tc (Kirpich) = 0.4·L^0.77/S^0.385 = **0.6747 hs = 40.5 min**
+   (oficial: 40.98 min, diferencia ~1% por redondeo intermedio).
+3. 20 min < tc < 1 h ⇒ calcular ambos métodos y adoptar el mayor.
+4. Método Racional: CT(5)=0.860, CD(tc)=0.517, CA(tc,A)=0.988 ⇒
+   P(tc,5,A)=35.1 mm ⇒ i=52.0 mm/h ⇒ **Q_racional = 20.64 m³/s**
+   (oficial: 20.6 m³/s).
+5. Método NRCS: S(NC=86)=41.35 mm, Ia=8.27 mm; tormenta de diseño por
+   bloque alterno (Δt=tc/7=5.78 min, 12 bloques, total 44.7 mm) ⇒
+   ΣPe=17.09 mm ⇒ hidrograma unitario (Tp=0.453 h, Tb=1.208 h) ⇒
+   **Q_NRCS = 29.72 m³/s** (oficial: 29.68-29.7 m³/s).
+6. Q_racional < Q_NRCS ⇒ se adopta el mayor.
+
+**Resultado Ejercicio 2, Parte 1: Qmax de diseño (Tr=5) = 29.7 m³/s
+(NRCS)** (coincide con la solución oficial: 29,7 m³/s).
+
+### Paso a paso — Parte 2: cambio de uso de suelo, nuevo Tr
+
+1. NC ponderado = 0.65·NC_maíz(82, curvas de nivel, cond. buena) +
+   0.35·NC_pastizal(86, sin cambios) = **83.4** (oficial: 83,4 —
+   coincide).
+2. tc_nuevo = 0.92·tc = 0.92×0.6747 = **0.6207 hs = 37.2 min**
+   (reducción del 8%, oficial: 0.62 hs — coincide).
+3. Se itera Tr (bisección) manteniendo NC=83.4 y tc=37.2 min hasta que
+   Qmax NRCS(Tr) reproduzca el caudal de diseño fijo de la Parte 1
+   (29.72 m³/s, la alcantarilla ya construida no cambia de capacidad):
+   Tr=7→28.9 m³/s, Tr=7.5→29.75 m³/s, Tr=8→30.6 m³/s ⇒ **Tr ≈ 7.5 años**.
+4. El efecto del NC (bajó, más infiltración) domina sobre el efecto
+   del tc (bajó, más pico): para alcanzar el mismo caudal de diseño
+   ahora hace falta un evento más raro que antes.
+
+**Resultado Ejercicio 2, Parte 2: nuevo Tr ≈ 7.5 años** (coincide
+exactamente con la solución oficial: "Tr=7,5 años").
+
+### Paso a paso — Parte 3: evento extremo de febrero
+
+1. P5d=38 mm, febrero = estación de **crecimiento** ⇒ 35.56<38<53.34
+   ⇒ **AMC II** ⇒ NC se mantiene en 83.4 sin corregir (oficial:
+   "P5DIAS T=38mm ⇒ NC II").
+2. Se toma el hietograma **observado** (12 bloques de 5 min, tabla del
+   enunciado, total 65 mm) directamente, sin reordenar por bloque
+   alterno, con el NC=83.4 y tc=37.2 min de la Parte 2 (mismo piso de
+   infiltración 1.2 mm/h): S=50.56 mm, Ia=10.11 mm ⇒ ΣPe=28.57 mm.
+3. Hidrograma unitario triangular (tr=5 min, Tp=0.414 h, Tb=1.104 h,
+   qp=2.562 m³/s por mm) convolucionado con los 12 pulsos de Pe ⇒
+   **Qmax evento = 58.18 m³/s** (oficial: 58.2 m³/s).
+4. 58.18 m³/s > 29.72 m³/s (caudal de diseño) ⇒ **el evento SUPERA el
+   caudal de diseño de la alcantarilla**.
+
+**Resultado Ejercicio 2, Parte 3: Qmax evento = 58.2 m³/s, SUPERA el
+caudal de diseño** (coincide con la solución oficial).
+
+---
+
+## EJERCICIO 3, 4 — pendientes
+
+## ESTADO: EN CURSO (Ejercicios 1 y 2 resueltos; faltan 3 y 4)

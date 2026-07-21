@@ -435,6 +435,32 @@ bloque tc_new/7 de la Parte 2 — no es coincidencia, así se arma la
 tormenta de diseño) ⇒ Qmax evento=53.82 m³/s, que supera el caudal de
 diseño de la Parte 1 durante 1.88 hs.
 
+**Ejemplo con cambio de uso de suelo que baja el NC Y baja el tc a la
+vez (efectos opuestos sobre Qmax) + inversión de Tr manteniendo fijo el
+caudal de diseño de una obra ya construida**, Ejercicio 2 de
+`resueltos/2019 febrero/RESOLUCION.md` (Cerro Largo: Área=5.10 km²,
+ΔH=120 m, L=3600 m, pastizales natural cond. mala GH C, NC=86, C=0.28,
+P310=80 mm, tc=40.5 min). Parte 1: flujo estándar (20 min<tc<1h ⇒
+ambos métodos) ⇒ Qmax racional=20.6 m³/s < Qmax NRCS=29.7 m³/s ⇒ se
+adopta NRCS=29.7 m³/s como caudal de diseño (Tr=5) de una alcantarilla.
+Parte 2: se cultiva 65% del área con maíz sembrado por curvas de nivel
+en condición BUENA (NC_maíz=82) — el 35% restante sigue pastizal mala
+(NC=86) ⇒ NC ponderado=83.4 (BAJA respecto al original, a pesar de que
+el cultivo ocupa la mayor parte del área, porque "buena condición +
+curvas de nivel" infiltra bastante más que "pastizal mala"); además el
+tc baja 8% (tc_nuevo=0.92·tc=37.2 min). Se itera Tr (misma alcantarilla,
+misma capacidad Q=29.7 m³/s) con NC_nuevo y tc_nuevo ⇒ **Tr≈7.5 años**
+(el efecto del NC más bajo domina sobre el efecto del tc más corto: la
+obra queda con más margen, hace falta un evento más raro para igualar
+su capacidad de diseño original). Parte 3: con esas mismas condiciones
+(NC=83.4, tc=37.2 min) se registra en febrero (estación de crecimiento)
+un evento con P5d=38 mm ⇒ 35.56<38<53.34 ⇒ **AMC II, NC sin corregir**;
+se sustituye la tormenta de bloque alterno por el hietograma
+**observado** (12 bloques de 5 min, total 65 mm) manteniendo el resto
+de la lógica (Pe por NC, piso de infiltración, HU triangular con
+tr=5 min y tc_nuevo) ⇒ Qmax evento=58.2 m³/s > 29.7 m³/s ⇒ el evento
+**supera** el caudal de diseño de la alcantarilla.
+
 ---
 
 ## 6) Errores comunes y cosas a no olvidar
