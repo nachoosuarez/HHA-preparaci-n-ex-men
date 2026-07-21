@@ -41,11 +41,11 @@ aún sin resolver en este repo).
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 11 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2 |
 | A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
 | B1. Delimitación de cuencas y divisoria de aguas | 15 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
 | B4. Método Racional (y criterio de selección según tc) | 18 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic, 2019 jul |
-| B6. Condición de humedad antecedente (AMC) | 10 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2019 jul |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
+| B6. Condición de humedad antecedente (AMC) | 11 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2019 jul, 2019 feb 2 |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
 | B8. Infiltración de Horton y tiempo de encharcamiento | 3 | 2025 feb 2, 2023 feb 2, 2019 jul |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
@@ -865,6 +865,20 @@ adoptando el mayor caudal). También se aplica igual, pero con el hietograma
 **observado** en su orden cronológico real (sin reordenar por bloque
 alterno), para verificar si un evento de lluvia real supera la capacidad de
 diseño de una obra.
+
+**Caso más simple: un único pulso de lluvia con duración efectiva DADA
+directamente por el enunciado (no una tormenta de diseño por bloque
+alterno)** (2019 feb 2, Ej.2: "ocurre un evento extremo de 32 mm... en
+una duración efectiva de 15 minutos"). Cuando el enunciado ya da un
+único evento con su P total y su duración D (en vez de pedir construir
+la tormenta de diseño de B3 con 12 sub-bloques de Δt=tc/7), el HU
+triangular se calcula con **esa D real** (tp=D/2+0.6·tc, igual fórmula
+de siempre) y el hidrograma resultante es simplemente ese único
+triángulo escalado por el Pe de todo el evento (Pe=(P−0.2S)²/(P+0.8S),
+con el NC que corresponda tras aplicar B6 si el enunciado indica una
+condición antecedente distinta de AMC II) — no hace falta convolucionar
+12 pulsos porque sólo hay uno. Es el caso más simple de B5, sin la
+maquinaria de bloque alterno de B3/la planilla `Cálculos (grande)`.
 
 **De la unidad de suelo (nombre) al grupo hidrológico A/B/C/D.** El NC
 depende del grupo hidrológico del suelo, que no siempre es un dato
