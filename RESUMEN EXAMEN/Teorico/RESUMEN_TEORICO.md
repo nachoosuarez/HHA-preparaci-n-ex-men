@@ -635,8 +635,9 @@ Ramser-Kirpich:  tc = 0.4 · L^0.77 / S^0.385
    S = pendiente del cauce principal (%) = ΔH(m) / L(km) / 10
    tc en horas
 
-(alternativa NRCS/velocidad de flujo, no usada en estos 4 exámenes):
+(alternativa NRCS/velocidad de flujo, flujo NO concentrado/mantiforme):
    tc = 0.91134 · Σ( k·Li / sqrt(Si) )     (suma por tramos, k=coef. de cobertura del suelo)
+   L en km, S en % POR TRAMO, tc en horas.
 ```
 
 **Cuándo se usa.** Siempre es el primer cálculo antes de elegir el método de
@@ -644,6 +645,30 @@ caudal de diseño: la pendiente S de Kirpich es la del **cauce principal**
 (ΔH/L/10), distinta de la pendiente media S de la cuenca que aparece en la
 tabla de datos del enunciado (esa se usa para el coeficiente C del método
 Racional, no para tc).
+
+**Fórmula NRCS por tramos (flujo mantiforme/no concentrado).** Se usa
+cuando el enunciado distingue explícitamente un tramo de **flujo no
+concentrado** (ladera, antes de que el agua se junte en un cauce
+definido) de un tramo de **flujo concentrado** (dentro de un cauce ya
+formado) — o pide comparar ambas hipótesis para el mismo perfil. El
+tramo no concentrado se divide en sub-tramos según los quiebres de
+pendiente del perfil altimétrico (progresiva/cota dados), y para cada
+uno se calcula Lᵢ (km, longitud del sub-tramo) y Sᵢ (%, = ΔHᵢ/Lᵢ(km)/10,
+la pendiente DE ESE sub-tramo, no la del cauce completo); el
+coeficiente **k** depende de la cobertura/rugosidad del terreno del
+tramo (tabla del Teórico — p.ej. k=1.111 para "cultivos en línea
+recta") y es una lectura de tabla, igual que P310/C/NC. El tc total de
+un perfil mixto es la SUMA del tc no concentrado (tramo alto) más el tc
+concentrado por Kirpich (tramo bajo, con el L y ΔH de ESE tramo, no del
+perfil completo). El flujo no concentrado es más lento que el
+concentrado equivalente ⇒ asumirlo da un tc (y por lo tanto un Qmax
+menor, un evento "más benigno") sistemáticamente MAYOR que asumir todo
+el recorrido concentrado — ver ejemplo completo con el mismo perfil
+resuelto por las dos alternativas, `resueltos/2019 febrero/RESOLUCION.md`,
+Ejercicio 3 (perfil de 8 puntos, José Pedro Varela: parte alta 0-575m
+en 3 sub-tramos con k=1.111 ⇒ Tc_mantiforme=0.28h, parte baja 575-2376m
+concentrado ⇒ Tc_Kirpich=0.49h ⇒ Tc total mixto=0.77h, vs. Tc=0.54h si
+se asume todo concentrado desde el origen).
 
 Cita: Teórico HHA §3.1.2; Formulómetro "Eventos extremos — Tiempo de
 Concentración".

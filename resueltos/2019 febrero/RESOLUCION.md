@@ -231,6 +231,73 @@ caudal de diseño** (coincide con la solución oficial).
 
 ---
 
-## EJERCICIO 3, 4 — pendientes
+## EJERCICIO 3 — Tiempo de concentración por dos alternativas (20 puntos)
 
-## ESTADO: EN CURSO (Ejercicios 1 y 2 resueltos; faltan 3 y 4)
+**Datos:** cuenca de 2.7 km² próxima a José Pedro Varela (X=625,
+Y=6300 km), cultivos en línea recta en la parte alta, pasturas en la
+parte baja. Perfil del cauce principal (progresiva/cota, 8 puntos):
+
+| Progresiva (m) | 0 | 175 | 295 | 575 | 726 | 1321 | 1850 | 2376 |
+|---|---|---|---|---|---|---|---|---|
+| Cota (m) | 237 | 230 | 220 | 210 | 200 | 190 | 180 | 176 |
+
+1) tc suponiendo flujo NO concentrado (mantiforme) en la parte alta y
+   flujo concentrado en la parte baja (desde la progresiva 575 hasta
+   el cierre).
+2) tc suponiendo flujo concentrado en todo el recorrido.
+
+### Teoría (RESUMEN_TEORICO.md §B2)
+
+- **B2** Fórmula NRCS por tramos para flujo **no concentrado**
+  (mantiforme): `tc = 0.91134 · Σ(kᵢ·Lᵢ/√Sᵢ)`, suma por sub-tramos del
+  perfil (Lᵢ en km, Sᵢ en % de CADA sub-tramo), k=coeficiente de
+  cobertura del suelo (tabla del Teórico; k=1.111 para cultivos en
+  línea recta — lectura de tabla, tomada de la solución oficial).
+- **B2** Ramser-Kirpich para el tramo de flujo **concentrado**: mismo
+  procedimiento de siempre, pero aplicado sólo al tramo correspondiente
+  (L y ΔH de ESE tramo, no del perfil completo).
+- El tc de un perfil mixto es la SUMA de ambos tramos; el flujo
+  mantiforme es más lento que el concentrado equivalente, así que
+  incluirlo da un tc mayor que asumir todo concentrado.
+
+Cita: Teórico HHA §3.1.2 "Tiempo de concentración" (fórmula NRCS de
+velocidad de flujo por tramos, tabla de coeficientes k); Formulómetro
+"Eventos extremos — Tiempo de Concentración".
+
+### Herramienta y por qué
+
+Se usó Python (`resueltos/2019 febrero/scripts/Ejercicio3_tiempo_concentracion.py`)
+en vez de la planilla de eventos extremos porque el ejercicio es
+puramente el cálculo de tc por dos vías, sin caudal de diseño de por
+medio — no hace falta el resto de la maquinaria de la planilla
+(tormenta de diseño, hidrograma). Es una combinación directa de las dos
+fórmulas de tc de §B2, aplicadas a distintos tramos del mismo perfil.
+
+### Paso a paso
+
+**Alternativa 1 — mixto (mantiforme + concentrado):**
+
+1. Parte alta (0-575 m) dividida en 3 sub-tramos según los quiebres del
+   perfil: 0-175m (L=0.175km, ΔH=7m, S=4.00%), 175-295m (L=0.12km,
+   ΔH=10m, S=8.33%), 295-575m (L=0.28km, ΔH=10m, S=3.57%).
+2. Con k=1.111: Σ(k·L/√S) = 0.0972+0.0462+0.1646 = 0.3080.
+   **Tc1 = 0.91134×0.3080 = 0.2807 h** (oficial: 0.28h).
+3. Parte baja (575-2376m, concentrado): L=1.801km, ΔH=34m, S=1.888%.
+   Kirpich: **Tc2 = 0.4927 h** (oficial: 0.49h).
+4. **Tca = Tc1+Tc2 = 0.7734 h** (oficial: 0.77h).
+
+**Alternativa 2 — todo concentrado (0-2376 m):**
+
+1. L=2.376km, ΔH=61m, S=2.567%. Kirpich: **Tcb = 0.5418 h** (oficial:
+   0.54h).
+
+**Resultado Ejercicio 3: Tca (mixto) = 0.77 h ; Tcb (todo concentrado)
+= 0.54 h** — coincide exactamente con la solución oficial en ambos
+valores. Suponer flujo no concentrado en el tramo alto da un tc mayor
+(flujo mantiforme más lento que el concentrado equivalente).
+
+---
+
+## EJERCICIO 4 — pendiente
+
+## ESTADO: EN CURSO (Ejercicios 1, 2 y 3 resueltos; falta 4)
