@@ -298,6 +298,96 @@ valores. Suponer flujo no concentrado en el tramo alto da un tc mayor
 
 ---
 
-## EJERCICIO 4 — pendiente
+## EJERCICIO 4 — Bombeo: tanque de succión a tanque elevado (25 puntos)
 
-## ESTADO: EN CURSO (Ejercicios 1, 2 y 3 resueltos; falta 4)
+**Datos:** tanque de succión (cota -1 m, abierto) → tanque de impulsión
+elevado (cota +50 m, abierto). Succión: D=100 mm, L=2 m, ks=1. Impulsión:
+D=75 mm, L=60 m, ki=3. Rugosidad 0.05 mm ambas tuberías. Bombas
+idénticas, acoplables en cota 0 m, curva característica:
+
+| Q (L/s) | 0.0 | 2.5 | 5.0 | 7.5 | 10.0 | 12.5 | 15.0 |
+|---|---|---|---|---|---|---|---|
+| H (m) | 39 | 38 | 35 | 31 | 26 | 20 | 13 |
+| rend (%) | 0 | 45 | 66 | 70 | 67 | 57 | 40 |
+| NPSHr (m) | 4.0 | 4.5 | 5.3 | 6.5 | 8.0 | 10.0 | 13.0 |
+
+1) Número mínimo de bombas y configuración para elevar agua (pérdidas
+   en el acople entre bombas despreciables).
+2) Punto de funcionamiento de cada bomba, potencia consumida por cada
+   una y por el sistema, verificar que ninguna cavite.
+
+### Teoría (RESUMEN_TEORICO.md §C1, §C2, §C3, §C4, §C5)
+
+- **C5** Criterio rápido para elegir serie vs. paralelo: en paralelo el
+  H entregado nunca supera el H máximo de la curva de UNA bomba (todas
+  ven la misma H); si la carga estática a vencer ya supera ese máximo,
+  ningún número de bombas en paralelo alcanza — hace falta **serie**
+  (que sí suma cargas), verificando max(H_bomba) contra la carga
+  estática ANTES de resolver el punto de funcionamiento completo.
+- **C1** Ecuación de la instalación (Darcy-Weisbach + Colebrook-White)
+  para succión e impulsión en serie (mismo Q en toda la línea).
+- **C2** Punto de funcionamiento: intersección de la curva de
+  instalación con la curva de la(s) bomba(s) equivalente(s) (en serie,
+  H_eq(Q)=H1(Q)+H2(Q), mismo Q para ambas).
+- **C3/C4** Potencia por bomba (P=γQH/η) y chequeo de cavitación
+  (NPSHdisp vs NPSHr) de cada bomba individualmente — en serie, la
+  segunda bomba parte con más carga a la entrada (gana el H1 ya
+  entregado por la primera), así que la más comprometida por
+  cavitación es siempre la PRIMERA de la serie.
+
+Cita: Teórico HHA §3.3 "Bombas" (§3.3.5 instalación, §3.3.8 punto de
+funcionamiento, §3.3.11 potencia, §3.3.12 cavitación/NPSH, §3.3.13
+acoplamiento); Formulómetro "Bombas — Instalación" / "NPSH".
+
+### Herramienta y por qué
+
+Se usó Octave, adaptando el script canónico
+`RESUMEN EXAMEN/Codigos/Bombas/Bombas_serie.m` (que ya resuelve
+exactamente este problema tipo: succión+impulsión en serie con 2
+bombas iguales acopladas en serie) a los datos de este examen, porque
+es el caso de uso central de ese script — no hizo falta ninguna
+función nueva. Script completo:
+`resueltos/2019 febrero/scripts/Ejercicio4_bombas_serie.m` (con copia
+de `colebrook.m`).
+
+### Paso a paso
+
+**Parte 1 — número mínimo de bombas:**
+
+1. Desnivel estático a vencer: z2−z1 = 50−(−1) = **51 m**.
+2. Una sola bomba entrega como máximo H=39 m (a Q=0) < 51 m ⇒ **no
+   alcanza** con 1 bomba.
+3. En **paralelo**, el H máximo entregado sigue siendo 39 m sin
+   importar cuántas bombas se agreguen (todas ven la misma H) ⇒ el
+   paralelo nunca alcanza los 51 m.
+4. En **serie**, 2 bombas iguales entregan hasta 2×39=78 m > 51 m ⇒
+   **sí alcanza**.
+
+**Resultado Parte 1: mínimo 2 bombas EN SERIE** (coincide con la
+solución oficial: "sólo es posible elevar agua... colocándolas en
+serie. Con 2 bombas es suficiente").
+
+**Parte 2 — punto de funcionamiento, potencia y cavitación:**
+
+1. Curva de instalación Hinst(Q) (Colebrook para f en succión e
+   impulsión) intersectada con la curva de 2 bombas en serie
+   (H_eq(Q)=2·H_cat(Q)) ⇒ **Q = 9.17 L/s** (oficial: 9.13 L/s),
+   **H_eq = 55.52 m** (oficial: 55.5 m).
+2. Cada bomba entrega H=27.76 m (oficial: 27.7 m), con rendimiento
+   η=68.4% (oficial: 68%) y NPSHr=7.46 m (oficial: 7.48 m) en ese
+   punto.
+3. Potencia por bomba = γQH/η = **3.65 kW**; potencia del sistema
+   (2 bombas) = **7.30 kW** (oficial: 7.3 kW — coincide exacto).
+4. NPSHdisp de la primera bomba (la más comprometida, antes de ganar
+   la carga de la segunda) = 9.00 m (oficial, valor parcial legible:
+   ≈8.5 m) > NPSHr=7.46 m ⇒ **NO cavita**. La segunda bomba, con la
+   carga ya ganada por la primera, tiene NPSHdisp=36.76 m, muy por
+   encima de NPSHr ⇒ tampoco cavita.
+
+**Resultado Ejercicio 4: 2 bombas en serie, Q≈9.15 L/s, H≈55.5 m
+(27.7 m por bomba), potencia del sistema ≈7.3 kW, ninguna bomba
+cavita** (coincide con la solución oficial).
+
+---
+
+## ESTADO: COMPLETO

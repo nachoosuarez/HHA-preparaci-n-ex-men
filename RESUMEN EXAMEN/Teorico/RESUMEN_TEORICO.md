@@ -50,11 +50,11 @@ aún sin resolver en este repo).
 | B8. Infiltración de Horton y tiempo de encharcamiento | 3 | 2025 feb 2, 2023 feb 2, 2019 jul |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
-| C2. Curva de la bomba y punto de funcionamiento | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
-| C3. Potencia consumida por el sistema de bombeo | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
-| C4. Cavitación: NPSH disponible vs. requerido | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2 |
-| C5. Bombas en serie y en paralelo | 9 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb, 2020 feb-13, 2019 jul |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| C2. Curva de la bomba y punto de funcionamiento | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| C3. Potencia consumida por el sistema de bombeo | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| C4. Cavitación: NPSH disponible vs. requerido | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| C5. Bombas en serie y en paralelo | 10 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb, 2020 feb-13, 2019 jul, 2019 feb-07 |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 4 | 2020 dic, 2024 dic, 2023 feb 2, 2019 jul |
 | D1. Diseño de alcantarillas: tipos de flujo 1-6 (clasificación de Bodhaine) | 2 | 2020 feb-13, 2019 feb-07 |
 
@@ -1555,7 +1555,10 @@ vencer (Hm en Q≈0, p.ej. z2−z1+p2/γ) ya supera el máximo de la curva H(Q) 
 una bomba, ningún número de bombas en paralelo puede elevar el agua —hace
 falta **serie** (que sí suma cargas). Se verifica comparando
 max(H_bomba(Q)) contra la carga estática de la instalación **antes** de
-resolver el punto de funcionamiento completo (2024 mar, Ej.4).
+resolver el punto de funcionamiento completo (2024 mar, Ej.4; también
+2019 feb-07, Ej.4: desnivel estático 51m > Hmax de una bomba=39m ⇒ 1
+bomba no alcanza y ningún número en paralelo alcanza tampoco ⇒ mínimo 2
+bombas en serie, 2×39=78m>51m sí alcanza).
 
 **Bombas en paralelo con succiones INDEPENDIENTES** (2023 dic, Ej.4 parte
 4; se pide sólo plantear las ecuaciones, sin resolver numéricamente). Si
