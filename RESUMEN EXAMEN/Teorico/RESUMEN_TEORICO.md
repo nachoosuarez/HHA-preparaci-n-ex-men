@@ -4,7 +4,7 @@ Este resumen se construyó leyendo completos los exámenes ya resueltos en
 `resueltos/` (2020 Diciembre, 2020 Julio, 2022 Julio, 2022 diciembre, 2024
 diciembre, 2025 Febrero 1, 2025 Febrero 2, 2026 Febrero, 2024 Julio, 2024
 marzo, 2024 febrero, 2023 diciembre, 2023 Julio, 2023 febrero_2, 2023
-Febrero y 2019 Diciembre) y extrayendo de ahí
+Febrero, 2019 Diciembre y 2019 julio) y extrayendo de ahí
 **todos los temas y fórmulas que efectivamente fueron preguntados**,
 fusionando los que se repiten entre exámenes en una sola sección
 enriquecida. Las fórmulas se verificaron/precisaron contra `Teórico
@@ -25,16 +25,17 @@ febrero — no confundir con 2023 feb 2); **2022 jul** = 2022 Julio
 2020 Julio (7/jul/2020); **2020 feb** = 2020 febrero (28/feb/2020);
 **2020 feb-13** = 2020 feb 2 (13/feb/2020, primera llamada de febrero —
 no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020);
-**2019 dic** = 2019 Diciembre (16/dic/2019).
+**2019 dic** = 2019 Diciembre (16/dic/2019); **2019 jul** = 2019 julio
+(22/jul/2019).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
-| A2. Energía específica y tirante crítico | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 16 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
+| A1. Ecuación de FGV y clasificación de canales M/S | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul |
+| A2. Energía específica y tirante crítico | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 jul |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 10 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb |
 | A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
 | B1. Delimitación de cuencas y divisoria de aguas | 15 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic |
@@ -221,6 +222,37 @@ autoconsistente (yn1<yc con el Q hallado):
   nada**: en flujo supercrítico la información no viaja hacia aguas
   arriba, así que toda la rama de salida es una curva S2/S3 fija, sin
   resalto, con el ajuste final al nivel del lago concentrado en el borde.
+
+**Misma idea con SECCIÓN TRAPEZOIDAL y también distinta RUGOSIDAD entre
+tramos (no sólo pendiente)** (2019 jul, Ej.1: b=3.8m, m=1H:1V; tramo 1
+corto y empinado L1=35m, S01=0.018, n1=0.017; tramo 2 largo y suave
+L2=1000m, S02=0.0006, n2=0.01). El razonamiento es idéntico al caso
+rectangular de arriba — sólo cambia que yc(Q) no tiene forma cerrada
+(control crítico vía `control_critico_lago_trap.m`, que anida `fsolve`
+en yc dentro de un `fzero` en Q) y que cada tramo usa su propio par
+(S,n) para yn y para integrar la EDO de FGV. Con tramo 1 steep
+confirmado (yn1=0.89m<yc=1.44m) y tramo 2 mild (yn2=1.73m>yc), el lago
+B controla la salida con una rama subcrítica que se integra hacia atrás
+hasta la unión de tramos (x=L1): si esa rama llega más alta que el
+**conjugado** de la curva S2 del tramo 1 en esa misma sección, el
+resalto se corre hacia **atrás, dentro del tramo 1** (no se queda en el
+tramo 2 donde "nace" la rama subcrítica) — hay que extender la rama
+subcrítica dentro del tramo 1 (con S01,n1) hasta que cruce el conjugado
+de S2, deteniendo esa integración en el evento y=yc (más atrás no tiene
+sentido físico en un tramo steep). **Hallar el rango de hLB para el que
+el resalto queda en el tramo 2** (en vez de en el tramo 1): el caso
+límite es cuando la rama subcrítica coincide EXACTAMENTE con el
+conjugado de S2 justo en la unión de tramos; se integra ese valor
+límite hacia ADELANTE (con S02,n2) hasta el lago B para obtener el hLB
+umbral (2019 jul: 2.35m). Chequeo importante: por debajo de yc el lago
+de salida deja de controlar (pasa a caída libre, y=yc en el borde) pero
+el resalto **puede seguir estando en el tramo 2** — no asumir que la
+pérdida de control del lago cambia automáticamente en qué tramo cae el
+resalto; se verifica integrando la curva de caída libre hacia atrás
+hasta la unión y comparando igual que antes contra el conjugado de S2.
+En este examen dio que sí seguía en el tramo 2 para cualquier hLB por
+debajo del umbral (sin cota inferior): el rango final fue simplemente
+hLB<2.35m, no un intervalo acotado por yc.
 
 **Canal tipo M CORTO (no "muy largo") entre dos lagos con AMBOS niveles
 conocidos, uno de ellos variable** (2019 dic, Ej.1). Si el canal es
