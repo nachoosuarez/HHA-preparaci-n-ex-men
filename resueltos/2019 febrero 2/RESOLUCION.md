@@ -303,4 +303,113 @@ solución oficial manuscrita.
 
 ---
 
-## ESTADO: EN CURSO (faltan Ejercicios 3 y 4)
+## EJERCICIO 3 — Delimitación de cuenca y caudal máximo (Racional + NRCS) (25 puntos)
+
+**Datos:** cañada "Sin Nombre", departamento de Canelones, punto de
+cierre X=470 km, Y=6212.5 km (carta topográfica SGM adjunta, curvas de
+nivel cada 5 m). Tabla de características ya dada: Área=4.3 km², ΔH=45 m,
+L(cauce principal)=2150 m, Grupo Hidrológico C, S=1.9% (**pendiente
+media de la cuenca**). Uso de suelo: 70% pastizales en condiciones
+hidrológicas **óptimas** + 30% cultivos en hileras rectas (condición
+hidrológica **buena**). Tr=10 años, flujo concentrado.
+
+### Teoría (RESUMEN_TEORICO.md §B1, B2, B3, B4, B5)
+
+- **B1** Delimitación: la divisoria de aguas corta perpendicularmente
+  las curvas de nivel, por el lado convexo al ganar cota (crestas) y
+  cóncavo al perderla (vaguadas), sin cruzar nunca el cauce salvo en el
+  punto de cierre.
+- **B2** tc (Ramser-Kirpich, flujo concentrado): la pendiente que
+  alimenta la fórmula es la del **cauce principal** (ΔH/L/10), no la
+  "S" de la tabla (que es la pendiente **media de la cuenca**, usada
+  sólo para elegir C en la Tabla 3.1.4).
+- **B4** Método Racional: `Q=C·i·A(ha)/360`; con uso de suelo mixto, C
+  ponderado por área: `C=ΣCi·frac_i`.
+- **B5** Método NRCS: NC ponderado por área (`NC=ΣNCi·frac_i`), tormenta
+  de diseño por bloque alterno (12 sub-intervalos de Δt=tc/7),
+  precipitación efectiva con piso de infiltración, convolución con el
+  hidrograma unitario triangular SCS.
+- **Criterio de selección (B4):** 20 min<tc<1 h ⇒ se calculan **ambos**
+  métodos y se adopta el **mayor** caudal.
+
+Cita: Teórico HHA §3.1.2 (delimitación/morfología), §3.1.4 (IDF),
+§3.1.5 (Racional y NRCS, coeficientes ponderados); Formulómetro
+"Morfología de Cuencas" / "Método Racional" / "Método NRCS".
+
+### Herramienta y por qué
+
+**Parte 1** (delimitación) es un trabajo gráfico directo sobre la carta
+topográfica adjunta (página 3 del PDF del examen): se traza la
+divisoria perpendicular a las curvas de nivel desde el punto de cierre
+dado (X=470, Y=6212.5 km), cerrando el polígono por las líneas de
+máxima cota que rodean el cauce de la cañada. El propio enunciado ya da
+como dato la síntesis cuantitativa de esa delimitación (Área, ΔH, L,
+Grupo Hidrológico, S — Tabla del Ejercicio 3), por lo que el resto del
+ejercicio (Parte 2) se resuelve directamente con esos valores, sin
+necesitar medir nada adicional sobre la carta.
+
+Para la Parte 2 se usó un script Python (`ej3_racional_NRCS.py`) que
+replica las fórmulas cerradas del Formulómetro (Kirpich, IDF de
+Uruguay, bloque alterno de 12 sub-intervalos, NC/Pe con piso de
+infiltración, HU triangular SCS) — igual planteo que la hoja
+`Cálculos (grande)` de `Eventos extremos.xlsx` (ver
+`COMO_USAR_EVENTOS_EXTREMOS.md`), pero con ambos coeficientes (C y NC)
+**ponderados** por el uso de suelo mixto 70/30 antes de entrar a cada
+fórmula.
+
+### Paso a paso
+
+**Parte 1)** Delimitación de la cuenca sobre la carta topográfica
+(perpendicular a las curvas de nivel, cerrando en el punto de cierre
+dado) — sin resalto/carta reproducida en este repo; se usan
+directamente los valores ya tabulados por el enunciado para la Parte 2.
+
+**Parte 2) Caudal máximo, Tr=10 años**
+
+Tiempo de concentración (Kirpich, con la pendiente del **cauce
+principal**, no la de la tabla):
+
+```
+S_cauce = ΔH/L/10 = 45/2.15/10 = 2.093 %
+tc = 0.4·2.15^0.77/2.093^0.385 = 0.5427 h (32.6 min)
+```
+
+Como 20 min<tc<1 h ⇒ se calculan ambos métodos.
+
+Coeficientes ponderados (70% pastizales óptimas + 30% cultivos en
+hileras rectas, ambos Grupo C):
+
+```
+NC = 0.7·74 + 0.3·85 = 77.30      (tabla NRCS)
+C  = 0.7·0.30 + 0.3·0.36 = 0.318  (Tabla 3.1.4, S media de la cuenca=1.9%, Tr=10)
+```
+
+**Método Racional** (P310=82 mm, leído de la Fig. 3.1.10 en X=470,
+Y=6212.5):
+
+```
+CD(tc=0.543h)=0.4689 ; CT(10)=1 ; CA(0.543h,4.3km²)=0.9887
+P(d,Tr,A) = 82·1·0.4689·0.9887 = 38.02 mm  ->  i = 70.05 mm/h
+Qmax racional = C·i·A(ha)/360 = 0.318·70.05·430/360 = 26.61 m³/s
+```
+
+**Método NRCS** (bloque alterno, Δt=tc/7=4.65 min, NC=77.3, piso de
+infiltración 1.2 mm/h):
+
+```
+S = 25.4·(1000/77.3-10) = 74.59 mm  ;  Ia = 14.92 mm
+Pe total (12 bloques, con piso de infiltración) = 10.42 mm
+HU triangular: tp=0.364 h, tb=0.972 h, qp=2.455 m³/s/mm
+Qmax NRCS (convolución) = 19.12 m³/s
+```
+
+Como Qmax racional (26.61 m³/s) > Qmax NRCS (19.12 m³/s), **se adopta
+el método Racional**.
+
+**Resultado: Qmax (Tr=10 años) = 26.6 m³/s** (oficial: NC=77.3, C=0.318,
+Qmax NRCS=19 m³/s, Qmax racional=26.6 m³/s, se adopta el mayor —
+coincide en todo).
+
+---
+
+## ESTADO: EN CURSO (falta Ejercicio 4)
