@@ -172,4 +172,114 @@ manuscrito da como umbral hLB=2.35 m y concluye "RANGO → hLB < 2.35 m"
 
 ---
 
-ESTADO: EN CURSO (falta Ejercicio 2, 3 y 4)
+## Ejercicio 2 — Infiltración de Horton y tiempo de encharcamiento
+
+### Enunciado (resumen)
+
+1) Definir qué se entiende por tiempo de encharcamiento de una cuenca.
+2) Cuenca de Área=5.3 km², Lcp=2.3 km, ΔH=45 m, con un evento de
+   precipitación en bloques de 30 min: P = 3, 5, 31, 6, 3, 1 mm (0-30,
+   30-60, 60-90, 90-120, 120-150, 150-180 min). Modelo de Horton con
+   f0=7.6 mm/h, fc=0.4 mm/h, k=0.5 1/h.
+   a) Tiempo de encharcamiento del evento.
+   b) Evolución temporal de la tasa de infiltración real (graficar).
+   c) Volumen de escorrentía del evento (mm).
+
+### Teoría (RESUMEN_TEORICO.md §B8 — Infiltración de Horton)
+
+**Concepto (parte 1).** El tiempo de encharcamiento es el lapso entre el
+inicio de la lluvia y el instante en que el agua empieza a encharcar en
+la superficie del terreno — a partir de ahí la intensidad de
+precipitación supera la tasa de infiltración potencial del suelo.
+
+**Fórmulas (parte 2):**
+
+```
+f(t) = fc + (f0-fc)·e^(-k·t)                    (capacidad de infiltración de Horton)
+Criterio: comparar, al inicio de cada bloque, I(bloque)=P/Δt contra f(t_inicio):
+  I < f  =>  bloque lluvia-limitado (infiltra 100%, tasa real = I)
+  I >= f =>  bloque capacidad-limitado (tasa real = f(t), integrada en el intervalo)
+Vinf = Σ infiltración de cada bloque ; Vesc = P_total - Vinf
+```
+
+Cita: Teórico HHA §3.1.3 (infiltración, modelo de Horton); Formulómetro
+"Agua en el Suelo — Curva de infiltración de Horton".
+
+### Herramienta y por qué
+
+Se usó Python (sin ningún toolkit de Octave — es álgebra cerrada de
+Horton, sin geometría de canal ni de cuenca de por medio), replicando el
+patrón ya usado en `resueltos/2023 febrero_2/scripts/ej2.py` (parte 2.2,
+mismo modelo de Horton): se tabula f(t) en el inicio de cada bloque, se
+compara contra la intensidad I=P/Δt de ese bloque para hallar el primer
+cruce (tiempo de encharcamiento), y se integra analíticamente f(t) en
+los bloques capacidad-limitados (en vez de aproximar el área con la
+regla del trapecio sobre los valores redondeados de la tabla, como hace
+a mano la solución oficial) para un volumen infiltrado más preciso.
+Script: `resueltos/2019 julio/scripts/Ejercicio2_Horton.py` (incluye
+también el gráfico de la tasa de infiltración real, parte b).
+
+### Paso a paso
+
+**Parte 1)** Definición de tiempo de encharcamiento (ver Teoría arriba).
+
+**Parte 2.a) Tiempo de encharcamiento.**
+
+```
+t(h)  f(t) mm/h   bloque      I=P/0.5h mm/h   ¿I>=f(t_ini)?
+0.0     7.60      0.0-0.5 h        6.0         no  (lluvia-limitado)
+0.5     6.01      0.5-1.0 h       10.0         SI  -> ENCHARCA en t=0.5 h
+1.0     4.77      1.0-1.5 h       62.0         SI
+1.5     3.80      1.5-2.0 h       12.0         SI
+2.0     3.05      2.0-2.5 h        6.0         SI
+2.5     2.46      2.5-3.0 h        2.0         (ya encharcado, sigue capacidad-limitado)
+```
+
+**Resultado 2.a): t_enc = 0.5 h.**
+
+**Parte 2.b) Evolución de la tasa de infiltración real.**
+
+Bloque 0-0.5h (lluvia-limitado): tasa real = I = 6.0 mm/h (constante).
+Desde t=0.5h en adelante (capacidad-limitado, se mantiene así el resto
+del evento aunque I vuelva a caer por debajo de f en el último bloque —
+ya hay agua encharcada infiltrando a la capacidad del suelo): tasa real
+= f(t), decreciente: 6.01, 4.77, 3.80, 3.05, 2.46 mm/h en t=0.5, 1, 1.5,
+2, 2.5 h. Gráfico: `resueltos/2019 julio/scripts/infiltracion_real.png`.
+
+**Parte 2.c) Volumen de escorrentía.**
+
+```
+Bloque         tipo                 Infiltración (mm)
+0.0-0.5 h      lluvia-limitado           3.00   (=I·Δt=P)
+0.5-1.0 h      capacidad-limitado        2.68   (integral de f(t))
+1.0-1.5 h      capacidad-limitado        2.13
+1.5-2.0 h      capacidad-limitado        1.71
+2.0-2.5 h      capacidad-limitado        1.37
+2.5-3.0 h      capacidad-limitado        1.11
+                                   -----------
+                       Infiltración total = 12.00 mm
+
+P_total = 3+5+31+6+3+1 = 49 mm
+Vesc = P_total - Inf_total = 49 - 12 = 37 mm
+```
+
+**Resultado 2.c): Vesc = 37 mm.**
+
+**Comparación con la solución oficial:** coincide exactamente —
+t_enc=0.5h (idéntico); f(t) tabulado idéntico (7.6, 6, 4.76, 3.81, 3.05,
+2.46, 2.00 mm/h en t=0,0.5,...,3h); infiltración total=12mm/Vesc=37mm
+(idénticos). La solución oficial integra f(t) con la regla del trapecio
+sobre los valores redondeados de la tabla (3+2.69+2.14+1.715+1.4+1.1=12mm),
+mientras que este cálculo integra f(t) analíticamente en cada bloque
+(2.68, 2.13, 1.71, 1.37, 1.11 mm) — la diferencia es de milésimas de mm
+por bloque y ambos redondean al mismo total de 12mm.
+
+---
+
+## Ejercicio 3 y 4
+
+Pendientes — quedan para la próxima corrida.
+
+---
+
+ESTADO: EN CURSO (falta Ejercicio 3 y 4)

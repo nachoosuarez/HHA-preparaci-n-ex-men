@@ -45,7 +45,7 @@ no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020);
 | B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 17 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic |
 | B6. Condición de humedad antecedente (AMC) | 9 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
-| B8. Infiltración de Horton y tiempo de encharcamiento | 2 | 2025 feb 2, 2023 feb 2 |
+| B8. Infiltración de Horton y tiempo de encharcamiento | 3 | 2025 feb 2, 2023 feb 2, 2019 jul |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
 | C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic |
@@ -1004,6 +1004,22 @@ encharcamiento (t_enc=0.2h), aunque calculado con más precisión f(0.2h)
 sale 68.02 mm/h (una diferencia de 0.03%, producto del redondeo con que
 se armó el enunciado) — no vale la pena perseguir esa diferencia de
 milésimas, el bloque marcado es el de encharcamiento.
+
+**Una vez encharcado, se mantiene capacidad-limitado el resto del
+evento** (2019 jul, Ej.2 — f0=7.6 mm/h, fc=0.4 mm/h, K=0.5 1/h,
+hietograma en bloques de 0.5h: P=3,5,31,6,3,1mm ⇒ t_enc=0.5h, ver
+`resueltos/2019 julio/RESOLUCION.md`). Si en un bloque posterior al
+encharcamiento la intensidad I vuelve a caer por debajo de f(t) (acá,
+el último bloque: I=2.0<f(2.5)=2.46 mm/h), la convención estándar del
+curso (usada en la solución oficial manuscrita) **no revierte** a
+lluvia-limitado — se sigue integrando f(t) como tasa real hasta el
+final del evento, porque ya hay agua encharcada en superficie
+infiltrando a la capacidad del suelo (no hay motivo físico para que esa
+lámina encharcada desaparezca por una caída puntual de intensidad).
+Volumen infiltrado total = Σ(I·Δt en bloques lluvia-limitados) +
+Σ(∫f(t)dt en bloques capacidad-limitados, integral analítica cerrada de
+la exponencial de Horton) = 12 mm; Vesc = P_total(49mm) - Inf(12mm) =
+**37 mm**.
 
 Cita: Teórico HHA §3.1.3 (infiltración, modelo de Horton); Formulómetro
 "Agua en el Suelo — Curva de infiltración de Horton".
