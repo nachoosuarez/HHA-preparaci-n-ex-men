@@ -50,10 +50,10 @@ aún sin resolver en este repo).
 | B8. Infiltración de Horton y tiempo de encharcamiento | 4 | 2025 feb 2, 2023 feb 2, 2019 jul, 2018 dic |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
-| C2. Curva de la bomba y punto de funcionamiento | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
-| C3. Potencia consumida por el sistema de bombeo | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
-| C4. Cavitación: NPSH disponible vs. requerido | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
+| C2. Curva de la bomba y punto de funcionamiento | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
+| C3. Potencia consumida por el sistema de bombeo | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
+| C4. Cavitación: NPSH disponible vs. requerido | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
 | C5. Bombas en serie y en paralelo | 10 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb, 2020 feb-13, 2019 jul, 2019 feb-07 |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 4 | 2020 dic, 2024 dic, 2023 feb 2, 2019 jul |
 | D1. Diseño de alcantarillas: tipos de flujo 1-6 (clasificación de Bodhaine) | 2 | 2020 feb-13, 2019 feb-07 |
@@ -1289,6 +1289,23 @@ abajo), la energía cinética de salida V²/(2g) **no se recupera** y debe
 incluirse como parte de la carga exigida por la instalación. Si ambos
 extremos son superficies libres de grandes depósitos (v≈0), esos términos
 cinéticos se anulan en la ecuación de instalación.
+
+**Descarga libre por una tobera/aspersor de diámetro MUCHO menor que la
+cañería, con esa cota de salida como incógnita** (2018 dic, Ej.4: aspersor
+DA=50mm al final de una impulsión DT=150mm, cota zA variable). El
+V²/(2g) de salida se calcula con el área del **aspersor** (no la de la
+cañería) — es el mismo caso "descarga libre" de arriba, pero conviene
+resolver el punto de funcionamiento con `fzero` (raíz exacta) y NO con
+una grilla gruesa de Q: como AA≪A_cañería, el término vA²/2g crece muy
+rápido con Q (d(vA²/2g)/dQ = Q/(g·AA²), del orden de 10³ m por m³/s en
+este ejemplo), así que un redondeo de Q de sólo ~10⁻⁴ m³/s (típico de
+leer una intersección gráfica a mano, o de una grilla de pocos cientos
+de puntos) se amplifica a **varios cm-dm** de error en cualquier cota
+que se despeje de esa ecuación (p.ej. la cota mínima sin cavitar,
+parte a) — con Q idéntico al de la solución oficial (redondeado a
+0.0405 m³/s) este mismo script reproduce su mismo resultado (zA≈1.70m
+vs 1.66m oficial), pero con el Q sin redondear (`fzero`) da zA≈1.57m:
+la diferencia es enteramente de propagación de redondeo, no de método.
 
 **Descarga libre dentro de un tanque PRESURIZADO** (2019 feb 2, Ej.4:
 tanque elevado con nivel de agua a +10 m y presión interior 100 kPa; la

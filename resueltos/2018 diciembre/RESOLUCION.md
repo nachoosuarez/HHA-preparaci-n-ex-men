@@ -368,6 +368,114 @@ examen).
 
 ---
 
-## ESTADO: EN CURSO (Ejercicios 1 y 3 completos; Ejercicio 2 parcial —
-parte 3 resuelta, partes 1 y 2 pendientes por calidad de escaneo de la
-carta topográfica; falta Ejercicio 4)
+## EJERCICIO 4 (20 puntos) — Bombeo de riego por aspersión desde un lago
+
+**Enunciado (resumen):** riego por aspersión que succiona de un lago
+(z_lago=−4 m). Succión: Ls=15 m, DT=150 mm, rugosidad e=0.05 mm, ks=1.
+Impulsión: Li=600 m, mismo DT=150 mm, ki=5. Aspersor de salida DA=50 mm,
+pérdida localizada despreciable, a cota zA variable. Bomba a zB=0 m, con
+curva característica H(Q), η(Q) y NPSHreq(Q) dadas en tabla (Q=0 a 0.07
+m³/s).
+a) Cota mínima zA para que la bomba no cavite.
+b) Con zA=30 m: punto de funcionamiento (Q,H), potencia consumida y
+   verificación de cavitación.
+c) Presión en la tubería inmediatamente antes del aspersor.
+
+Teoría usada: ecuación de la instalación con descarga libre (§C1), curva
+de la bomba y punto de funcionamiento (§C2), potencia consumida (§C3),
+NPSH disponible vs. requerido (§C4) — ver
+`RESUMEN EXAMEN/Teorico/RESUMEN_TEORICO.md`.
+
+### Por qué esta herramienta
+
+Es el caso general de instalación de bombeo (succión+impulsión, Darcy-
+Weisbach/Colebrook-White) con la particularidad de que la descarga es
+**libre a través de un aspersor** (tobera de diámetro DA=50 mm, mucho
+menor que la cañería DT=150 mm): el término cinético de salida vA²/2g
+**no se cancela** (§C1) y hay que usarlo con el área del aspersor, no la
+de la cañería. Se usó Octave con `colebrook.m` (reusado de
+`RESUMEN EXAMEN/Codigos/Bombas/`), replicando el patrón de
+`Bomba_sola.m` — de hecho ese script canónico trae **precargados los
+mismos datos exactos de este examen** como ejemplo (Ls=15, Ds=0.15,
+z1=−4, ks=1, zB=0, Li=600, D1=0.15, z2=30, ki=5, Dt=0.05, misma curva de
+bomba), lo que sirvió como primera verificación cruzada de la parte b).
+
+**Script:** `Ejercicio4_riego_aspersor.m` (usa `colebrook.m`, copiado a
+esta carpeta).
+
+### Parte a) Cota mínima del aspersor sin cavitar
+
+**Concepto.** zA está del lado de la **descarga**: al bajar zA, la carga
+estática que debe vencer la bomba disminuye, el punto de funcionamiento
+se corre a **mayor Q** sobre la curva de la bomba (decreciente) — mayor Q
+empeora tanto NPSHdisp (más pérdida en la succión) como NPSHreq (crece
+con Q en la tabla): ambos efectos van en el mismo sentido, así que existe
+una zA mínima por debajo de la cual la bomba cavita.
+
+**Por qué esta herramienta.** No hay forma cerrada porque Q cambia con
+zA (a diferencia de "mover la bomba a lo largo de la misma tubería", que
+no cambia Q — ver §C4): se resuelve con un `fzero` **anidado** — para
+cada zA de prueba se halla el punto de funcionamiento completo
+(intersección exacta con `fzero`, no grilla, ver nota de precisión en el
+script) y se compara NPSHdisp(Q) contra NPSHreq(Q), iterando zA hasta
+igualarlos.
+
+**Resultado:**
+```
+zA_min = 1.57 m
+(en ese punto: Qpf=0.0406 m3/s, Hpf=47.64 m, NPSHdisp=NPSHreq=5.37 m)
+```
+
+**Comparación con la solución oficial:** el punto de tangencia coincide
+casi exactamente (oficial: Q=0.0405 m³/s, H=47.65 m, NPSH=5.38 m; acá:
+0.0406, 47.64, 5.37), pero la **zA final oficial da 1.66 m** (contra 1.57
+m acá). La diferencia se debe a que el término cinético de salida del
+aspersor vA²/2g es **muy sensible a Q** (dvA²/2g/dQ≈1000 m por m³/s,
+porque el aspersor es mucho más chico que la cañería): repitiendo el
+cálculo de zA con el Q=0.0405 redondeado a mano de la solución oficial,
+este mismo script también da zA≈1.70 m — confirma que la diferencia es
+enteramente de redondeo de Q propagado por ese término (no un error de
+método), y que 1.57 m es el valor más preciso.
+
+### Parte b) Punto de funcionamiento con zA=30 m
+
+**Resultado:**
+```
+Qpf = 0.0284 m3/s
+Hpf = 54.97 m
+eta(Qpf) = 67.5 %
+Pcons = ro*g*Q*H/eta = 22.63 kW
+NPSHdisp = 5.73 m ; NPSHreq = 4.27 m -> NO CAVITA
+```
+
+**Comparación con la solución oficial:** coincide bien — oficial Q=0.0284
+m³/s (idéntico), H=54.85 m (vs 54.97, diferencia de redondeo de tabla),
+NPSHreq=4.25 m / NPSHdisp=5.75 m (vs 4.27/5.73, prácticamente iguales),
+η=66.1% / P=23.1 kW (vs 67.5%/22.63 kW, pequeña diferencia atribuible a
+cómo se interpola η en la tabla) — mismo diagnóstico "NO CAVITA".
+
+### Parte c) Presión inmediatamente antes del aspersor
+
+**Concepto.** Entre el punto justo antes del aspersor (dentro de la
+cañería DT=150 mm, misma cota que el aspersor) y la salida a la
+atmósfera (pérdida despreciable), Bernoulli da: la presión "extra" en la
+cañería se convierte íntegramente en el salto de velocidad hacia la
+tobera: p_antes/(ρg) = vA²/2g − v_DT²/2g.
+
+**Resultado:**
+```
+v(cañería,150mm) = 1.61 m/s ; v(aspersor,50mm) = 14.48 m/s
+p_antes = ro*(vA^2-vi^2)/2 = 103.2 kPa = 10.55 m.c.a.
+```
+
+**Comparación con la solución oficial:** no hay una página de solución
+específicamente rotulada para esta parte con claridad suficiente, pero
+en el escaneo (pág. 9 del PDF, muy degradado, junto a contenido de otras
+partes) se distingue un valor "≈10.55" consistente con este resultado —
+coincidencia razonable dado el estado del escaneo.
+
+---
+
+## ESTADO: COMPLETO salvo Ejercicio 2 (partes 1 y 2 pendientes por
+calidad de escaneo de la carta topográfica — ver nota en Ejercicio 2).
+Ejercicios 1, 3 y 4 completos.
