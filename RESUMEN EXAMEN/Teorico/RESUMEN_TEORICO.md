@@ -34,11 +34,11 @@ aún sin resolver en este repo).
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2 |
-| A2. Energía específica y tirante crítico | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2 |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 jul, 2019 feb 2 |
-| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 18 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2 |
-| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 11 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2 |
+| A1. Ecuación de FGV y clasificación de canales M/S | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic |
+| A2. Energía específica y tirante crítico | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 jul, 2019 feb 2, 2018 dic |
+| A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic |
+| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 12 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2, 2018 dic |
 | A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
 | B1. Delimitación de cuencas y divisoria de aguas | 16 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 feb 2 |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
@@ -470,6 +470,43 @@ decimales antes de restar amplifica mucho el error relativo del resultado
 final (en 2023 feb 2 la solución oficial, con y1 redondeado a 1.03 m, da
 F=1172 N; con más decimales en y1 el resultado correcto es F≈1277 N) —
 conviene **no redondear** hasta el final en este tipo de cuentas.
+
+**Compuerta INTERIOR entre un lago aguas arriba (a distancia FINITA) y una
+caída libre aguas abajo, con remanso que puede llegar hasta el lago**
+(2018 dic, Ej.1). Lago → canal M largo (L1=1000 m) → compuerta (abertura
+a) → canal (L2=500 m) → caída libre. Es la combinación de A4 (lago a
+distancia finita, shooting en Q) con la compuerta ideal de A5, pero con
+una sutileza clave respecto al caso "escalón interior" de más arriba: acá
+**no alcanza con probar si el Q sin obstáculo cambia poco o mucho** — hay
+que resolver directamente el shooting, porque una compuerta angosta
+genera muchísimo más remanso que un escalón típico. Procedimiento:
+1. Probar primero la hipótesis "sin compuerta" (A4, canal M largo): Q tal
+   que E(yn)=h_Lago. Da un Q de referencia (acá 5.53 m³/s, yn=1.40 m).
+2. Con la abertura a dada, calcular para ese Q el tirante aguas arriba de
+   la compuerta requerido por la compuerta ideal, yA=alterno(a) (`Eesp_rect`,
+   rama subcrítica), e integrar la EDO de FGV **hacia atrás** desde la
+   compuerta (x=L1) hasta el lago (x=0) partiendo de yA. Si el tirante
+   resultante en x=0 excede h_Lago (energéticamente imposible: acá dio
+   2.78 m contra h_Lago=1.6 m), la compuerta "ahoga" también la entrada
+   del lago y el Q de la hipótesis 1 no es válido — **hay que iterar**.
+3. `fzero` en Q: para cada Q de prueba, (a) yA=alterno(a,Q) en la
+   compuerta, (b) integrar la EDO hacia atrás L1 metros hasta el lago,
+   (c) calcular la energía específica en esa sección y compararla con
+   h_Lago. El cero de esa función da el Q real (acá 4.15 m³/s, bastante
+   menor que los 5.53 m³/s sin compuerta) — la compuerta angosta reduce
+   el caudal que el lago logra entregar, aun con 1000 m de canal "largo"
+   de por medio (el remanso M1 de una compuerta puede no relajarse a yn
+   ni siquiera en un tramo que sí sería "largo" para un M2/M4 ordinario).
+4. Con ese Q ya determinado: verificar descarga libre/ahogada (a* =
+   conjugado(a) vs. yn del tramo de salida) igual que en el caso general
+   de A5; si es libre, ubicar el resalto en el tramo de salida cruzando
+   el conjugado de la curva M3 (desde la compuerta) con la curva M2
+   (desde la caída libre) — mismo método de A3/A5. La fuerza sobre la
+   compuerta usa `Mom_rect` con sección completa en ambos lados (yA y a),
+   porque la descarga es libre, no ahogada (si fuera ahogada habría que
+   usar el momento híbrido, ver "Trampa" más arriba). La potencia disipada
+   en el resalto es γ·Q·hj, con hj=(y2−y1)³/(4y1y2) los tirantes
+   conjugados exactos del resalto (no los de la malla de búsqueda).
 
 Cita: Teórico HHA §2.2 (transiciones de energía), §2.3.2–2.3.3
 (conjugados/resalto), §2.3.4 "Descarga ahogada de una compuerta" (Fig.
