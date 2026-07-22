@@ -42,9 +42,9 @@ no confundir con "2024 jul" = 2024 Julio).
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 13 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2, 2018 dic, 2018 jul |
 | A6. Tensión rasante de fondo en FGV | 3 | 2025 feb 1, 2019 dic, 2018 jul |
 | B1. Delimitación de cuencas y divisoria de aguas | 17 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 feb 2, 2018 dic |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
 | B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 23 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
-| B4. Método Racional (y criterio de selección según tc) | 21 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
+| B4. Método Racional (y criterio de selección según tc) | 22 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
 | B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 jul |
 | B6. Condición de humedad antecedente (AMC) | 13 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 jul |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
@@ -868,6 +868,10 @@ tabla (Tabla 3.1.4) tabulada en columnas DISCRETAS de Tr** (típicamente
 práctica de resolverlo es **probar los Tr tabulados** (con su C
 correspondiente) hasta encontrar el escalón donde Q cruza el valor límite,
 y adoptar ese Tr tabulado como respuesta (no interpolar entre columnas).
+Mismo patrón en 2018 jul, Ej.3 parte b (cuenca casi gemela de la de 2023
+dic, mismo departamento): Qmax(Tr=10)=34.15 m³/s < 42 m³/s <
+Qmax(Tr=25)=44.45 m³/s ⇒ Tr límite=25 años (con 20min<tc<1h, el "Qmax"
+de cada escalón es el mayor entre Racional y NRCS, no sólo Racional).
 
 **Variante: interpolar C linealmente entre columnas cuando se pide el Tr
 "exacto"** (2019 dic, Ej.2 parte 3). Si el enunciado pide directamente

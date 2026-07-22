@@ -307,11 +307,125 @@ resueltos.
 
 ---
 
+## EJERCICIO 3 (25 puntos) — Caudal de diseño de alcantarilla (Treinta y Tres), Tr límite, área urbanizable máxima
+
+**Enunciado (resumen):** cuenca en Treinta y Tres (punto de cierre
+X=600 km, Y=6330 km), pastizales naturales, Grupo Hidrológico B,
+condición mala, flujo concentrado. Área=4.95 km², ΔH=110 m (cauce
+principal), L=3100 m (cauce principal), S(media cuenca)=3.3%.
+a) Caudal de diseño de una alcantarilla en el cierre, Tr=5 años.
+   Justificar la metodología.
+b) Período de retorno del caudal de sobrepasamiento de la rasante del
+   camino, Q=42 m³/s. Justificar la metodología.
+c) Área máxima urbanizable (concreto/techo) para que el caudal máximo no
+   supere en 15% el de la parte (a), con tc invariante.
+
+Teoría usada: tiempo de concentración de Ramser-Kirpich (§B2), criterio
+de selección de método según tc y coeficiente de escorrentía ponderado
+(§B4), Número de Curva NRCS (§B5). Ver
+`RESUMEN EXAMEN/Teorico/RESUMEN_TEORICO.md`. Este ejercicio es
+prácticamente idéntico (misma zona, mismo tipo de cuenca, valores muy
+parecidos) al Ejercicio 2 de `resueltos/2023 diciembre/`, que ya tiene
+solución oficial validada — se reutiliza el mismo script adaptado a
+estos datos.
+
+### Parte a) Caudal de diseño, Tr=5 años
+
+**Concepto y por qué esta herramienta.** Primero hay que calcular tc
+(Kirpich, con la pendiente del **cauce principal** ΔH/L/10=3.548%, *no*
+la pendiente media de la cuenca 3.3% que el enunciado da aparte). Con
+20 min<tc<1 h, el criterio de §B4 exige calcular **ambos** métodos
+(Racional y NRCS) y adoptar el mayor caudal — no alcanza con justificar
+uno solo.
+
+**Datos externos:** P(3,10)=80 mm (isoyetas Fig. 3.1.10, X=600 km,
+Y=6330 km — el punto cae prácticamente sobre la isoyeta gruesa "80",
+ver `ej3_isoyeta_P310.png`; coincide con la lectura de un punto cercano,
+X=625 km/Y=6350 km, en `resueltos/2023 diciembre/`, también 80 mm, buena
+consistencia); NC=79 (Tabla 3.1.20: "Pradera o pastizal", condición
+mala, Grupo B); C=0.36 (Tabla 3.1.4, Chow 1994: Pastizales, pendiente
+"Promedio 2-7%", Tr=5 — la condición "mala" del enunciado no aplica a
+esta tabla, sólo a la de NC).
+
+**Script:** `Ejercicio3_alcantarilla_racional_NRCS.py`, secciones "PARTE
+A" (Kirpich, Racional y NRCS).
+
+**Resultado:**
+```
+S_cauce = 110/3.1/10 = 3.548 %
+tc = 0.4*3.1^0.77/3.548^0.385 = 0.587 hs = 35.2 min   (20min<tc<1h => ambos métodos)
+
+Racional: CT(5)=0.860, CD(tc)=0.486, CA(tc)=0.987
+  P max en el area = 32.98 mm ; i = 56.18 mm/h
+  QMR(Tr=5) = 0.36*56.18*495/360 = 27.81 m3/s
+
+NRCS: S=25.4*(1000/79-10)=67.52 mm ; Ia=13.50 mm
+  (tormenta de diseño por bloque alterno + Pe con piso 1.2 mm/h + HU
+  triangular SCS)
+  QNRCS(Tr=5) = 16.58 m3/s
+```
+
+**Qdiseño = max(QMR,QNRCS) = 27.81 m³/s (método Racional).**
+
+### Parte b) Período de retorno del caudal límite (Q=42 m³/s)
+
+**Concepto.** La Tabla 3.1.4 tabula C en columnas discretas de Tr (2,
+5, 10, 25, 50, 100 años) — no es una función continua. Como el
+enunciado pide "determinar el período de retorno" de un caudal límite
+puntual (verificar contra un umbral de diseño, no un ajuste fino), se
+prueban los Tr tabulados con el método que domina en cada uno (en todo
+el rango probado, Racional≥NRCS) hasta encontrar el escalón donde Q
+cruza el valor límite (mismo criterio que `resueltos/2023 diciembre/`,
+validado ahí contra la solución oficial).
+
+**Script:** `Ejercicio3_alcantarilla_racional_NRCS.py`, sección "PARTE
+B".
+
+**Resultado:**
+```
+Tr=10: QMR=34.15  QNRCS=23.76  Qmax=34.15 m3/s
+Tr=25: QMR=44.45  QNRCS=33.88  Qmax=44.45 m3/s
+```
+Como Qmax(Tr=10)=34.15 m³/s < 42 m³/s < Qmax(Tr=25)=44.45 m³/s, el
+caudal de sobrepasamiento cae dentro del escalón de **Tr=25 años**.
+
+### Parte c) Área máxima urbanizable
+
+**Concepto.** Con tc invariante (dato del enunciado), Q es
+proporcional a C (i, A fijos). El coeficiente de escorrentía ponderado
+entre el área natural (C1=0.36, Tr=5) y el área urbanizada (C2=0.80,
+concreto/techo, Tr=5) permite despejar el área A2 tal que el caudal no
+supere en 15% el de la parte (a) (§B4, "coeficiente de escorrentía
+ponderado y área urbanizable máxima").
+
+**Script:** `Ejercicio3_alcantarilla_racional_NRCS.py`, sección "PARTE
+C".
+
+**Resultado:**
+```
+Qtarget = 1.15*Qa = 31.98 m3/s
+C_target = 1.15*C1 = 0.414
+A2 = AT*(C_target-C1)/(C2-C1) = 4.95*(0.414-0.36)/(0.80-0.36) = 0.607 km2
+```
+
+**Área urbanizable máxima ≈ 0.61 km² (≈12.3% del área total).**
+
+**Comparación con la solución oficial:** las páginas manuscritas del
+PDF (3-7) son difíciles de leer con confianza; no se pudo extraer un
+número claro para comparar directamente. El método (tc por Kirpich con
+la pendiente del cauce, criterio Racional+NRCS para 20min<tc<1h, C de
+Tabla 3.1.4 sin distinción por condición para pastizales, NC de Tabla
+3.1.20 con "condición mala"/Grupo B, escalón tabulado de Tr, área
+urbanizable por proporcionalidad de C) es el mismo, validado
+numéricamente cuenca por cuenca, que en `resueltos/2023 diciembre/`
+(examen prácticamente gemelo de este, con solución oficial confirmada
+ítem por ítem).
+
+---
+
 ## Pendiente para próximas corridas
 
-- Ejercicio 3 (alcantarilla, Racional/NRCS según tc, % de urbanización
-  máximo admitido).
 - Ejercicio 4 (dos bombas en paralelo, coeficientes de pérdida de carga
   Kgs/Kgi, potencia y cavitación).
 
-## ESTADO: EN CURSO (Ejercicios 1 y 2 de 4 completos)
+## ESTADO: EN CURSO (Ejercicios 1, 2 y 3 de 4 completos)
