@@ -169,13 +169,149 @@ mismas herramientas.
 
 ---
 
+## EJERCICIO 2 (25 puntos) — Hietograma observado, período de retorno, infiltración NRCS y tiempo de encharcamiento
+
+**Enunciado (resumen):** el 12 de diciembre se registró en un pluviógrafo
+de Canelones (X=480 km, Y=6200 km) el hietograma en bloques de 10 min:
+P=3, 6, 12, 26, 9, 4 mm (P_total=60 mm).
+a) Calcular el período de retorno asociado a la intensidad máxima de
+   todo el evento.
+b) Con el modelo NRCS, estimar el volumen infiltrado (mm) en una cuenca
+   de tc=1.42 h, suelo grupo hidrológico C, cobertura "hierbas poco
+   densas y arbustos". Precipitación de los 5 días previos: 58 mm.
+c) Definir tiempo de encharcamiento y estimarlo para este evento.
+
+Teoría usada: curvas IDF de Uruguay e inversión de CT para hallar el Tr
+de un evento observado (§B3), Número de Curva NRCS y condición de
+humedad antecedente AMC (§B5, §B6), tiempo de encharcamiento con el
+modelo NRCS quando no se dan parámetros de Horton (§B8, variante añadida
+a partir de este examen). Ver `RESUMEN EXAMEN/Teorico/RESUMEN_TEORICO.md`.
+
+### Parte a) Período de retorno de la intensidad máxima del evento
+
+**Concepto.** El bloque más intenso del hietograma (26 mm en 10 min) es
+un dato **puntual** de pluviógrafo (no una lluvia sobre una cuenca), así
+que se relaciona con las curvas IDF de Uruguay sin corrección por área
+(CA=1): P=P(3,10)·CT(Tr)·CD(d). Conocidos P, d y P(3,10) (isoyetas), se
+despeja CT=P/(P(3,10)·CD(d)) y se invierte numéricamente CT(Tr) para
+obtener el Tr del evento (§B3, "Encontrar el Tr de un evento observado").
+
+**Por qué esta herramienta.** Es exactamente el caso de inversión de CT
+ya usado en varios exámenes anteriores (2024 feb, 2023 jul, 2019 dic,
+etc.), aplicado aquí al bloque de mayor intensidad de un hietograma en
+vez de a un único valor de lluvia-duración.
+
+**Lectura de P(3,10) en isoyetas (Fig. 3.1.10 del Teórico) para
+X=480 km, Y=6200 km:** se renderizó la figura a 300/600 dpi con PyMuPDF
+y se calibraron los ejes en píxeles (recuadro X: 200–800 km en píxeles
+523.5–2263.5; Y: 6100–6700 km en píxeles 2117–533.5). El punto cae
+prácticamente **sobre la isoyeta gruesa "90"** (desplazamiento
+perpendicular estimado de sólo ≈6 km hacia el lado de mayor
+precipitación, muy por debajo de la resolución/grosor de la línea
+dibujada a mano) ⇒ **P(3,10) ≈ 90 mm** (imagen: `ej2_isoyeta_P310.png`,
+punto marcado en rojo). Nota: un punto cercano (X=494.4 km, Y=6171.8 km,
+~30 km al SE) usado en `resueltos/2024 febrero/` leyó P310=79 mm — la
+diferencia es coherente con que en esta zona las isoyetas 90 y 80 están
+muy próximas entre sí (gradiente local empinado, visible en la propia
+figura), no con un error de lectura.
+
+**Script:** `Ejercicio2_hietograma_NRCS_encharcamiento.py`, sección
+"PARTE a)". Entradas: P_obs=26 mm, d=10 min=1/6 h, P310=90 mm, CA=1.
+
+**Resultado:**
+```
+CD(10 min) = 0.2718
+CT objetivo = 26/(90*0.2718) = 1.0629
+Tr = 13.78 anios
+```
+
+**Tr ≈ 13.8 años.**
+
+### Parte b) Volumen infiltrado (modelo NRCS)
+
+**Concepto.** El volumen infiltrado (junto con la abstracción inicial)
+es la diferencia entre la precipitación total del evento y la
+precipitación efectiva (escorrentía) que predice el modelo NRCS:
+Vinf=P−Pe, con Pe=(P−Ia)²/(P−Ia+S), Ia=0.2S, S=25400/NC−254 (§B5). El NC
+de tabla (condición media, AMC II) se corrige según la humedad
+antecedente real del evento (§B6): con P5d=58 mm y el evento en
+diciembre (estación de crecimiento, umbral 53.34 mm) ⇒ **AMC III**
+(suelo húmedo) ⇒ NC(III) > NC(II).
+
+**Por qué esta herramienta.** El enunciado pide explícitamente asumir
+el modelo NRCS (no Horton) y da exactamente los datos que ese modelo
+necesita: NC de tabla + P5d para la corrección por AMC.
+
+**NC de tabla (Fig./Tabla 3.1.20 del Teórico):** "Hierba con baja
+densidad y arbustos" (coincide literalmente con la cobertura del
+enunciado), Grupo Hidrológico C ⇒ **NC(II)=71** (fila sin variantes de
+condición hidrológica, a diferencia de las filas de "Pradera o
+pastizal").
+
+**Script:** `Ejercicio2_hietograma_NRCS_encharcamiento.py`, sección
+"PARTE b)". Entradas: NC(II)=71, P5d=58 mm, P_total=60 mm.
+
+**Resultado:**
+```
+P5d=58 mm > 53.34 mm (estacion de crecimiento) => AMC III
+NC(III) = 23*71/(10+0.13*71) = 84.92
+S = 25400/84.92 - 254 = 45.11 mm ; Ia = 0.2*S = 9.02 mm
+Pe(P_total=60mm) = (60-9.02)^2/(60-9.02+45.11) = 27.05 mm
+```
+
+**Volumen infiltrado = P_total − Pe = 60 − 27.05 = 32.95 mm.**
+
+### Parte c) Tiempo de encharcamiento (definición y estimación con NRCS)
+
+**Concepto.** El tiempo de encharcamiento es el instante en que la
+lluvia acumulada empieza a exceder la capacidad de abstracción del
+suelo y comienza a generarse escorrentía en superficie. Con el modelo
+de Horton esto se ve comparando intensidad i(t) contra f(t) (§B8); acá
+no hay parámetros de Horton, pero el modelo NRCS tiene un análogo
+directo: mientras la precipitación acumulada P(t) no supera la
+abstracción inicial Ia=0.2S, el modelo predice Pe=0 (nada escurre,
+"lluvia-limitado" en la terminología de Horton). En cuanto P(t) supera
+Ia, Pe crece de inmediato (dPe/dP=0 en P=Ia y >0 para P>Ia, sin
+"retraso" adicional) — así que el tiempo de encharcamiento es
+simplemente el instante en que la curva acumulada del hietograma cruza
+Ia.
+
+**Por qué esta herramienta.** Es la extensión natural del concepto de
+tiempo de encharcamiento (§B8) al modelo NRCS ya usado en la parte b),
+sin necesitar datos adicionales de Horton que el enunciado no da.
+
+**Script:** `Ejercicio2_hietograma_NRCS_encharcamiento.py`, sección
+"PARTE c)".
+
+**Resultado:**
+```
+Ia = 9.02 mm
+P_acum(20 min) = 9.0 mm   (justo por debajo de Ia)
+P_acum(30 min) = 21.0 mm  (bloque 20-30 min, intensidad 72 mm/h)
+t_enc = 20 + (9.02-9.0)/1.2 = 20.02 min ~ 20 min
+```
+
+**t_enc ≈ 20 min** (prácticamente en el borde entre el 2º y 3er bloque
+del hietograma — el hecho de que P_acum(20min)=9.0mm caiga tan cerca de
+Ia=9.02mm sugiere que el enunciado fue diseñado para que el
+encharcamiento ocurra justo ahí, confirmando que NC=71 es el valor de
+tabla correcto).
+
+**Comparación con la solución oficial:** el manuscrito de las páginas
+3-7 del PDF es difícil de leer con confianza (letra cursiva,
+fotografías rotadas); no se pudo extraer un valor numérico claro para
+comparar. El planteo (inversión de CT, corrección de NC por AMC,
+extensión del concepto de tiempo de encharcamiento al modelo NRCS) es
+consistente con la teoría del curso y con los demás exámenes ya
+resueltos.
+
+---
+
 ## Pendiente para próximas corridas
 
-- Ejercicio 2 (hietograma, período de retorno de la intensidad máxima,
-  infiltración NRCS, tiempo de encharcamiento).
 - Ejercicio 3 (alcantarilla, Racional/NRCS según tc, % de urbanización
   máximo admitido).
 - Ejercicio 4 (dos bombas en paralelo, coeficientes de pérdida de carga
   Kgs/Kgi, potencia y cavitación).
 
-## ESTADO: EN CURSO (Ejercicio 1 de 4 completo)
+## ESTADO: EN CURSO (Ejercicios 1 y 2 de 4 completos)

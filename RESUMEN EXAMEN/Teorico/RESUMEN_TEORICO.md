@@ -43,12 +43,12 @@ no confundir con "2024 jul" = 2024 Julio).
 | A6. Tensión rasante de fondo en FGV | 3 | 2025 feb 1, 2019 dic, 2018 jul |
 | B1. Delimitación de cuencas y divisoria de aguas | 17 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 feb 2, 2018 dic |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 23 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
 | B4. Método Racional (y criterio de selección según tc) | 21 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
-| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
-| B6. Condición de humedad antecedente (AMC) | 12 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 jul |
+| B6. Condición de humedad antecedente (AMC) | 13 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 jul |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
-| B8. Infiltración de Horton y tiempo de encharcamiento | 4 | 2025 feb 2, 2023 feb 2, 2019 jul, 2018 dic |
+| B8. Infiltración de Horton y tiempo de encharcamiento | 5 | 2025 feb 2, 2023 feb 2, 2019 jul, 2018 dic, 2018 jul |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
 | C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
@@ -793,7 +793,10 @@ P=45mm en d=1h, P(3,10)=79mm, CA=1 ⇒ CT≈0.925 ⇒ Tr≈6.9 años (la soluci�
 oficial manuscrita da Tr≈5.25 años usando un CD(1h)≈0.65 leído
 gráficamente, contra el CD(1h)=0.616 de la fórmula cerrada exacta — ver
 `resueltos/2019 Diciembre/RESOLUCION.md` para el detalle de la
-diferencia). **Nota:** cuando
+diferencia); otro ejemplo, 2018 jul Ej.2 parte a — I=26mm en d=10min
+(bloque más intenso de un hietograma en bloques de 10 min), P(3,10)=90mm
+(isoyetas en X=480km,Y=6200km, Canelones), CA=1 (dato puntual) ⇒
+CD(10min)=0.2718 ⇒ CT≈1.063 ⇒ Tr≈13.8 años. **Nota:** cuando
 CT objetivo sale muy cerca de 1 (=CT(10) por definición), la inversión es
 muy sensible a redondeos de CD/CT — conviene reportar el **Tr tabulado**
 más próximo (2, 5, 10, 25, 50, 100 años) en vez del valor "exacto" con
@@ -1226,6 +1229,28 @@ infiltrar, no indefinidamente. Si un examen pide Vesc en un caso así,
 hay que rastrear el volumen de agua encharcada en superficie bloque a
 bloque (se agota cuando la infiltración acumulada alcanza a la lluvia
 acumulada) en vez de asumir capacidad-limitado hasta el final.
+
+**Tiempo de encharcamiento SIN parámetros de Horton, con el modelo NRCS**
+(2018 jul, Ej.2 parte c). Si el enunciado no da f0/fc/K sino sólo un NC
+(Número de Curva) y pide igual el tiempo de encharcamiento sobre un
+hietograma observado (mismo evento de la parte de volumen infiltrado,
+B5), no hay curva f(t) explícita, pero el concepto es el mismo:
+mientras la precipitación acumulada P(t) no supera la abstracción
+inicial Ia=0.2S, el modelo NRCS asume que el 100% de la lluvia se
+abstrae (nada escurre) — es literalmente el tramo "lluvia-limitado". En
+cuanto P(t) supera Ia, empieza a generarse precipitación efectiva
+Pe=(P−Ia)²/(P−Ia+S)>0 de forma inmediata y creciente (se puede verificar
+derivando Pe respecto de P: dPe/dP=0 exactamente en P=Ia y >0 para todo
+P>Ia), es decir que el "punto de quiebre" P(t)=Ia es también el momento
+en que arranca la escorrentía superficial — no hace falta ubicar un
+cruce posterior entre intensidad y una f(t) explícita, alcanza con
+encontrar el instante en que la lluvia acumulada del hietograma iguala
+a Ia (interpolando linealmente dentro del bloque donde ocurre el
+cruce). Ejemplo: NC(III)=84.9 ⇒ S=45.1mm ⇒ Ia=9.02mm; con el hietograma
+acumulado 3,9,21,47,56,60mm (bloques de 10 min), Ia se alcanza dentro
+del bloque 20-30min (P_acum pasa de 9.0 a 21.0mm) ⇒ **t_enc≈20.0 min**
+(prácticamente en el borde del bloque, con P_acum(20min)=9.0mm casi
+exactamente igual a Ia=9.02mm).
 
 ## B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego
 
