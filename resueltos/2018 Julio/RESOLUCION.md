@@ -423,9 +423,137 @@ numéricamente cuenca por cuenca, que en `resueltos/2023 diciembre/`
 
 ---
 
-## Pendiente para próximas corridas
+## EJERCICIO 4 (25 puntos) — Dos bombas distintas en paralelo con manómetros comunes
 
-- Ejercicio 4 (dos bombas en paralelo, coeficientes de pérdida de carga
-  Kgs/Kgi, potencia y cavitación).
+**Enunciado (resumen):** instalación de laboratorio que recircula agua
+desde y hacia un tanque a cota +3 m. Dos bombas distintas (B1, B2) en
+paralelo a cota +6 m, con curvas H-Q-η-NPSHr dadas en tabla. Tuberías de
+succión e impulsión (comunes a ambas bombas, antes de repartirse/después
+de unirse) de igual diámetro interno D=250 mm. Dos manómetros comunes,
+inmediatamente aguas abajo y aguas arriba de las bombas, ambos a cota
++6 m: succión p_A=−44.1 kPa, impulsión p_B=240.1 kPa.
+1) Caudal y carga que entrega cada bomba.
+2) Coeficientes globales Kgs, Kgi (ΔH=Kg·Q²) y expresión de la curva Q-H
+   de la instalación.
+3) Potencia consumida por cada bomba y verificación de cavitación.
 
-## ESTADO: EN CURSO (Ejercicios 1, 2 y 3 de 4 completos)
+Teoría usada: ecuación de la instalación con manómetros en las bridas de
+la(s) bomba(s) (§C1, variantes "dos bombas distintas en paralelo con
+manómetros comunes" y "despejar Kg de la ecuación de energía", añadidas
+a partir de este examen), potencia consumida (§C3), NPSH disponible con
+varias bombas en paralelo compartiendo la succión (§C4). Ver
+`RESUMEN EXAMEN/Teorico/RESUMEN_TEORICO.md`.
+
+### Parte 1) Caudal y carga de cada bomba
+
+**Concepto.** Los manómetros están en la tubería **común**, antes de
+repartirse entre las dos bombas — mismo diámetro (250 mm) en succión e
+impulsión, misma cota (+6 m) en ambos manómetros. El término cinético
+Bernoulli se cancela exactamente igual que en el caso de un solo
+manómetro por lado (§C1): Hm=(p_B−p_A)/γ, **sin depender de Q**. Como
+las dos bombas están en paralelo (comparten la misma succión y la misma
+impulsión comunes), esa **misma** Hm es la carga que entrega cada bomba
+individualmente — se interseca contra la curva H-Q de **cada** bomba
+por separado para hallar Q1 y Q2 (no hace falta que sean iguales).
+
+**Por qué esta herramienta.** Es exactamente el caso de
+`Bomba_manometros.m` (manómetros en las bridas, misma cota) extendido a
+dos bombas de curvas distintas en paralelo: no hace falta ninguna
+iteración de Colebrook-White para esta parte, sólo leer la Hm directa de
+los manómetros e invertir cada curva de catálogo.
+
+**Script:** `Ejercicio4_bombas_paralelo_manometros.m`, sección "PARTE 1".
+
+**Resultado:**
+```
+Hm = (pB-pA)/gamma = 28.970 m   (igual para B1 y B2)
+Q1 (bomba 1) = 0.1403 m3/s
+Q2 (bomba 2) = 0.0601 m3/s
+Q_total = Q1+Q2 = 0.2004 m3/s
+```
+
+**H = 28.97 m ; Q1 ≈ 0.140 m³/s ; Q2 ≈ 0.060 m³/s** (ambos muy cerca de
+puntos exactos de la tabla de catálogo — Q1=0.14 con H=29 m, Q2=0.06 con
+H=29 m — lo que sugiere que el enunciado fue diseñado para que el punto
+de funcionamiento caiga casi exactamente ahí).
+
+### Parte 2) Coeficientes globales Kgs, Kgi
+
+**Concepto.** Con la presión conocida en un extremo (el manómetro) y en
+el otro (la superficie libre del tanque, presión atmosférica≈0), el
+coeficiente global Kg de cada tramo (que agrupa fricción distribuida +
+pérdidas localizadas en un solo número, ΔH=Kg·Q²) se despeja
+directamente de la ecuación de energía entre esos dos puntos — sin
+necesitar Colebrook-White ni conocer la geometría interna real de la
+tubería. El caudal que atraviesa los tramos comunes de succión e
+impulsión es el **total** Q1+Q2 (no el de una sola bomba).
+
+**Por qué esta herramienta.** Es la variante "despejar Kg de la ecuación
+de energía, conocida la lectura del manómetro" (§C1) — el enunciado da
+exactamente los datos que hacen falta (presión en el manómetro, cotas,
+diámetro) sin pedir nunca la rugosidad ni la longitud real de las
+tuberías, así que ese es el camino previsto.
+
+**Script:** `Ejercicio4_bombas_paralelo_manometros.m`, sección "PARTE 2".
+
+**Resultado:**
+```
+V_comun (succion e impulsion, Qtotal, D=0.250m) = 4.083 m/s
+
+hf_succion = z_tanque - z_bombas - pA/gamma - Vc^2/2g = 0.646 m
+Kgs = hf_succion/Qtotal^2 = 16.07
+
+hf_impulsion = z_bombas + pB/gamma + Vc^2/2g - z_tanque = 28.325 m
+Kgi = hf_impulsion/Qtotal^2 = 705.08
+
+H_inst(Q) = (Kgs+Kgi)*Q^2 = 721.15*Q^2   (Q en m3/s, H en m)
+Verificación: H_inst(Qtotal) = 28.970 m  (coincide exactamente con Hm de la Parte 1)
+```
+
+**Kgs ≈ 16.07 ; Kgi ≈ 705.08 (unidades: m por (m³/s)²).** La curva Q-H
+de toda la instalación es **H_inst(Q) = 721.15·Q²**, con Q=Q1+Q2 el
+caudal total (el circuito recircula al mismo tanque, sin desnivel
+neto). La verificación cruzada (H_inst evaluada en Qtotal reproduce
+exactamente la Hm medida por los manómetros) confirma que el despeje es
+internamente consistente.
+
+### Parte 3) Potencia consumida y verificación de cavitación
+
+**Concepto.** La potencia de cada bomba usa su propia eficiencia
+interpolada en su propio caudal (Pot=γ·Qi·H/ηi). Para el NPSH, la
+presión de succión medida (p_A) ya es la presión REAL en la brida de
+succión común — el NPSH disponible se calcula directamente con esa
+presión absoluta (sin pasar por el tanque), usando la velocidad del
+caudal **total** en la tubería común (§C4: "con varias bombas en
+paralelo compartiendo la succión, NPSHdisp se calcula con el caudal
+total, pero NPSHreq se interpola con el caudal individual de cada
+bomba").
+
+**Script:** `Ejercicio4_bombas_paralelo_manometros.m`, sección "PARTE 3".
+
+**Resultado:**
+```
+eta1(Q1=0.1403) = 72.0 %  ; Potencia1 = gamma*Q1*H/eta1 = 55.38 kW
+eta2(Q2=0.0601) = 66.0 %  ; Potencia2 = gamma*Q2*H/eta2 = 25.89 kW
+Potencia total del sistema = 81.27 kW
+
+NPSHdisp (comun, con Qtotal) = (Patm+pA-Pvap)/gamma + Vc^2/2g = 6.442 m
+Bomba 1: NPSHreq(Q1) = 5.310 m => NO cavita (margen 1.132 m)
+Bomba 2: NPSHreq(Q2) = 5.610 m => NO cavita (margen 0.832 m)
+```
+
+**Potencia bomba 1 ≈ 55.4 kW ; potencia bomba 2 ≈ 25.9 kW ; ninguna de
+las dos cavita** (márgenes de 1.13 m y 0.83 m respectivamente).
+
+**Comparación con la solución oficial:** las páginas manuscritas del PDF
+(3-7) son difíciles de leer con confianza (letra cursiva, fotografías
+rotadas); no se pudo extraer un valor numérico claro para comparar
+directamente. El método (Hm directa de manómetros con cancelación del
+término cinético por igual diámetro, Kg despejado de la ecuación de
+energía, NPSH con caudal total en succión común/caudal individual en
+NPSHreq) es el mismo, ya validado en otros exámenes del curso, aplicado
+aquí a la variante de dos bombas distintas en paralelo.
+
+---
+
+## ESTADO: COMPLETO

@@ -51,11 +51,11 @@ no confundir con "2024 jul" = 2024 Julio).
 | B8. Infiltración de Horton y tiempo de encharcamiento | 5 | 2025 feb 2, 2023 feb 2, 2019 jul, 2018 dic, 2018 jul |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
-| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
-| C2. Curva de la bomba y punto de funcionamiento | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
-| C3. Potencia consumida por el sistema de bombeo | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
-| C4. Cavitación: NPSH disponible vs. requerido | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
-| C5. Bombas en serie y en paralelo | 10 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb, 2020 feb-13, 2019 jul, 2019 feb-07 |
+| C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 23 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
+| C2. Curva de la bomba y punto de funcionamiento | 23 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
+| C3. Potencia consumida por el sistema de bombeo | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
+| C4. Cavitación: NPSH disponible vs. requerido | 23 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
+| C5. Bombas en serie y en paralelo | 11 | 2020 jul, 2022 jul, 2025 feb 1, 2025 feb 2, 2024 mar, 2023 dic, 2023 feb, 2020 feb-13, 2019 jul, 2019 feb-07, 2018 jul |
 | C6. Regulación de caudal por válvula (pérdida localizada variable) | 4 | 2020 dic, 2024 dic, 2023 feb 2, 2019 jul |
 | D1. Diseño de alcantarillas: tipos de flujo 1-6 (clasificación de Bodhaine) | 2 | 2020 feb-13, 2019 feb-07 |
 
@@ -1423,6 +1423,46 @@ Hm=H_B−H_A=(p_B−p_A)/γ+(V_impulsión²−V_succión²)/2g, función de Q s�
 través de las velocidades (áreas de succión/impulsión, que pueden tener
 distinto diámetro). Se interseca igual con la curva H-Q de la bomba (C2)
 para hallar (Qpf,Hpf) (2024 feb, Ej.4 parte 1).
+
+**Variante: DOS bombas DISTINTAS en paralelo con manómetros COMUNES
+(succión e impulsión compartidas)** (2018 jul, Ej.4). Si el enunciado da
+un único manómetro de succión y uno de impulsión ubicados en la tubería
+común, antes de que se reparta entre las bombas (mismo diámetro D en
+succión e impulsión, misma cota), el término cinético se cancela igual
+que en el caso de una sola bomba (Hm=(p_B−p_A)/γ exacto, sin depender de
+Q) — y esa **misma** Hm es la que le corresponde a **cada** bomba
+individualmente (por estar en paralelo, todas entregan la misma H a la
+salida común), aunque las bombas sean de curvas distintas: se interseca
+Hm contra la curva H-Q de **cada** bomba por separado para hallar Q1,
+Q2 (no hace falta que sean iguales ni que Q1=Q2). El caudal que pasa
+por la tubería común de succión/impulsión (para calcular Kgs, Kgi o V
+en el chequeo de NPSH, C4) es el **total** Q1+Q2, no el de una sola
+bomba.
+
+**Despejar Kg (succión o impulsión) de la ecuación de energía, conocida
+la lectura del manómetro** (2018 jul, Ej.4 parte 2; ver también la nota
+de `Bomba_manometros.m` para el caso de un solo coeficiente localizado
+ks). Si se pide el coeficiente GLOBAL Kg de un tramo (ΔH=Kg·Q²,
+agrupando fricción distribuida + pérdidas localizadas en un solo
+número) y se conoce la presión en sus dos extremos (p.ej. superficie
+libre de un tanque, presión≈0, y un manómetro en el otro extremo), Kg
+se despeja directamente de la ecuación de energía entre esos dos
+puntos, sin necesidad de Colebrook-White ni de conocer la geometría
+interna del tramo:
+
+```
+Tanque(z1,P=0,V=0) -> manometro(z2,p,V=Q/A):  hf = (z1-z2) - p/gamma - V^2/(2g)   [tanque aguas arriba]
+manometro(z1,p,V=Q/A) -> Tanque(z2,P=0,V=0):  hf = (z1+p/gamma+V^2/2g) - z2        [tanque aguas abajo]
+Kg = hf / Q^2
+```
+
+Con dos bombas en paralelo compartiendo la succión/impulsión, Q en estas
+fórmulas es el caudal TOTAL (Q1+Q2), ya que es el que efectivamente
+recorre esos tramos comunes. La curva Q-H de toda la instalación (si el
+circuito recircula al mismo tanque, sin desnivel neto) es simplemente
+H_inst(Q)=(Kgs+Kgi)·Q² — se puede verificar que H_inst(Qtotal) reproduce
+exactamente la Hm medida por los manómetros (mismo balance de energía,
+consistencia interna del problema).
 
 **Caso particular: UN solo manómetro (aguas abajo de la bomba), con el
 extremo de aguas ARRIBA siendo un lago/depósito por tubería, y el
