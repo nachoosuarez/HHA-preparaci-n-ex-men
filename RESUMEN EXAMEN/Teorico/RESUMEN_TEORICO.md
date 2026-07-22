@@ -28,18 +28,19 @@ no confundir con "2020 feb", que es la segunda llamada, 28/feb/2020);
 **2019 dic** = 2019 Diciembre (16/dic/2019); **2019 jul** = 2019 julio
 (22/jul/2019); **2019 feb 2** = 2019 febrero 2 (22/feb/2019 — no
 confundir con "2019 febrero.pdf", la otra llamada de febrero de 2019,
-aún sin resolver en este repo).
+aún sin resolver en este repo); **2018 jul** = 2018 Julio (23/jul/2018,
+no confundir con "2024 jul" = 2024 Julio).
 
 ## Índice de temas
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic |
-| A2. Energía específica y tirante crítico | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 jul, 2019 feb 2, 2018 dic |
+| A1. Ecuación de FGV y clasificación de canales M/S | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic, 2018 jul |
+| A2. Energía específica y tirante crítico | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic, 2018 jul |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 jul, 2019 feb 2, 2018 dic, 2018 jul |
 | A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic |
-| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 12 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2, 2018 dic |
-| A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
+| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 13 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2, 2018 dic, 2018 jul |
+| A6. Tensión rasante de fondo en FGV | 3 | 2025 feb 1, 2019 dic, 2018 jul |
 | B1. Delimitación de cuencas y divisoria de aguas | 17 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 feb 2, 2018 dic |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
 | B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
@@ -418,6 +419,25 @@ fondo (abertura mínima para no superar un tirante límite aguas arriba,
 posición del resalto aguas abajo); para empalmar tramos de un canal con
 distinto talud/ancho sin pérdida de carga.
 
+**Compuerta en un canal de largo INFINITO con Q fijo, sin otro control
+aguas arriba/abajo** (2018 jul, Ej.1). Caso más simple que el de "control
+a distancia finita" (ver más abajo): lejos de la compuerta, en ambos
+sentidos, el canal tiende a yn (no hay lago ni caída libre que fije un
+tirante distinto). Sólo hacen falta valores puntuales, sin integrar
+ningún perfil: yB=a (dato o incógnita según la parte), yA=alterno(a) (E
+constante a través de la compuerta ideal), yn e yc para clasificar. La
+posición **exacta** del resalto aguas abajo (entre yB=a supercrítico y
+yn subcrítico) **no está determinada** por el enunciado si no se da
+ninguna longitud de referencia (a diferencia de 2018 dic, donde sí hay
+lago y caída libre a distancias fijas) — con "canal infinito" cualquier
+posición del resalto es compatible con que el tramo M2 posterior se
+relaje a yn más adelante, así que alcanza con un perfil **cualitativo**:
+M1 (remanso) desde yn hasta yA justo aguas arriba de la compuerta →
+salto a yB=a → M3 (acelerando, y<yc) → **resalto** (tirantes conjugados
+de a, vía `Mom_trap`/`conjugados_trap`) → M2 relajándose a yn aguas
+abajo. La fuerza sobre la compuerta usa M1 (en yA) y M2 (en yB=a, sección
+llena, descarga libre) igual que en el caso base de arriba.
+
 **Compuerta con descarga AHOGADA (a > conjugado de la condición de aguas
 abajo).** Si el tirante que impone la condición de aguas abajo (y3, p.ej.
 ≈yn si el resalto queda lejos de cualquier otro control) es mayor que el
@@ -604,6 +624,18 @@ si no lo hay.
 
 Cita: Teórico HHA §2.1/§2.3 (tensión rasante, pendiente de energía);
 Formulómetro "Flujo Uniforme" / "Flujo Gradualmente Variado".
+
+**Variante: abertura mínima de una compuerta de fondo por tensión rasante
+admisible** (2018 jul, Ej.1 parte 2). No hace falta integrar ningún
+perfil de FGV: como el canal es de largo infinito y Q es un dato fijo
+(no lo determina la compuerta), basta evaluar τ0(y) directamente en el
+tirante de la vena contraída yB=a (fórmula cerrada de arriba, con y=a).
+Como τ0 es decreciente en y, hay una única abertura a_min tal que
+τ0(a_min)=τmax exactamente (resolver con `fsolve`/`fzero`); cualquier
+abertura **mayor o igual** a a_min cumple τ0≤τmax (abertura mínima
+admisible = a_min). Verificación útil: τ0(yn) debe coincidir con
+γ·Rh(yn)·S0 (tensión de flujo uniforme), ya que en yn, Sf=S0 por
+definición.
 
 ---
 
