@@ -269,6 +269,105 @@ con el esquema visible en esa página.
 
 ---
 
-## ESTADO: EN CURSO (Ejercicio 1 completo; Ejercicio 2 parcial —
+## EJERCICIO 3 (25 puntos) — Método Racional, urbanización parcial de una cuenca chica
+
+**Enunciado (resumen):** cuenca con área<200 ha y tc<20 min, cobertura
+original pastizales (Figura a); se proyecta urbanizar (concreto/techo)
+una zona sin modificar el resto (Figura b).
+1) A) Metodología para el caudal máximo en condiciones (a), justificar.
+   B) ¿Sigue siendo válida en condiciones (b)? Discutir y justificar.
+2) Encontrar una expresión para el % de urbanización máximo admitido en
+   (b) si el caudal máximo urbanizado (Qb) no supera en más de 20% al
+   original (Qa), para un cierto Tr, asumiendo que tc no cambia.
+3) Estimar el caudal máximo para Tr=10 años, cuenca en José Pedro Varela
+   (X=615 km, Y=6300 km), Área=190 ha, pendiente de cuenca 3%, tc=18 min,
+   zona urbanizada=20% de la superficie.
+
+Teoría usada: criterio de selección de método según tc, coeficiente de
+escorrentía ponderado y % de urbanización máximo admitido, curvas IDF de
+Uruguay (§B3, §B4) — ver `RESUMEN EXAMEN/Teorico/RESUMEN_TEORICO.md`.
+
+### Parte 1) Metodología
+
+**A)** Área<200 ha y tc<20 min ⇒ por el criterio de §B4 (Teórico §3.1.5:
+tc<20min ⇒ sólo método Racional), corresponde el **método Racional**:
+cuenca chica de respuesta rápida, donde la hipótesis de tormenta de
+intensidad constante e uniforme en toda el área (con duración=tc) es
+razonable sin objeciones para un área tan pequeña.
+
+**B)** En (b) el tc **no cambia** (dato de la parte 2), así que el mismo
+criterio tc<20 min sigue exigiendo/permitiendo sólo Racional. La
+hipótesis de "intensidad de lluvia uniforme en el espacio" no depende
+del uso del suelo, así que sigue siendo válida; lo que deja de ser
+uniforme es el **coeficiente de escorrentía C** (pastizal en parte de la
+cuenca, concreto/techo en el resto) — se resuelve con un **C ponderado
+por área** entre ambas coberturas (práctica estándar del curso, §B4), sin
+que eso invalide el método Racional en sí.
+
+### Parte 2) Expresión del % de urbanización máximo admitido
+
+**Concepto y fórmula:** con tc fijo, Q=C·i·A/360 es directamente
+proporcional a C (i y A no cambian). Con Cb=C1·(1−p)+C2·p (p=fracción
+urbanizada, C1=pastizal, C2=concreto/techo) y la condición Qb≤(1+x)·Qa:
+
+```
+p_max = x·C1 / (C2−C1)
+```
+
+Ver §B4 (variante en % de la fórmula ya usada en área en 2020 jul y 2019
+dic).
+
+### Parte 3) Estimación numérica (Tr=10 años, José Pedro Varela)
+
+**Por qué esta herramienta.** Álgebra cerrada de las curvas IDF de
+Uruguay (CT/CD/CA) + método Racional — se replicaron en Python las
+mismas fórmulas de la hoja "Cálculos (grande)" de `Eventos extremos.xlsx`
+(ver `COMO_USAR_EVENTOS_EXTREMOS.md`), igual que en 2024 marzo y 2023
+diciembre.
+
+**P(3,10) por isoyetas (Fig. 3.1.10 del Teórico):** se renderizó la
+figura a 300 dpi y se calibraron los ejes en píxeles (recuadro X:
+200–800 km, Y: 6100–6700 km) para ubicar el punto X=615, Y=6300 con
+precisión. El punto cae prácticamente **sobre la isoyeta "78"** (a mitad
+de camino entre la línea gruesa "80" y la siguiente línea fina "76",
+líneas cada 2 mm) ⇒ **P(3,10) = 78 mm** (imagen:
+`ej3_isoyeta_P310.png`).
+
+**Coeficientes C (Tabla 3.1.4, Tr=10 años):** pastizal, pendiente
+"promedio 2-7%" (S=3% cae en ese tramo) ⇒ **C1=0.38**; concreto/techo ⇒
+**C2=0.83** (mismos valores validados en `resueltos/2024 marzo/`).
+
+**Script:** `Ejercicio3_racional_urbanizacion.py`. Entradas: A=190 ha,
+Tr=10, tc=18 min=0.3 h, p_urb=20%, P310=78 mm, C1=0.38, C2=0.83.
+
+**Resultado:**
+```
+C ponderado = 0.80*0.38 + 0.20*0.83 = 0.4700
+CT(10)=1.0000 ; CD(0.3h)=0.3581 ; CA(1.90km2,0.3h)=0.9935
+P(d=tc,Tr=10,A) = 78*1.000*0.3581*0.9935 = 27.75 mm
+i = P/tc = 92.50 mm/h
+```
+
+**Qmax = 22.95 m³/s.**
+
+**Nota de consistencia con la parte 2:** con estos mismos C1/C2 y x=20%,
+el % de urbanización máximo admisible sería p_max=0.20·0.38/(0.83−0.38)
+≈**16.9%** — menor que el 20% real de esta parte 3, es decir, la
+urbanización dada en el enunciado ya excede el límite de +20% de caudal
+admisible: con C1 solo (sin urbanizar) Qa≈18.55 m³/s, y el Qb=22.95 m³/s
+de esta parte es **≈23.7% mayor** que Qa (no ≤20%), coherente con
+p_real=20% > p_max=16.9%.
+
+**Comparación con la solución oficial:** la página de solución oficial
+(pág. 9 del PDF) está manuscrita y muy degradada en el escaneo — sólo se
+alcanza a distinguir una expresión con "≈10.55" y otra línea con
+"≈1.9·C·A" ilegibles con confianza suficiente para comparar
+numéricamente; no se pudo validar el resultado final contra la solución
+oficial por calidad del escaneo (mismo problema que en el resto de este
+examen).
+
+---
+
+## ESTADO: EN CURSO (Ejercicios 1 y 3 completos; Ejercicio 2 parcial —
 parte 3 resuelta, partes 1 y 2 pendientes por calidad de escaneo de la
-carta topográfica; faltan Ejercicios 3 y 4)
+carta topográfica; falta Ejercicio 4)

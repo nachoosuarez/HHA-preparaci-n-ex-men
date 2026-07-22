@@ -42,8 +42,8 @@ aún sin resolver en este repo).
 | A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
 | B1. Delimitación de cuencas y divisoria de aguas | 17 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 feb 2, 2018 dic |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
-| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
-| B4. Método Racional (y criterio de selección según tc) | 20 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
+| B4. Método Racional (y criterio de selección según tc) | 21 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
 | B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
 | B6. Condición de humedad antecedente (AMC) | 12 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2019 jul, 2019 feb 2, 2019 feb-07 |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
@@ -873,6 +873,16 @@ admisible de caudal (p.ej. "que Qmax no supere en x% el caudal original"):
 ```
 Q_admisible = (1+x)·Q_original  =>  C_target = (1+x)·C_original   (por proporcionalidad directa)
 A2 = AT · (C_target − C1) / (C2 − C1)
+```
+
+**Variante: pedido como % de urbanización en vez de área** (2018 dic,
+Ej.3 parte 2 — expresión genérica, sin números; parte 3 la evalúa con
+C1=0.38, C2=0.83, x=0.20 ⇒ p_max≈16.9%, y compara contra el 20% real de
+urbanización dado en el enunciado, que YA excede ese límite). Es la
+misma deducción de arriba con p=A2/AT (fracción, no área absoluta):
+
+```
+p_max = x·C1 / (C2 − C1)
 ```
 
 **Verificar si un evento REAL sostenido (d>tc, intensidad constante dada)
