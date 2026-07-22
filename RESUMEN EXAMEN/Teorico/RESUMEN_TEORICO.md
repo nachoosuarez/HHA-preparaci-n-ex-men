@@ -40,14 +40,14 @@ aún sin resolver en este repo).
 | A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 12 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2, 2018 dic |
 | A6. Tensión rasante de fondo en FGV | 2 | 2025 feb 1, 2019 dic |
-| B1. Delimitación de cuencas y divisoria de aguas | 16 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 feb 2 |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
+| B1. Delimitación de cuencas y divisoria de aguas | 17 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 feb 2, 2018 dic |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic |
 | B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
 | B4. Método Racional (y criterio de selección según tc) | 20 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
 | B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
 | B6. Condición de humedad antecedente (AMC) | 12 | 2020 feb, 2022 jul, 2022 dic, 2025 feb 1, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2019 jul, 2019 feb 2, 2019 feb-07 |
 | B7. Volumen de escorrentía y embalses de retención | 6 | 2022 jul, 2022 dic, 2024 dic, 2025 feb 2, 2024 feb, 2023 feb 2 |
-| B8. Infiltración de Horton y tiempo de encharcamiento | 3 | 2025 feb 2, 2023 feb 2, 2019 jul |
+| B8. Infiltración de Horton y tiempo de encharcamiento | 4 | 2025 feb 2, 2023 feb 2, 2019 jul, 2018 dic |
 | B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego | 2 | 2026 feb, 2023 feb |
 | B10. Coeficiente de escorrentía por balance directo de abstracciones (infiltración + intercepción dadas) | 1 | 2022 dic |
 | C1. Ecuación de la instalación de bombeo (Darcy-Weisbach + Colebrook-White) | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07 |
@@ -1168,6 +1168,22 @@ la exponencial de Horton) = 12 mm; Vesc = P_total(49mm) - Inf(12mm) =
 
 Cita: Teórico HHA §3.1.3 (infiltración, modelo de Horton); Formulómetro
 "Agua en el Suelo — Curva de infiltración de Horton".
+
+**Cuidado si sólo piden t_enc (no Vesc).** Cuando el ejercicio pide
+únicamente el tiempo de encharcamiento (2018 dic, Ej.2 parte final:
+f0=24, fc=4.4, k=2.5 1/h, bloques de 0.25h con I dada directamente en
+mm/h: 5,10,15,10,5,1,0.5,0.3,0.1,0.05 ⇒ **t_enc=0.5h**, bloque 0.5-0.75h
+con I=15≥f(0.5)=10.02), basta con el criterio bloque a bloque de arriba
+y NO hace falta aplicar la convención "una vez encharcado, siempre
+capacidad-limitado" para calcular Vesc: en este examen la intensidad cae
+muy por debajo de f(t) en los últimos bloques (I=0.05–1 mm/h contra
+f(t)≈4.5–5.3 mm/h), y aplicar ciegamente esa convención daría una
+infiltración mayor que la lluvia disponible (Vesc negativo, imposible)
+— la convención vale mientras hay lámina encharcada acumulada por
+infiltrar, no indefinidamente. Si un examen pide Vesc en un caso así,
+hay que rastrear el volumen de agua encharcada en superficie bloque a
+bloque (se agota cuando la infiltración acumulada alcanza a la lluvia
+acumulada) en vez de asumir capacidad-limitado hasta el final.
 
 ## B9. Agua Disponible del suelo, ETc (Kc) y necesidad de riego
 

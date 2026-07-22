@@ -175,4 +175,100 @@ están validados contra el resto de la solución oficial.
 
 ---
 
-## ESTADO: EN CURSO (Ejercicio 1 completo; faltan Ejercicios 2, 3 y 4)
+## EJERCICIO 2 (25 puntos) — Cuenca cañada San Fructuoso (Río Negro)
+
+**Enunciado (resumen):**
+1) Delimitar la cuenca de la cañada San Fructuoso (Río Negro), punto de
+   cierre X=382.5 km, Y=6408.5 km, sobre carta topográfica SGM adjunta
+   (curvas de nivel cada 10 m).
+2) Determinar el desnivel máximo del cauce principal y el tiempo de
+   concentración, con L=5875 m (flujo concentrado).
+3) Con la precipitación extrema dada en bloques de 0.25 h (tabla/gráfico
+   de intensidades I(mm/h): 5, 10, 15, 10, 5, 1, 0.5, 0.3, 0.1, 0.05),
+   determinar el tiempo de encharcamiento con el modelo de Horton
+   (f0=24 mm/h, fc=4.4 mm/h, k=2.5 1/h).
+
+Teoría usada: delimitación de cuencas y divisoria de aguas (§B1),
+tiempo de concentración de Ramser-Kirpich (§B2), infiltración de Horton
+y tiempo de encharcamiento (§B8) — ver
+`RESUMEN EXAMEN/Teorico/RESUMEN_TEORICO.md`.
+
+### Partes 1) y 2) — Delimitación de la cuenca, desnivel y tc: NO resueltas en esta corrida
+
+**Motivo.** La carta topográfica SGM incluida en el PDF del examen
+(`EXAMENES/2018 diciembre.pdf`, página 3) está escaneada con muy baja
+calidad/contraste (curvas de nivel y cotas apenas legibles incluso a
+400 dpi con recortes por cuadrante) y la solución oficial manuscrita
+(página 6) también está muy degradada — no se pudo leer con confianza
+ni el trazado de la divisoria de aguas ni las cotas de nacimiento/cierre
+del cauce principal necesarias para el desnivel ΔH. Delimitar a mano
+"a ojo" sobre una imagen ilegible e inventar cotas para el desnivel
+produciría un resultado no verificable y potencialmente engañoso, así
+que se prefiere dejarlo pendiente antes que dar un número sin respaldo.
+
+**Método a aplicar (para hacerlo a mano con la carta física, ver §B1
+y §B2 del resumen teórico):**
+- Trazar la divisoria de aguas perpendicular a las curvas de nivel,
+  pasando por los puntos de mayor cota que separan la cuenca de las
+  vecinas, cerrando en el punto de cierre dado (X=382.5, Y=6408.5 km).
+- Leer en la carta la cota del punto más alto del cauce principal
+  (nacimiento) y la cota en el punto de cierre; ΔH = diferencia entre
+  ambas.
+- Con L=5875 m (dato del enunciado, no hace falta medirlo en la carta)
+  y S=ΔH/L, aplicar Ramser-Kirpich: tc = 0.0195·L^0.77·S^(-0.385) (L en
+  m, tc en minutos) — fórmula de §B2, justificando "flujo concentrado"
+  como pide el enunciado (cauce definido, no flujo laminar en manto).
+
+**Pendiente para una próxima corrida:** si se consigue una copia de
+mayor resolución de la carta topográfica (o se define manualmente sobre
+un mapa georreferenciado), completar 1) y 2) con el mismo método.
+
+### Parte 3) Tiempo de encharcamiento (modelo de Horton)
+
+**Concepto.** El tiempo de encharcamiento es el instante en que la
+intensidad de lluvia supera la capacidad de infiltración del suelo
+f(t): antes, toda la lluvia infiltra; desde ese instante, el exceso
+empieza a acumularse en superficie (§B8).
+
+**Fórmula:** f(t) = fc + (f0−fc)·e^(−k·t). Criterio: comparar, al
+inicio de cada bloque, la intensidad I del bloque (acá dada
+directamente por el enunciado, no hace falta dividir P/Δt) contra
+f(t_inicio); el primer bloque con I≥f(t_inicio) marca t_enc.
+
+**Por qué esta herramienta.** Es álgebra cerrada de Horton (una
+exponencial), sin geometría de canal ni de cuenca de por medio — no
+hace falta Octave ni la planilla de eventos extremos. Se usó Python,
+con la función canónica `RESUMEN EXAMEN/Codigos/Infiltracion/horton_encharcamiento.py`
+(ver `Ejercicio2_Horton.py` en esta carpeta, versión adaptada a los
+datos de este examen), mismo patrón validado en 2019 julio y 2023 feb 2.
+
+**Script:** `Ejercicio2_Horton.py`. Entradas: f0=24, fc=4.4, k=2.5,
+bloques de 0.25 h con I dada directamente (mm/h).
+
+**Resultado:**
+```
+t(h)   I bloque (mm/h)   f(t_ini) (mm/h)   Estado
+0.00        5.00              24.00        lluvia-limitado
+0.25       10.00              14.89        lluvia-limitado
+0.50       15.00              10.02        ENCHARCA (I>=f)
+```
+
+**t_enc = 0.50 h = 30 min.**
+
+(Verificado también con la función canónica del toolkit — mismo
+resultado; y cruzado contra el caso ya validado de 2019 julio, que
+reproduce exactamente t_enc=0.5h y Vesc=37mm de la solución oficial de
+ese examen, confirmando que la implementación del modelo de Horton es
+correcta.)
+
+**Comparación con la solución oficial:** la página de solución oficial
+(pág. 6 del PDF) está manuscrita y muy degradada en el escaneo — no se
+pudo leer un valor numérico final con confianza para comparar
+directamente, pero el planteo (tabla f(t) vs. I por bloque) coincide
+con el esquema visible en esa página.
+
+---
+
+## ESTADO: EN CURSO (Ejercicio 1 completo; Ejercicio 2 parcial —
+parte 3 resuelta, partes 1 y 2 pendientes por calidad de escaneo de la
+carta topográfica; faltan Ejercicios 3 y 4)
