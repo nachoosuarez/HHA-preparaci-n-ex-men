@@ -223,6 +223,21 @@ y §B2 del resumen teórico):**
 mayor resolución de la carta topográfica (o se define manualmente sobre
 un mapa georreferenciado), completar 1) y 2) con el mismo método.
 
+**Segundo intento (corrida posterior):** se re-renderizó la página 3 del
+PDF a 600 dpi con PyMuPDF y se probaron mejoras de contraste/nitidez
+(autocontraste, sharpen, tiles 2x con upscaling LANCZOS). El resultado
+confirma el diagnóstico anterior: el original ya está impreso/escaneado
+como una trama de semitonos muy gruesa (dot-matrix), no una imagen en
+escala de grises continua — las curvas de nivel son líneas de puntos
+discontinuas y las cotas son manchas de puntos sin forma de dígito
+reconocible, incluso ampliadas al doble. No es un problema de resolución
+de renderizado sino de la calidad intrínseca de la fuente escaneada, así
+que no hay mejora de procesamiento de imagen que lo resuelva. Se
+descarta seguir intentando con este archivo; si en el futuro aparece una
+copia distinta (mejor escaneo, o la carta SGM original georreferenciada
+de la zona de Tacuarembó, hoja con el arroyo/cañada San Fructuoso),
+retomar 1) y 2) con el método ya descripto arriba.
+
 ### Parte 3) Tiempo de encharcamiento (modelo de Horton)
 
 **Concepto.** El tiempo de encharcamiento es el instante en que la
