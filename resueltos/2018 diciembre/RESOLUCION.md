@@ -238,6 +238,56 @@ copia distinta (mejor escaneo, o la carta SGM original georreferenciada
 de la zona de Tacuarembó, hoja con el arroyo/cañada San Fructuoso),
 retomar 1) y 2) con el método ya descripto arriba.
 
+**Tercer intento (corrida posterior) — diagnóstico definitivo.** Se
+identificó que la imagen es CCITTFaxDecode (1 bit blanco/negro puro, sin
+gris real): por eso *ampliar* (upscaling/sharpen/autocontraste directo,
+intentado antes) no sirve, porque cada punto de la trama de semitonos ya
+es 100% blanco o negro. En cambio, *reducir* la imagen con un filtro de
+promediado de área (downsampling tipo `PIL.Image.BOX`, factor 6, sobre un
+render a 600 dpi — script `descreen_carta_CCITT.py` en esta carpeta)
+reconstruye correctamente el gris real, porque es la operación inversa
+del halftoning. Resultado: **las curvas de nivel, cotas (90, 100, 110...
+150 m) y accidentes del terreno quedan claramente legibles**
+(`ej2_carta_descreened.png`) — mejora real y reproducible respecto a los
+intentos anteriores.
+
+Sin embargo, esto **no alcanza para resolver 1) y 2) de forma
+verificable**, por dos motivos que persisten:
+- La carta está recortada **sin los márgenes con la grilla de
+  coordenadas** (UTM/Gauss-Krüger): no aparece ningún rótulo numérico de
+  grilla en ninguno de los 4 bordes de la página (verificado a full
+  resolución en las 4 esquinas). Sin al menos una etiqueta de referencia
+  no hay forma de anclar el punto de cierre X=382.5 km, Y=6408.5 km a una
+  intersección concreta de la grilla visible.
+- Los **rótulos de texto** (nombres de arroyos/cañadas, topónimos) siguen
+  ilegibles incluso con este descreening: el trazo de una letra es más
+  fino que el período de la trama de semitonos y no sobrevive al
+  promediado (a diferencia de las curvas de nivel, que son líneas
+  continuas más gruesas). Se alcanza a ver que hay una cañada rotulada
+  cerca del borde superior del mapa y una localidad/cruce de caminos
+  "Las Averías" (nombre parcialmente legible), pero no el nombre completo
+  "San Fructuoso" con confianza.
+
+Búsqueda externa: "Las Averías" / "Arroyo Averías Grande" es un topónimo
+real del departamento de Río Negro, consistente con la ubicación del
+examen — pero cruzar esto con las coordenadas X/Y dadas requeriría además
+resolver qué sistema de proyección usa esta carta SGM (no es UTM WGS84
+estándar; Uruguay históricamente usa "Faja Uruguay" Gauss-Krüger con
+datum propio) y no hay margen para validarlo con confianza en esta
+corrida.
+
+**Camino recomendado para una futura corrida (mejor que seguir leyendo
+este escaneo a mano):** delimitar la cuenca por vía computacional con un
+DEM (ej. SRTM 30 m o similar, descargado por internet) alrededor del
+punto de cierre, usando una herramienta de delineación de cuencas
+(`pysheds`, `whitebox`, `richdem` en Python) sobre las coordenadas reales
+de "Las Averías"/Río Negro — con cuidado de resolver primero la
+conversión de X=382.5/Y=6408.5 (sistema de la carta SGM) a lat/lon WGS84.
+Esto reemplazaría por completo la lectura manual de la carta y daría un
+desnivel/tc verificable. **No se intenta en esta corrida** para no
+introducir una georreferenciación no verificada con falsa confianza;
+queda como tarea concreta para la próxima vez que se retome este examen.
+
 ### Parte 3) Tiempo de encharcamiento (modelo de Horton)
 
 **Concepto.** El tiempo de encharcamiento es el instante en que la
