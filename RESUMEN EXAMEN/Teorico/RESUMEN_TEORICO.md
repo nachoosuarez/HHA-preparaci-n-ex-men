@@ -41,8 +41,8 @@ no confundir con "2024 jul" = 2024 Julio).
 | A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic |
 | A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 14 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2, 2018 dic, 2018 jul, 2018 mar |
 | A6. Tensión rasante de fondo en FGV | 3 | 2025 feb 1, 2019 dic, 2018 jul |
-| B1. Delimitación de cuencas y divisoria de aguas | 17 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 feb 2, 2018 dic |
-| B2. Tiempo de concentración (Ramser-Kirpich) | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
+| B1. Delimitación de cuencas y divisoria de aguas | 18 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 feb 2, 2018 dic, 2018 mar |
+| B2. Tiempo de concentración (Ramser-Kirpich) | 23 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul, 2018 mar |
 | B3. Curvas IDF de Uruguay y coeficientes CD/CT/CA | 23 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
 | B4. Método Racional (y criterio de selección según tc) | 22 | 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
 | B5. Método NRCS: Número de Curva + Hidrograma Unitario Triangular SCS | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 jul |
@@ -709,6 +709,20 @@ inventar un polígono falsamente preciso — y resolver las partes
 numéricas del ejercicio con los datos que sí da el enunciado de forma
 inequívoca (longitud del cauce, coordenadas del punto de cierre) en
 lugar de con medidas propias sobre un trazo de baja confianza.
+
+**Caso más simple: punto de cierre marcado explícitamente en la carta**
+(2018 mar, Ej.2). Cuando la carta trae impreso un círculo/rótulo "Punto
+de cierre" directamente sobre el mapa (no sólo coordenadas UTM a
+ubicar), la delimitación no depende de la calidad de los márgenes con
+la grilla de coordenadas (que puede faltar igual, como en 2018 dic) ni
+de acertar la intersección correcta: alcanza con leer el relieve
+alrededor de ese punto ya ubicado. Sirve igual la técnica de leer
+**cotas de punto cercanas** (números sueltos, más confiables que seguir
+una curva de nivel fina) tanto en el cierre como en la naciente del
+cauce principal para estimar ΔH — una lectura visual cuidadosa (antes
+de ver la solución oficial) puede acercarse mucho al valor real (en
+este examen, rango propio 85-90 m / 120-130 m contra el oficial exacto
+88 m / 125 m).
 
 ## B2. Tiempo de concentración (Ramser-Kirpich)
 

@@ -166,16 +166,93 @@ Diferencias del orden del redondeo manual del examen.
 
 ---
 
-## EJERCICIO 2 (25 puntos) + EJERCICIO 3 (25 puntos): pendientes
+## EJERCICIO 2 (25 puntos) — Cuenca del arroyo Molles de Quinteros (Durazno)
 
-No resueltos en esta corrida (queda para la próxima). El Ejercicio 2
-requiere delimitar la cuenca del arroyo Molles de Quinteros (Durazno) —
-**la carta topográfica de este examen es un escaneo de buena calidad
-que SÍ muestra el "Punto de cierre" marcado explícitamente sobre el
-mapa** (a diferencia del caso de 2018 diciembre), así que es
-perfectamente resoluble; sólo falta tiempo en esta corrida. El
-Ejercicio 3 (alcantarillado en Artigas, NRCS+Racional+isoyetas) también
-tiene datos completos y legibles.
+**Enunciado (resumen):**
+1) Delimitar la cuenca del arroyo Molles de Quinteros (Durazno), punto
+   de cierre marcado directamente sobre la carta topográfica adjunta
+   (SGM, curvas de nivel cada 10 m).
+2) Con longitud del cauce principal Lcp=5300 m y flujo concentrado,
+   determinar el tiempo de concentración.
+3) Con un evento de intensidad variable (d=120 min, hietograma en
+   escalones de 0.5 h dado), determinar el período de retorno de la
+   intensidad máxima para una duración de 0.5 h. **Pendiente para la
+   próxima corrida** (requiere leer P(3,10) de las isoyetas de Uruguay
+   para este punto, mismo método que 2018 dic Ej.3 y otros exámenes).
+
+Teoría usada: delimitación de cuencas y divisoria de aguas (§B1),
+tiempo de concentración de Ramser-Kirpich (§B2) — ver
+`RESUMEN EXAMEN/Teorico/RESUMEN_TEORICO.md`.
+
+### Parte 1) Delimitación de la cuenca
+
+**Diferencia clave con 2018 diciembre:** en este examen la carta SGM es
+un escaneo de buena calidad (no hace falta descreening) y, sobre todo,
+**el punto de cierre viene marcado explícitamente** sobre el mapa con
+un círculo relleno y el rótulo "Punto de cierre" — no depende de leer
+una grilla de coordenadas UTM (que, igual que en 2018 dic, tampoco
+aparece en los márgenes de este recorte). Esto hace la delimitación
+directamente abordable.
+
+**Lectura del relieve.** El punto de cierre está en el fondo de un
+valle donde converge un pequeño abanico de 4-5 tributarios cortos (ver
+`ej2_cuenca_esquematica.png`): es prácticamente la cabecera del arroyo
+Molles de Quinteros. El tributario más largo de ese abanico se prolonga
+hacia el norte/noreste, hacia el camino y el "Establecimiento Los
+Ceibos" (con cotas de punto cercanas de 121, 125 y 128 m), consistente
+con Lcp=5300 m dado.
+
+**Divisoria (criterio, ver §B1):** se traza perpendicular a las curvas
+de nivel, por el lado convexo (crestas) alrededor de todo el abanico de
+tributarios, cerrando en el punto de cierre, sin cruzar ningún cauce.
+Se marca en `ej2_cuenca_esquematica.png` (línea verde) — es una
+delimitación **esquemática/aproximada** (mismo criterio de honestidad
+que 2019 dic, Ej.3): la carta permite ubicar el punto de cierre y leer
+cotas puntuales con confianza, pero trazar la divisoria al milímetro
+exacto sobre un escaneo no es posible con la misma precisión que un SIG.
+
+**Cotas leídas:** punto de cierre en el fondo de valle, rodeado de
+cotas de punto de 100/111 m ⇒ **cota del cierre ≈ 88 m** (una lectura
+propia, antes de mirar la solución oficial, daba un rango 85-90 m).
+Naciente del tributario más largo (cerca del camino/Establecimiento Los
+Ceibos, cotas de punto 121/125/128 m) ⇒ **cota de la naciente ≈ 125 m**
+(lectura propia previa: rango 120-130 m).
+
+**Comparación con la solución oficial:** la solución oficial (pág. 6)
+da exactamente **cota naciente=125 m, cota cierre=88 m ⇒ ΔH=37 m** —
+coincide con el rango de la lectura propia hecha antes de mirarla, lo
+que da confianza en el criterio de lectura del relieve usado.
+
+### Parte 2) Tiempo de concentración (Ramser-Kirpich)
+
+**Concepto y por qué esta herramienta:** flujo concentrado (dato del
+enunciado) ⇒ Ramser-Kirpich (§B2), álgebra cerrada con L y S del cauce
+principal — no hace falta NRCS por tramos (eso es sólo para flujo NO
+concentrado/mantiforme).
+
+**Script:** `Ejercicio2_tc_kirpich.py`. Entradas: `Lcp=5.300 km,
+ΔH=37 m`.
+
+**Resultado:**
+```
+S = ΔH/Lcp/10 = 37/5.3/10 = 0.698 %
+tc = 0.4 * Lcp^0.77 / S^0.385 = 1.659 h ≈ 100 min
+```
+
+**tc ≈ 1.66 h (100 min).**
+
+**Comparación con la solución oficial:** coincide exactamente
+(ΔH=37 m, S=0.7%, tc=1.66 h).
+
+---
+
+## EJERCICIO 3 (25 puntos): pendiente
+
+Alcantarillado en Artigas (NRCS/Racional ponderados 75%/25%,
+pastizales+cultivos en hileras, suelo "Manuel Oribe", hidrograma
+esquemático) — datos completos y legibles en la letra y en la solución
+oficial (pág. 6, bajo el Ejercicio 2). Pendiente para la próxima
+corrida.
 
 ## EJERCICIO 4 (20 puntos): pendiente
 
@@ -185,4 +262,5 @@ en la solución oficial (pág. 7). Pendiente para la próxima corrida.
 
 ---
 
-## ESTADO: EN CURSO (Ejercicio 1 completo; Ejercicios 2, 3 y 4 pendientes)
+## ESTADO: EN CURSO (Ejercicio 1 completo; Ejercicio 2 partes 1-2 completas,
+parte 3 pendiente; Ejercicios 3 y 4 pendientes)
