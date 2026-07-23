@@ -35,11 +35,11 @@ no confundir con "2024 jul" = 2024 Julio).
 
 | Tema | Veces preguntado | Exámenes |
 |---|---|---|
-| A1. Ecuación de FGV y clasificación de canales M/S | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic, 2018 jul |
-| A2. Energía específica y tirante crítico | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic, 2018 jul |
-| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 20 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 jul, 2019 feb 2, 2018 dic, 2018 jul |
+| A1. Ecuación de FGV y clasificación de canales M/S | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic, 2018 jul, 2018 mar |
+| A2. Energía específica y tirante crítico | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic, 2018 jul, 2018 mar |
+| A3. Cantidad de movimiento, tirante conjugado y resalto hidráulico | 21 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 jul, 2019 feb 2, 2018 dic, 2018 jul, 2018 mar |
 | A4. Perfiles de flujo controlados por lagos/embalses y por caída libre | 19 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 jul, 2019 feb 2, 2018 dic |
-| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 13 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2, 2018 dic, 2018 jul |
+| A5. Transiciones de fondo: cambio de sección, escalón y compuerta de fondo | 14 | 2020 dic, 2020 jul, 2024 dic, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 feb 2, 2023 feb, 2019 feb 2, 2018 dic, 2018 jul, 2018 mar |
 | A6. Tensión rasante de fondo en FGV | 3 | 2025 feb 1, 2019 dic, 2018 jul |
 | B1. Delimitación de cuencas y divisoria de aguas | 17 | 2020 feb, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb 2, 2023 feb, 2019 dic, 2019 feb 2, 2018 dic |
 | B2. Tiempo de concentración (Ramser-Kirpich) | 22 | 2020 feb, 2020 dic, 2020 jul, 2022 jul, 2022 dic, 2024 dic, 2025 feb 1, 2025 feb 2, 2026 feb, 2024 jul, 2024 mar, 2024 feb, 2023 dic, 2023 jul, 2023 feb, 2020 feb-13, 2019 dic, 2019 jul, 2019 feb 2, 2019 feb-07, 2018 dic, 2018 jul |
@@ -437,6 +437,25 @@ salto a yB=a → M3 (acelerando, y<yc) → **resalto** (tirantes conjugados
 de a, vía `Mom_trap`/`conjugados_trap`) → M2 relajándose a yn aguas
 abajo. La fuerza sobre la compuerta usa M1 (en yA) y M2 (en yB=a, sección
 llena, descarga libre) igual que en el caso base de arriba.
+
+**Variante con distancia finita a la caída libre, pero suficientemente
+larga** (2018 mar, Ej.1: compuerta a L=3000 m de la caída libre). Aun
+cuando el enunciado SÍ da una distancia hasta el control de aguas abajo
+(a diferencia del caso "sin ninguna longitud de referencia" de arriba),
+si esa distancia es mucho mayor que el desarrollo de la curva M3 hasta
+el resalto, el resultado es el mismo que el caso "canal infinito": el
+tirante y3 (fin de la curva M3, arranca el resalto) se puede hallar en
+forma **cerrada** pidiendo que su conjugado (`Mom_rect`/`Mom_trap`) sea
+exactamente yn (en vez de integrar dos ramas y cruzarlas como en A3/A5
+"lago a distancia finita"), porque aguas abajo del resalto el perfil se
+relaja a yn mucho antes de sentir la caída libre. Conviene igual
+verificar con la EDO completa (`rect.m`+`ode23` desde la compuerta) que
+la longitud de desarrollo de la M3 (en este examen, ≈31 m) es chica
+frente a la distancia total dada (3000 m) — si no lo fuera, hay que
+pasar al método de shooting con cruce de conjugados de A3/A5. La fuerza
+sobre la compuerta se calcula igual que siempre, F=γ(M1−M2), con M1 en
+el alterno de la apertura (remanso aguas arriba) y M2 en la apertura
+misma (sección llena, descarga libre).
 
 **Compuerta con descarga AHOGADA (a > conjugado de la condición de aguas
 abajo).** Si el tirante que impone la condición de aguas abajo (y3, p.ej.
